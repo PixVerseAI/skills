@@ -15,7 +15,7 @@ description: Generate an image from text, then animate it into a video
 ### Full Example
 ```bash
 # Step 1: Generate image
-IMG_RESULT=$(pixverse create image --prompt "A cyberpunk cityscape at night with neon lights" --quality 1080p --json)
+IMG_RESULT=$(pixverse create image --prompt "A cyberpunk cityscape at night with neon lights" --model gemini-3.1-flash --quality 2160p --json)
 IMAGE_ID=$(echo "$IMG_RESULT" | jq -r '.image_id')
 
 # Step 2: Get image URL

@@ -237,9 +237,9 @@ JSON output:
     "aspectRatio": "16:9"
   },
   "image": {
-    "model": "v5.6",
+    "model": "qwen-image",
     "quality": "1080p",
-    "aspectRatio": "16:9"
+    "aspectRatio": "1:1"
   }
 }
 ```

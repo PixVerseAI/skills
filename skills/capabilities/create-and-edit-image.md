@@ -26,8 +26,8 @@ Want an image?
 | `--image <pathOrUrl>` | Single image input (enables I2I) | local file or URL |
 | `--images <paths...>` | Multiple image inputs (enables I2I) | local files or URLs |
 | `--asset-image <path>` | OSS asset path (skips upload) | -- |
-| `-m, --model <model>` | Image model | `qwen-image` (default), `seedream-5.0-lite`, `seedream-4.5`, `seedream-4.0`, `nanobanana`, `nano-banana-pro`, `nano-banana-2` |
-| `-q, --quality <q>` | Image quality | `720p`, `1080p` (default), `1440p`, `2160p` |
+| `-m, --model <model>` | Image model | `qwen-image` (default), `seedream-5.0-lite`, `seedream-4.5`, `seedream-4.0`, `gemini-2.5-flash`, `gemini-3.0`, `gemini-3.1-flash` |
+| `-q, --quality <q>` | Image quality | `512p`, `720p`, `1080p` (default), `1440p`, `1800p`, `2160p` (availability varies by model — see table below) |
 | `--aspect-ratio <ratio>` | Aspect ratio | `1:1` (default), `16:9`, `9:16`, `4:3`, `3:4`, `3:2`, `2:3`, `5:4`, `4:5`, `21:9`, `auto` |
 | `--count <number>` | Number of generations | `1` (default), `2`, `3`, `4` |
 | `--seed <number>` | Random seed | any integer |
@@ -42,14 +42,16 @@ Each model has its own supported parameter combinations. **Always check this tab
 | Model | `--model` value | Resolution | Aspect Ratio |
 |:---|:---|:---|:---|
 | Qwen Image | `qwen-image` (default) | `720p` `1080p` | `1:1` `16:9` `9:16` `4:3` `3:4` `5:4` `4:5` `3:2` `2:3` `21:9` |
-| Seedream 5.0 Lite | `seedream-5.0-lite` | `2k` `3k` | `auto` `1:1` `16:9` `9:16` `4:3` `3:4` `5:4` `4:5` `3:2` `2:3` `21:9` |
-| Seedream 4.5 | `seedream-4.5` | `2k` `4k` | `auto` `1:1` `16:9` `9:16` `4:3` `3:4` `5:4` `4:5` `3:2` `2:3` `21:9` |
-| Seedream 4.0 | `seedream-4.0` | `1080p` `2k` `4k` | `auto` `1:1` `16:9` `9:16` `4:3` `3:4` `5:4` `4:5` `3:2` `2:3` `21:9` |
-| Nanobanana | `nanobanana` | `1080p` | `auto` `1:1` `16:9` `9:16` `4:3` `3:4` `5:4` `4:5` `3:2` `2:3` `21:9` |
-| Nano Banana Pro | `nano-banana-pro` | `1080p` `2k` `4k` | `auto` `1:1` `16:9` `9:16` `4:3` `3:4` `5:4` `4:5` `3:2` `2:3` `21:9` |
-| Nano Banana 2 | `nano-banana-2` | `512p` `1080p` `2k` `4k` | `auto` `1:1` `16:9` `9:16` `4:3` `3:4` `5:4` `4:5` `3:2` `2:3` `21:9` |
+| Seedream 5.0 Lite | `seedream-5.0-lite` | `1440p` `1800p` | `auto` `1:1` `16:9` `9:16` `4:3` `3:4` `5:4` `4:5` `3:2` `2:3` `21:9` |
+| Seedream 4.5 | `seedream-4.5` | `1440p` `2160p` | `auto` `1:1` `16:9` `9:16` `4:3` `3:4` `5:4` `4:5` `3:2` `2:3` `21:9` |
+| Seedream 4.0 | `seedream-4.0` | `1080p` `1440p` `2160p` | `auto` `1:1` `16:9` `9:16` `4:3` `3:4` `5:4` `4:5` `3:2` `2:3` `21:9` |
+| Gemini 2.5 Flash (aka Nanobanana) | `gemini-2.5-flash` | `1080p` | `auto` `1:1` `16:9` `9:16` `4:3` `3:4` `5:4` `4:5` `3:2` `2:3` `21:9` |
+| Gemini 3.0 (aka Nano Banana Pro) | `gemini-3.0` | `1080p` `1440p` `2160p` | `auto` `1:1` `16:9` `9:16` `4:3` `3:4` `5:4` `4:5` `3:2` `2:3` `21:9` |
+| Gemini 3.1 Flash (aka Nano Banana 2) | `gemini-3.1-flash` | `512p` `1080p` `1440p` `2160p` | `auto` `1:1` `16:9` `9:16` `4:3` `3:4` `5:4` `4:5` `3:2` `2:3` `21:9` |
 
-> Models marked with "—" have not yet been documented; use default values until confirmed.
+> **Recommended:** For best image quality, prefer `gemini-3.1-flash` (up to `2160p`, widest resolution range) or `seedream-5.0-lite` (up to `1800p`). The default `qwen-image` is fast but capped at `1080p`.
+
+> **Important:** Each model only accepts specific quality values. Using an unsupported quality for a model will return `invalid param` (error 400017). Always match quality to the model's supported values above.
 
 ---
 
@@ -96,8 +98,8 @@ When `--count > 1`:
 ## Steps for T2I
 
 1. Compose your prompt describing the desired image.
-2. Choose a model from: `qwen-image`, `seedream-5.0-lite`, `seedream-4.5`, `gpt-image-1.5`.
-3. Set quality (`720p`, `1080p`, `1440p`, `2160p`) and aspect ratio.
+2. Choose a model — prefer `gemini-3.1-flash` (up to `2160p`) or `seedream-5.0-lite` (up to `1800p`) for higher quality; fall back to `qwen-image` for speed.
+3. Set quality to the model's highest supported value for best results (see Model Reference table), then choose aspect ratio.
 4. Optionally set: `--seed`, `--count`.
 5. Run the command:
    ```bash
@@ -135,10 +137,10 @@ When `--count > 1`:
 
 ## Examples
 
-### T2I basic
+### T2I basic (recommended: high-quality model)
 
 ```bash
-pixverse create image --prompt "A serene lake at dawn with mist rising" --json
+pixverse create image --prompt "A serene lake at dawn with mist rising" --model gemini-3.1-flash --quality 2160p --json
 ```
 
 ### T2I with full options
@@ -147,7 +149,7 @@ pixverse create image --prompt "A serene lake at dawn with mist rising" --json
 pixverse create image \
   --prompt "A photorealistic portrait of a medieval knight in golden armor" \
   --model seedream-5.0-lite \
-  --quality 2160p \
+  --quality 1800p \
   --aspect-ratio 16:9 \
   --json
 ```

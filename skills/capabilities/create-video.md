@@ -25,9 +25,9 @@ Want to create a video?
 | `--prompt <text>` | Prompt text (required) | -- |
 | `--image <pathOrUrl>` | Image path or URL (enables I2V) | local file or URL |
 | `--asset-image <path>` | OSS asset path (skips upload) | -- |
-| `-m, --model <model>` | Video model | `v5.6` (default), `v5`, `v4.5`, `v4`, `v3.5` |
-| `-d, --duration <sec>` | Duration in seconds | `1`–`10` (any integer, default `5`) |
-| `-q, --quality <q>` | Video quality | `360p`, `540p`, `720p` (default), `1080p` |
+| `-m, --model <model>` | Video model | `v5.6` (default), `v5`, `v4.5`, `v4`, `v3.5`, `sora-2`, `sora-2-pro`, `veo-3.1-standard`, `veo-3.1-fast`, `grok-imagine` |
+| `-d, --duration <sec>` | Duration in seconds | `1`–`10` (any integer, default `5`; varies by model — see Model Reference) |
+| `-q, --quality <q>` | Video quality | `360p`, `480p`, `540p`, `720p` (default), `1080p` (availability varies by model — see Model Reference) |
 | `--aspect-ratio <ratio>` | Aspect ratio | `16:9`, `4:3`, `1:1`, `3:4`, `9:16`, `3:2`, `2:3` |
 | `--seed <number>` | Random seed | any integer |
 | `--count <number>` | Number of generations | `1` (default), `2`, `3`, `4` |
@@ -46,10 +46,10 @@ Want to create a video?
 |:---|:---|:---|
 | `--images <paths...>` | Image paths or URLs (2+ required) | -- |
 | `--prompt <text>` | Prompt text (required) | -- |
-| `-m, --model <model>` | Video model | `v5.6` (default), `v5`, `v4.5`, `v4`, `v3.5` |
-| `-q, --quality <q>` | Video quality | `360p`, `540p`, `720p` (default), `1080p` |
+| `-m, --model <model>` | Video model | `v5.6` (default), `v5`, `v4.5`, `v4`, `v3.5`, `sora-2`, `sora-2-pro`, `veo-3.1-standard`, `veo-3.1-fast`, `grok-imagine` |
+| `-q, --quality <q>` | Video quality | `360p`, `480p`, `540p`, `720p` (default), `1080p` (availability varies by model) |
 | `--aspect-ratio <ratio>` | Aspect ratio | `16:9`, `4:3`, `1:1`, `3:4`, `9:16`, `3:2`, `2:3` |
-| `-d, --duration <sec>` | Duration in seconds | `1`–`10` (any integer, default `5`) |
+| `-d, --duration <sec>` | Duration in seconds | `1`–`10` (any integer, default `5`; varies by model) |
 | `--count <number>` | Number of generations | `1` (default), `2`, `3`, `4` |
 | `--seed <number>` | Random seed | any integer |
 | `--off-peak` | Use off-peak pricing | flag |
@@ -104,8 +104,8 @@ When `--count > 1`, the submitted output includes a list of IDs:
 ## Steps for T2V
 
 1. Compose your prompt describing the desired video.
-2. Choose a model from: `v5.6`, `v5`, `v4.5`, `v4`, `v3.5`.
-3. Set quality (`360p`, `540p`, `720p`, `1080p`), aspect ratio, and duration (`1`–`10`).
+2. Choose a model — see Model Reference table below for all available models and their constraints.
+3. Set quality, aspect ratio, and duration based on the chosen model's supported values.
 4. Optionally set: `--seed`, `--count`, `--audio`, `--multi-shot`, `--off-peak`.
 5. Run the command:
    ```bash
@@ -203,6 +203,8 @@ Each model has its own supported parameter combinations. **Always check this tab
 | Veo 3.1 Standard | `veo-3.1-standard` | Video, Transition | `720p` `1080p` | `4` `6` `8` | `16:9` `9:16` |
 | Veo 3.1 Fast | `veo-3.1-fast` | Video, Transition | `720p` `1080p` | `4` `6` `8` | `16:9` `9:16` |
 | Grok Imagine | `grok-imagine` | Video | `480p` `720p` | `1`–`15` (any integer) | `16:9` `4:3` `1:1` `9:16` `3:4` `3:2` `2:3` |
+
+> **Recommended:** For best video quality, prefer `sora-2-pro` (up to `1080p`) or `veo-3.1-standard` (up to `1080p`, also supports Transition). The default `v5.6` offers the most flexible duration and quality range.
 
 ### Model-specific constraints
 

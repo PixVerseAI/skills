@@ -13,7 +13,7 @@ description: Iteratively edit an image using I2I — refine until satisfied
 ### Full Example
 ```bash
 # Step 1: Create initial image
-RESULT=$(pixverse create image --prompt "A modern living room with large windows" --quality 1440p --json)
+RESULT=$(pixverse create image --prompt "A modern living room with large windows" --model seedream-5.0-lite --quality 1800p --json)
 IMAGE_ID=$(echo "$RESULT" | jq -r '.image_id')
 IMAGE_URL=$(echo "$RESULT" | jq -r '.image_url')
 
@@ -24,14 +24,14 @@ pixverse asset download $IMAGE_ID --type image --json
 EDIT_RESULT=$(pixverse create image \
   --prompt "Add warm golden sunset light streaming through the windows" \
   --image "$IMAGE_URL" \
-  --quality 1440p --json)
+  --model seedream-5.0-lite --quality 1800p --json)
 EDIT_ID=$(echo "$EDIT_RESULT" | jq -r '.image_id')
 
 # Step 4: Further edit — add plants
 FINAL_RESULT=$(pixverse create image \
   --prompt "Add lush green indoor plants near the windows" \
   --image "$(pixverse asset info $EDIT_ID --type image --json | jq -r '.image_url')" \
-  --quality 1440p --json)
+  --model seedream-5.0-lite --quality 1800p --json)
 
 # Step 5: Download final
 pixverse asset download $(echo "$FINAL_RESULT" | jq -r '.image_id') --type image --json
