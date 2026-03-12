@@ -1,6 +1,6 @@
 ---
-name: pixverse
-description: PixVerse CLI — generate AI videos and images from the command line. Start here.
+name: pixverse-ai-image-and-video-generator
+description: PixVerse CLI — generate AI videos and images from the command line. Supports PixVerse, Veo, Sora, Kling, Hailuo, Wan, and more video models; Nano Banana (Gemini), Seedream, Qwen image models; and PixVerse's rich effect template library. Start here.
 ---
 
 # PixVerse CLI — Master Skill
@@ -98,6 +98,7 @@ Details:
 | Check generation progress | `pixverse:task-management` |
 | Browse, download, or delete assets | `pixverse:asset-management` |
 | Set up auth or check account | `pixverse:auth-and-account` |
+| Browse and create from effect templates | `pixverse:template` |
 
 ---
 
@@ -129,6 +130,11 @@ Details:
 | `create extend` | Extend video duration |
 | `create upscale` | Upscale video resolution |
 | `create reference` | Generate video with character references |
+| `create template` | Create video or image from an effect template |
+| `template categories` | List template categories |
+| `template list` | Browse templates (with optional category filter) |
+| `template search` | Search templates by keyword |
+| `template info` | Get template details |
 | `task status` | Check task status |
 | `task wait` | Wait for task completion |
 | `asset list` | List generated assets |

@@ -64,6 +64,18 @@ Only specific models support Transition mode. Using other models will result in 
 
 > **Veo 3.1 constraint:** `1080p` only supports `8s` duration; `720p` supports `4` / `6` / `8`.
 
+### 3+ image constraint: automatic model fallback
+
+When **3 or more images** are provided, models `v5.5` and `v5.6` do **not** support multi-frame transitions. The CLI automatically falls back to `v5` and prints a warning:
+
+```
+--model v5.6 does not support 3+ image transitions, using v5
+```
+
+To avoid the fallback, explicitly pass `--model v5` when supplying 3+ images.
+
+Additionally, with 3+ images the `--count` flag has no effect — multi-frame transitions always produce one output per transition pair.
+
 ## JSON Output
 
 Same video result format as create-video.
