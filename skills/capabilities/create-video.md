@@ -13,7 +13,7 @@ Generate AI videos using PixVerse CLI. Supports text-to-video (T2V), image-to-vi
 Want to create a video?
 |-- From text only?            -> T2V:    pixverse create video --prompt "..." --json
 |-- From an image?             -> I2V:    pixverse create video --prompt "..." --image <path> --json
-+-- With character references? -> Fusion: pixverse create reference --images <img1> <img2> --prompt "..." --json
++-- With character references? -> Fusion: pixverse create reference --images <img1> [img2...] --prompt "..." --json
 ```
 
 ---
@@ -44,7 +44,7 @@ Want to create a video?
 
 | Flag | Description | Values / Default |
 |:---|:---|:---|
-| `--images <paths...>` | Image paths or URLs (2+ required) | -- |
+| `--images <paths...>` | Image paths or URLs (1–7 required) | -- |
 | `--prompt <text>` | Prompt text (required) | -- |
 | `-m, --model <model>` | Video model | `v5.6` (default), `v5`, `v4.5`, `v4`, `v3.5`, `sora-2`, `sora-2-pro`, `veo-3.1-standard`, `veo-3.1-fast`, `grok-imagine` |
 | `-q, --quality <q>` | Video quality | `360p`, `480p`, `540p`, `720p` (default), `1080p` (availability varies by model) |
@@ -131,7 +131,7 @@ When `--count > 1`, the submitted output includes a list of IDs:
 
 ## Steps for Fusion (Character Reference)
 
-1. Prepare 2 or more character reference images.
+1. Prepare 1–7 character reference images.
 2. Write a prompt describing the desired scene with those characters.
 3. Run the command:
    ```bash

@@ -100,6 +100,41 @@ Details:
 | Set up auth or check account | `pixverse:auth-and-account` |
 | Browse and create from effect templates | `pixverse:template` |
 
+> **Looking up models or parameters?** Don't wait until you're generating — read the relevant capabilities file directly:
+> - Video models & constraints → `skills/capabilities/create-video.md` (Model Reference section)
+> - Image models & constraints → `skills/capabilities/create-and-edit-image.md` (Model Reference section)
+
+---
+
+## Model Quick Reference
+
+Use this to pick a model before diving into a sub-skill.
+
+### Video Models (`pixverse create video --model <value>`)
+
+| Model | `--model` value | Max Quality | Duration |
+|:---|:---|:---|:---|
+| PixVerse v5.6 *(default)* | `v5.6` | `1080p` | `1`–`10`s |
+| Sora 2 | `sora-2` | `720p` | `4` `8` `12`s |
+| Sora 2 Pro | `sora-2-pro` | `1080p` | `4` `8` `12`s |
+| Veo 3.1 Standard | `veo-3.1-standard` | `1080p` | `4` `6` `8`s |
+| Veo 3.1 Fast | `veo-3.1-fast` | `1080p` | `4` `6` `8`s |
+| Grok Imagine | `grok-imagine` | `720p` | `1`–`15`s |
+
+### Image Models (`pixverse create image --model <value>`)
+
+| Model | `--model` value | Max Quality |
+|:---|:---|:---|
+| Qwen Image *(default)* | `qwen-image` | `1080p` |
+| Seedream 5.0 Lite | `seedream-5.0-lite` | `1800p` |
+| Seedream 4.5 | `seedream-4.5` | `2160p` |
+| Seedream 4.0 | `seedream-4.0` | `2160p` |
+| Gemini 2.5 Flash (Nanobanana) | `gemini-2.5-flash` | `1080p` |
+| Gemini 3.0 (Nano Banana Pro) | `gemini-3.0` | `2160p` |
+| Gemini 3.1 Flash (Nano Banana 2) | `gemini-3.1-flash` | `2160p` |
+
+For full parameter constraints (aspect ratios, quality per model, mode support), read the capabilities files listed above.
+
 ---
 
 ## Workflow Skills
