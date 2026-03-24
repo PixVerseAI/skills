@@ -1,7 +1,10 @@
 ---
 name: pixverse-ai-image-and-video-generator
 description: PixVerse CLI — generate AI videos and images from the command line. Supports PixVerse, Veo, Sora, Kling, Hailuo, Wan, and more video models; Nano Banana (Gemini), Seedream, Qwen image models; and PixVerse's rich effect template library. Start here.
+version: 1.0.0
 ---
+
+!`bash skills/scripts/check-update.sh 2>/dev/null`
 
 # PixVerse CLI — Master Skill
 
