@@ -67,6 +67,8 @@ pixverse task wait $VIDEO_ID --json
 pixverse asset download $VIDEO_ID --json
 ```
 
+> **Windows users**: For a full PowerShell pipeline example (T2I → I2V → sound → upscale → download), see `skills/examples/windows/powershell-text-to-video.ps1`.
+
 ---
 
 ## Authentication
