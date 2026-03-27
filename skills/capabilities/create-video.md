@@ -121,7 +121,7 @@ When `--count > 1`, the submitted output includes a list of IDs:
 ## Steps for I2V
 
 1. Same as T2V, plus provide `--image <local-path-or-url>`.
-2. Local file paths are auto-uploaded to OSS by the CLI.
+2. Local file paths are auto-uploaded to PixVerse cloud storage (OSS) by the CLI. **Do not pass files containing sensitive, private, or confidential content.**
 3. URLs are passed directly to the API.
 4. Alternatively, use `--asset-image <oss-path>` to skip the upload step.
 5. Run the command:
