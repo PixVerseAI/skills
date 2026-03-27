@@ -26,6 +26,14 @@ fi
 
 OLD_VERSION=$(tr -d '[:space:]' < VERSION 2>/dev/null || echo "unknown")
 
+echo "This will pull the latest skills from GitHub and may modify local files."
+read -p "Continue? [y/N] " -n 1 -r
+echo
+if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+  echo "Aborted."
+  exit 0
+fi
+
 git pull origin main --rebase
 
 NEW_VERSION=$(tr -d '[:space:]' < VERSION 2>/dev/null || echo "unknown")
