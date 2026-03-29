@@ -1,7 +1,7 @@
 ---
 name: pixverse-ai-image-and-video-generator
 description: PixVerse CLI — generate AI videos and images from the command line. Supports PixVerse, Veo, Sora, Kling, Hailuo, Wan, and more video models; Nano Banana (Gemini), Seedream, Qwen image models; and PixVerse's rich effect template library. Start here.
-version: 1.0.1
+version: 1.1.0
 homepage: https://pixverse.ai
 source: https://github.com/PixVerseAI/skills
 ---
@@ -104,6 +104,7 @@ Details:
 | Browse, download, or delete assets | `pixverse:asset-management` |
 | Set up auth or check account | `pixverse:auth-and-account` |
 | Browse and create from effect templates | `pixverse:template` |
+| Generate Mondo-style posters and covers | `pixverse:mondo-poster-design` |
 
 > **Looking up models or parameters?** Don't wait until you're generating — read the relevant capabilities file directly:
 > - Video models & constraints → `skills/capabilities/create-video.md` (Model Reference section)
@@ -152,6 +153,20 @@ For full parameter constraints (aspect ratios, quality per model, mode support),
 | Iteratively edit an image | `pixverse:image-editing-pipeline` |
 | Full video production (create + extend + audio + upscale) | `pixverse:video-production` |
 | Create multiple items in parallel | `pixverse:batch-creation` |
+| Generate a Mondo-style poster end-to-end | `pixverse:mondo-poster-pipeline` |
+| Generate poster then animate into video | `pixverse:mondo-poster-to-video-pipeline` |
+
+---
+
+## Reference Materials
+
+Located in `skills/references/`. These are read-only knowledge bases that capabilities and workflows draw from — no CLI commands, just curated design knowledge.
+
+| Reference | Path | Content |
+|:---|:---|:---|
+| Mondo Artist Styles | `references/mondo-poster/artist-styles.md` | 37 artist styles with prompt keywords across 7 categories |
+| Mondo Composition Patterns | `references/mondo-poster/composition-patterns.md` | 8 composition techniques (negative space, silhouette, geometric framing, etc.) |
+| Mondo Genre Templates | `references/mondo-poster/genre-templates.md` | Genre-specific prompt templates for film, book covers, and album covers |
 
 ---
 
