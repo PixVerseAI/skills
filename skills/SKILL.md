@@ -1,7 +1,7 @@
 ---
 name: pixverse-ai-image-and-video-generator
 description: PixVerse CLI — generate AI videos and images from the command line. Supports PixVerse, Veo, Sora, Kling, Hailuo, Wan, and more video models; Nano Banana (Gemini), Seedream, Qwen image models; and PixVerse's rich effect template library. Start here.
-version: 1.1.0
+version: 1.2.0
 homepage: https://pixverse.ai
 source: https://github.com/PixVerseAI/skills
 ---
@@ -120,7 +120,8 @@ Use this to pick a model before diving into a sub-skill.
 
 | Model | `--model` value | Max Quality | Duration |
 |:---|:---|:---|:---|
-| PixVerse v5.6 *(default)* | `v5.6` | `1080p` | `1`–`10`s |
+| PixVerse V6 *(default)* | `v6` | `1080p` | `1`–`15`s |
+| PixVerse v5.6 | `v5.6` | `1080p` | `1`–`10`s |
 | Sora 2 | `sora-2` | `720p` | `4` `8` `12`s |
 | Sora 2 Pro | `sora-2-pro` | `1080p` | `4` `8` `12`s |
 | Veo 3.1 Standard | `veo-3.1-standard` | `1080p` | `4` `6` `8`s |
