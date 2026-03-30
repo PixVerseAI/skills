@@ -4,6 +4,16 @@ All notable changes to PixVerse Skills will be documented in this file.
 
 Format follows [Keep a Changelog](https://keepachangelog.com/).
 
+## [1.2.0] - 2026-03-30
+
+### Changed
+- PixVerse V6 is now the default video model across all skills
+- Updated model lists to match CLI source: video (`v6, v5.6, v5.5, v5, v5-fast`), extend (`v6, v5.5, v5`), reference (`v5, v5.6`), transition (`v6, v5.6, v5.5, v5, v4.5, veo-3.1-*`)
+- V6 supports duration 1–15s, aspect ratio includes `21:9`, native audio and multi-shot
+- V6 transition limited to first/last frame only — documented in transition and create-video skills
+- V6 does not support multi-subject reference (fusion) — documented with fallback guidance
+- Removed deprecated models (`v4, v3.5`) from video mode model lists
+
 ## [1.1.0] - 2026-03-30
 
 ### Added
