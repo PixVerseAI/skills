@@ -4,6 +4,20 @@ All notable changes to PixVerse Skills will be documented in this file.
 
 Format follows [Keep a Changelog](https://keepachangelog.com/).
 
+## [1.3.0] - 2026-04-01
+
+### Added
+- Workspace management capability (`pixverse:workspace`) — list, switch, check status, and open management page for personal and team workspaces
+- Global `--workspace-id` flag documented in master SKILL.md for per-command workspace override
+- Workspace error auto-recovery documented in exit codes section
+
+### Changed
+- `account info` JSON output now includes `workspace` object and team credits (`credits.used`, `workspace.seats`)
+- `account usage` behavior documented for team workspaces (different item fields, `--type` filter restriction)
+- `auth login` / `auth status` / `auth logout` JSON output schemas updated to match CLI v1.0.7
+- `subscribe` command now documented with team workspace guard (exits code 6 in team context)
+- `batch-creation` workflow updated with workspace context and cross-workspace example
+
 ## [1.2.0] - 2026-03-30
 
 ### Changed

@@ -1,11 +1,11 @@
 ---
 name: pixverse:auth-and-account
-description: Authenticate with PixVerse, check account info, manage credits, and configure CLI defaults
+description: Authenticate with PixVerse, check account info, manage credits, configure CLI defaults, and understand workspace-aware behavior
 ---
 
 # Auth and Account Management
 
-Covers: `auth login`, `auth logout`, `auth status`, `account info`, `account usage`, `config set/get/list/reset/path/defaults`
+Covers: `auth login`, `auth logout`, `auth status`, `account info`, `account usage`, `subscribe`, `config set/get/list/reset/path/defaults`
 
 ---
 
@@ -20,17 +20,15 @@ pixverse auth login --json
 JSON output on success:
 ```json
 {
-  "message": "Login successful",
-  "user": {
-    "accountId": 12345,
-    "email": "user@example.com",
-    "nickname": "user",
-    "username": "user",
-    "memberType": 2,
-    "memberLabel": "Pro"
-  }
+  "success": true,
+  "email": "user@example.com",
+  "nickname": "user",
+  "memberType": 2,
+  "tokenExpiresIn": 2592000
 }
 ```
+
+After login, the CLI automatically syncs the active workspace from the server.
 
 Decision tree:
 - If exit code 0 -> login succeeded, token is stored in `~/.pixverse/`
@@ -51,21 +49,18 @@ JSON output when logged in:
 ```json
 {
   "authenticated": true,
-  "user": {
-    "accountId": 12345,
-    "email": "user@example.com",
-    "nickname": "user",
-    "username": "user",
-    "memberType": 2,
-    "memberLabel": "Pro"
-  }
+  "email": "user@example.com",
+  "nickname": "user",
+  "memberType": "Pro",
+  "credits": 650
 }
 ```
 
-JSON output when not logged in:
+JSON output when not logged in (exit code 3):
 ```json
 {
-  "authenticated": false
+  "authenticated": false,
+  "message": "Not logged in"
 }
 ```
 
@@ -86,21 +81,25 @@ pixverse auth logout --json
 JSON output:
 ```json
 {
-  "message": "Logged out successfully"
+  "success": true,
+  "message": "Token removed"
 }
 ```
+
+Logout also resets the active workspace to personal (ID=0).
 
 ---
 
 ## account info
 
-Display account details and credit balance.
+Display account details, workspace context, and credit balance. Output varies depending on whether the active workspace is personal or a team.
 
 ```bash
 pixverse account info --json
 ```
 
-JSON output:
+### JSON output (personal workspace)
+
 ```json
 {
   "accountId": 12345,
@@ -116,30 +115,77 @@ JSON output:
     "bonus": 50,
     "total": 650,
     "highQualityTimes": 10,
-    "renewalCredits": 500
+    "renewalCredits": 500,
+    "used": null
+  },
+  "workspace": {
+    "workspaceId": 0,
+    "name": "Personal",
+    "role": null,
+    "memberType": 2,
+    "memberLabel": "Pro",
+    "memberCount": null,
+    "seats": null
+  }
+}
+```
+
+### JSON output (team workspace)
+
+```json
+{
+  "accountId": 12345,
+  "email": "user@example.com",
+  "nickname": "user",
+  "username": "user",
+  "memberType": 3,
+  "memberLabel": "Premium",
+  "isCreator": false,
+  "credits": {
+    "daily": null,
+    "membership": null,
+    "bonus": null,
+    "total": 5000,
+    "highQualityTimes": null,
+    "renewalCredits": null,
+    "used": 1200
+  },
+  "workspace": {
+    "workspaceId": 42,
+    "name": "My Team",
+    "role": "admin",
+    "memberType": 3,
+    "memberLabel": "Premium",
+    "memberCount": 15,
+    "seats": 20
   }
 }
 ```
 
 Key fields:
-- `credits.total` — total available credits across all types
-- `credits.daily` — credits that reset daily
-- `credits.membership` — credits from subscription tier
-- `credits.bonus` — bonus credits (promotions, etc.)
-- `credits.highQualityTimes` — remaining high-quality generation slots
-- `memberType` — subscription tier (0 = free, 1 = Basic, 2 = Pro, 3 = Team)
-- `memberLabel` — human-readable subscription name
+- `credits.total` — total available credits (personal breakdown or team pool)
+- `credits.used` — credits consumed (team workspaces only; `null` in personal)
+- `credits.daily` / `membership` / `bonus` — personal breakdown (`null` in team context)
+- `workspace.workspaceId` — `0` for personal, `> 0` for team
+- `workspace.name` — workspace display name
+- `workspace.role` — user's role in this workspace (`owner`, `admin`, `member`, `guest`, or `null`)
+- `workspace.seats` — total seats in team plan (`null` in personal)
+- `memberType` — subscription tier (0 = Free, 1 = Basic, 2 = Pro, 3 = Premium/Team)
+- `memberLabel` — human-readable subscription name (always "Premium" in team context)
 
 Decision tree:
 - If `credits.total` > 0 -> user can create content
 - If `credits.total` == 0 -> wait for daily reset or upgrade subscription at https://app.pixverse.ai/subscribe
+- If in a team workspace and credits are low -> team admin should manage via `pixverse workspace manage`
 - If exit code 3 -> token expired, re-run `pixverse auth login --json`
 
 ---
 
 ## account usage
 
-View credit usage history.
+View credit usage history. Behavior differs between personal and team workspaces.
+
+### Personal workspace
 
 ```bash
 pixverse account usage --json --type used --limit 10
@@ -148,8 +194,8 @@ pixverse account usage --json --type used --limit 10
 Options:
 | Flag | Values | Default | Description |
 |:---|:---|:---|:---|
-| `--type` | `all`, `earned`, `used` | `all` | Filter by transaction type |
-| `--limit` | any positive integer | `20` | Number of items per page |
+| `--type` | `all`, `earned`, `used` | `all` | Filter by transaction type (personal only) |
+| `--limit` | 1–100 | `20` | Number of items per page |
 | `--page` | any positive integer | `1` | Page number |
 
 JSON output:
@@ -168,6 +214,57 @@ JSON output:
     }
   ]
 }
+```
+
+### Team workspace
+
+```bash
+pixverse account usage --json --limit 10
+```
+
+In a team workspace, the command shows **your personal usage within the team** (last 30 days).
+
+**Important:** The `--type` filter is not supported in team workspaces — only `all` is accepted. Using `--type earned` or `--type used` in a team workspace exits with code 6 (`VALIDATION_ERROR`).
+
+JSON output (team):
+```json
+{
+  "total": 50,
+  "page": 1,
+  "limit": 10,
+  "items": [
+    {
+      "credit_cost": 10,
+      "creation_mode": "text_to_video",
+      "model": "v6",
+      "created_at": "2026-03-30T14:00:00Z"
+    }
+  ]
+}
+```
+
+Note: Team usage items have different fields (`credit_cost`, `creation_mode`, `model`) compared to personal usage items.
+
+---
+
+## subscribe
+
+Open the subscription management page in the browser.
+
+```bash
+pixverse subscribe --json
+```
+
+**Team workspace guard:** If the active workspace is a team workspace (ID > 0), this command exits with code 6 and a message directing you to use `pixverse workspace manage` instead. Team billing is managed by admins through the web dashboard.
+
+```bash
+# In a team workspace, this will fail:
+pixverse subscribe --json
+# → { "error": "You are in a team workspace. Use \"pixverse workspace manage\"..." }
+
+# Switch to personal first, or use workspace manage:
+pixverse workspace switch 0 --json
+pixverse subscribe --json
 ```
 
 ---
@@ -330,6 +427,7 @@ fi
 
 ## Related Skills
 
+- `pixverse:workspace` — manage workspaces (list, switch, status)
 - `pixverse:create-video` — create videos from text or image
 - `pixverse:create-and-edit-image` — create or edit images
 - `pixverse:task-management` — check generation progress and wait for completion
