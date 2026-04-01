@@ -1,7 +1,7 @@
 ---
 name: pixverse-ai-image-and-video-generator
 description: PixVerse CLI — generate AI videos and images from the command line. Supports PixVerse, Veo, Sora, Kling, Hailuo, Wan, and more video models; Nano Banana (Gemini), Seedream, Qwen image models; and PixVerse's rich effect template library. Start here.
-version: 1.2.0
+version: 1.3.0
 homepage: https://pixverse.ai
 source: https://github.com/PixVerseAI/skills
 ---
@@ -104,6 +104,7 @@ Details:
 | Browse, download, or delete assets | `pixverse:asset-management` |
 | Set up auth or check account | `pixverse:auth-and-account` |
 | Browse and create from effect templates | `pixverse:template` |
+| Manage workspaces (list, switch, status) | `pixverse:workspace` |
 | Generate Mondo-style posters and covers | `pixverse:mondo-poster-design` |
 
 > **Looking up models or parameters?** Don't wait until you're generating — read the relevant capabilities file directly:
@@ -199,6 +200,10 @@ Located in `skills/references/`. These are read-only knowledge bases that capabi
 | `asset delete` | Delete an asset |
 | `account info` | View account info and credits |
 | `account usage` | View credit usage records |
+| `workspace list` | List all workspaces |
+| `workspace status` | Show currently active workspace |
+| `workspace switch` | Switch to a different workspace |
+| `workspace manage` | Open workspace management in browser |
 | `subscribe` | Open subscription page in browser |
 | `config list` | List all config values |
 | `config get` | Get a config value |
@@ -214,6 +219,7 @@ Located in `skills/references/`. These are read-only knowledge bases that capabi
 | Flag | Description |
 |:---|:---|
 | `--json` or `-p` | Pure JSON output to stdout (required for agent use) |
+| `--workspace-id <id>` | Per-command workspace override (0 = personal). Not persisted — only affects the single invocation. |
 | `-V, --version` | Show CLI version |
 | `-h, --help` | Show help for any command |
 
@@ -242,6 +248,10 @@ Every command supports `--json`. All examples in skills use `--json` for machine
 | 4 | CREDIT_INSUFFICIENT | Not enough credits | Check `pixverse account info --json`, wait for daily reset or upgrade |
 | 5 | GENERATION_FAILED | Generation failed/rejected | Check prompt, try different parameters |
 | 6 | VALIDATION_ERROR | Invalid parameters | Check flag values against enums in each skill |
+
+### Workspace error auto-recovery
+
+When a request fails because the active workspace is no longer accessible (e.g. user was removed from a team), the CLI automatically resets to personal workspace (ID=0) and asks you to retry. This does **not** trigger when `--workspace-id` override is active or the failing request is a workspace management command.
 
 ### Error handling pattern
 
