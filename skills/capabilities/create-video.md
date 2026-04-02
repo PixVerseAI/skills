@@ -254,6 +254,7 @@ video_url=$(echo "$result" | jq -r '.video_url')
 
 ## Related Skills
 
+- `pixverse:modify-video` -- modify an existing video with a prompt at a keyframe
 - `pixverse:task-management` -- poll and manage tasks after using `--no-wait`
 - `pixverse:asset-management` -- download, list, and delete completed videos
 - `pixverse:post-process-video` -- extend, upscale, or add audio to existing videos
