@@ -1,6 +1,9 @@
 ---
 name: pixverse-ai-image-and-video-generator
 description: PixVerse CLI — generate AI videos and images from the command line. Supports PixVerse, Veo, Sora, Kling, Hailuo, Wan, and more video models; Nano Banana (Gemini), Seedream, Qwen image models; and PixVerse's rich effect template library. Start here.
+version: 1.4.0
+homepage: https://pixverse.ai
+source: https://github.com/PixVerseAI/skills
 ---
 
 # PixVerse CLI — Master Skill
@@ -94,6 +97,7 @@ Details:
 | I want to... | Use skill |
 |:---|:---|
 | Create a video from text or image | `pixverse:create-video` |
+| Modify an existing video with a prompt | `pixverse:modify-video` |
 | Create or edit an image | `pixverse:create-and-edit-image` |
 | Extend, upscale, or add audio to a video | `pixverse:post-process-video` |
 | Create transition animation between frames | `pixverse:transition` |
@@ -147,6 +151,7 @@ For full parameter constraints (aspect ratios, quality per model, mode support),
 | Animate an image into video | `pixverse:image-to-video-pipeline` |
 | Generate image then animate it | `pixverse:text-to-image-to-video` |
 | Iteratively edit an image | `pixverse:image-editing-pipeline` |
+| Modify a video and enhance it | `pixverse:modify-video-pipeline` |
 | Full video production (create + extend + audio + upscale) | `pixverse:video-production` |
 | Create multiple items in parallel | `pixverse:batch-creation` |
 
@@ -164,6 +169,7 @@ For full parameter constraints (aspect ratios, quality per model, mode support),
 | `create transition` | Create transitions between keyframes |
 | `create speech` | Add lip-sync speech to video |
 | `create sound` | Add AI sound effects to video |
+| `create modify` | Modify video content with a prompt at a keyframe |
 | `create extend` | Extend video duration |
 | `create upscale` | Upscale video resolution |
 | `create reference` | Generate video with character references |

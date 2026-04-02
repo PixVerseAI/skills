@@ -18,6 +18,8 @@ Enhance existing PixVerse videos with additional capabilities: extend duration, 
 
 ```
 Have an existing video?
+├── Change content/scene? → pixverse create modify --video <id-or-path> --prompt "..." --json
+│                           (see pixverse:modify-video)
 ├── Make it longer? → pixverse create extend --video <id-or-path> --json
 ├── Higher resolution? → pixverse create upscale --video <id-or-path> --json
 ├── Add voice/speech?
@@ -168,5 +170,6 @@ pixverse asset download $FINAL --json
 ## Related Skills
 
 - `pixverse:create-video` -- create videos from text or images
+- `pixverse:modify-video` -- modify video content with a prompt at a keyframe
 - `pixverse:task-management` -- check status and wait for tasks
 - `pixverse:asset-management` -- browse, download, and delete assets
