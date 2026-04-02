@@ -105,6 +105,8 @@ Details:
 | Browse, download, or delete assets | `pixverse:asset-management` |
 | Set up auth or check account | `pixverse:auth-and-account` |
 | Browse and create from effect templates | `pixverse:template` |
+| Manage workspaces (list, switch, status) | `pixverse:workspace` |
+| Generate Mondo-style posters and covers | `pixverse:mondo-poster-design` |
 
 > **Looking up models or parameters?** Don't wait until you're generating — read the relevant capabilities file directly:
 > - Video models & constraints → `skills/capabilities/create-video.md` (Model Reference section)
@@ -120,7 +122,8 @@ Use this to pick a model before diving into a sub-skill.
 
 | Model | `--model` value | Max Quality | Duration |
 |:---|:---|:---|:---|
-| PixVerse v5.6 *(default)* | `v5.6` | `1080p` | `1`–`10`s |
+| PixVerse V6 *(default)* | `v6` | `1080p` | `1`–`15`s |
+| PixVerse v5.6 | `v5.6` | `1080p` | `1`–`10`s |
 | Sora 2 | `sora-2` | `720p` | `4` `8` `12`s |
 | Sora 2 Pro | `sora-2-pro` | `1080p` | `4` `8` `12`s |
 | Veo 3.1 Standard | `veo-3.1-standard` | `1080p` | `4` `6` `8`s |
@@ -154,6 +157,20 @@ For full parameter constraints (aspect ratios, quality per model, mode support),
 | Modify a video and enhance it | `pixverse:modify-video-pipeline` |
 | Full video production (create + extend + audio + upscale) | `pixverse:video-production` |
 | Create multiple items in parallel | `pixverse:batch-creation` |
+| Generate a Mondo-style poster end-to-end | `pixverse:mondo-poster-pipeline` |
+| Generate poster then animate into video | `pixverse:mondo-poster-to-video-pipeline` |
+
+---
+
+## Reference Materials
+
+Located in `skills/references/`. These are read-only knowledge bases that capabilities and workflows draw from — no CLI commands, just curated design knowledge.
+
+| Reference | Path | Content |
+|:---|:---|:---|
+| Mondo Artist Styles | `references/mondo-poster/artist-styles.md` | 37 artist styles with prompt keywords across 7 categories |
+| Mondo Composition Patterns | `references/mondo-poster/composition-patterns.md` | 8 composition techniques (negative space, silhouette, geometric framing, etc.) |
+| Mondo Genre Templates | `references/mondo-poster/genre-templates.md` | Genre-specific prompt templates for film, book covers, and album covers |
 
 ---
 
@@ -186,6 +203,10 @@ For full parameter constraints (aspect ratios, quality per model, mode support),
 | `asset delete` | Delete an asset |
 | `account info` | View account info and credits |
 | `account usage` | View credit usage records |
+| `workspace list` | List all workspaces |
+| `workspace status` | Show currently active workspace |
+| `workspace switch` | Switch to a different workspace |
+| `workspace manage` | Open workspace management in browser |
 | `subscribe` | Open subscription page in browser |
 | `config list` | List all config values |
 | `config get` | Get a config value |
@@ -201,6 +222,7 @@ For full parameter constraints (aspect ratios, quality per model, mode support),
 | Flag | Description |
 |:---|:---|
 | `--json` or `-p` | Pure JSON output to stdout (required for agent use) |
+| `--workspace-id <id>` | Per-command workspace override (0 = personal). Not persisted — only affects the single invocation. |
 | `-V, --version` | Show CLI version |
 | `-h, --help` | Show help for any command |
 
@@ -229,6 +251,10 @@ Every command supports `--json`. All examples in skills use `--json` for machine
 | 4 | CREDIT_INSUFFICIENT | Not enough credits | Check `pixverse account info --json`, wait for daily reset or upgrade |
 | 5 | GENERATION_FAILED | Generation failed/rejected | Check prompt, try different parameters |
 | 6 | VALIDATION_ERROR | Invalid parameters | Check flag values against enums in each skill |
+
+### Workspace error auto-recovery
+
+When a request fails because the active workspace is no longer accessible (e.g. user was removed from a team), the CLI automatically resets to personal workspace (ID=0) and asks you to retry. This does **not** trigger when `--workspace-id` override is active or the failing request is a workspace management command.
 
 ### Error handling pattern
 

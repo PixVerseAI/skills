@@ -36,6 +36,7 @@ skills/
     post-process-video.md           #   Extend, upscale, speech, sound
     task-management.md              #   Poll and wait for generation tasks
     asset-management.md             #   List, download, delete assets
+    mondo-poster-design.md          #   Mondo-style poster, book cover, album art design
   workflows/                        # Multi-step pipeline skills
     text-to-video-pipeline.md       #   End-to-end text-to-video
     image-to-video-pipeline.md      #   Animate an image into video
@@ -43,6 +44,10 @@ skills/
     image-editing-pipeline.md       #   Iterative image editing
     video-production.md             #   Full production (create + extend + audio + upscale)
     batch-creation.md               #   Parallel batch generation
+    mondo-poster-pipeline.md        #   End-to-end Mondo poster generation
+    mondo-poster-to-video-pipeline.md #  Animate poster into cinematic video
+  references/                       # Curated design knowledge
+    mondo-poster/                   #   37 artist styles, composition, genre templates
 ```
 
 ### Capabilities vs Workflows
@@ -56,7 +61,8 @@ skills/
 
 | Model | CLI value | Modes | Quality | Duration | Aspect Ratio |
 |:---|:---|:---|:---|:---|:---|
-| PixVerse v5.6 | `v5.6` | Video | `360p` `540p` `720p` `1080p` | `1`-`10` (any integer) | `16:9` `4:3` `1:1` `3:4` `9:16` `3:2` `2:3` |
+| PixVerse V6 | `v6` (default) | Video, Transition (first/last frame), Extend | `360p` `540p` `720p` `1080p` | `1`-`15` (any integer) | `16:9` `4:3` `1:1` `3:4` `9:16` `3:2` `2:3` `21:9` |
+| PixVerse v5.6 | `v5.6` | Video, Transition, Reference, Extend | `360p` `540p` `720p` `1080p` | `1`-`10` (any integer) | `16:9` `4:3` `1:1` `3:4` `9:16` `3:2` `2:3` |
 | Sora 2 | `sora-2` | Video | `720p` | `4` `8` `12` | `16:9` `9:16` |
 | Sora 2 Pro | `sora-2-pro` | Video | `720p` `1080p` | `4` `8` `12` | `16:9` `9:16` |
 | Veo 3.1 Standard | `veo-3.1-standard` | Video, Transition | `720p` `1080p` | `4` `6` `8` | `16:9` `9:16` |
@@ -87,6 +93,24 @@ These skills are designed to be loaded into agent context. Each skill file is se
 - **Examples** — copy-paste-ready commands
 
 Start by loading `skills/SKILL.md` as the entry point, then load specific capability or workflow skills as needed.
+
+## Community Skills
+
+Projects built on top of PixVerse CLI by the community:
+
+| Project | Author | Description |
+|:---|:---|:---|
+| [pixverse-character-pipeline](https://github.com/Takamasa045/pixverse-character-pipeline) | [@takamasa045](https://x.com/takamasa045) | Character-driven video production — one speaker image + YAML config → multi-language, multi-ratio talking-head videos with lip-sync, BGM, and Remotion rendering |
+| [pixverse-shotpack](https://github.com/Takamasa045/pixverse-shotpack) | [@takamasa045](https://x.com/takamasa045) | Creative brief → video shot pipeline — transforms markdown briefs or YAML storyboards into organized, editor-ready AI-generated video assets |
+
+> Have a project built on PixVerse CLI? Open a PR to add it here.
+
+## Credits
+
+Thanks to the creators whose work has contributed to the PixVerse ecosystem:
+
+- [@takamasa045](https://x.com/takamasa045) — for building character pipeline and shotpack production tools on PixVerse CLI
+- [@vista8](https://x.com/vista8) — for the Mondo poster design system whose prompt engineering and artist style library are adapted in `pixverse:mondo-poster-design`
 
 ## Links
 

@@ -44,7 +44,7 @@ Use transitions when you need to:
 |:---|:---|:---|
 | `--images <paths...>` | Image paths or URLs (2+ required) | -- |
 | `--prompt <text>` | Optional prompt to guide transition | -- |
-| `-m, --model <model>` | Video model | `v5.6` (default), `v5`, `v4.5`, `v4`, `v3.5`, `veo-3.1-standard`, `veo-3.1-fast` |
+| `-m, --model <model>` | Video model | `v6` (default, first/last frame only), `v5.6`, `v5.5`, `v5`, `v4.5`, `veo-3.1-standard`, `veo-3.1-fast` |
 | `-q, --quality <q>` | Video quality | `360p`, `540p`, `720p` (default), `1080p` |
 | `-d, --duration <sec>` | Duration | `5` (default), `8`, `10` |
 | `--count <n>` | Generations | `1`-`4` |
@@ -56,17 +56,21 @@ Use transitions when you need to:
 
 Only specific models support Transition mode. Using other models will result in a validation error.
 
-| Model | `--model` value | Quality | Duration | Aspect Ratio |
-|:---|:---|:---|:---|:---|
-| PixVerse v5.6 | `v5.6` (default) | `360p` `540p` `720p` `1080p` | `1`–`10` (any integer) | `16:9` `4:3` `1:1` `3:4` `9:16` `3:2` `2:3` |
-| Veo 3.1 Standard | `veo-3.1-standard` | `720p` `1080p` | `4` `6` `8` | `16:9` `9:16` |
-| Veo 3.1 Fast | `veo-3.1-fast` | `720p` `1080p` | `4` `6` `8` | `16:9` `9:16` |
+| Model | `--model` value | Quality | Duration | Aspect Ratio | Notes |
+|:---|:---|:---|:---|:---|:---|
+| PixVerse V6 | `v6` (default) | `360p` `540p` `720p` `1080p` | `1`–`15` (any integer) | `16:9` `4:3` `1:1` `3:4` `9:16` `3:2` `2:3` `21:9` | **First/last frame only** — no multi-frame |
+| PixVerse v5.6 | `v5.6` | `360p` `540p` `720p` `1080p` | `1`–`10` (any integer) | `16:9` `4:3` `1:1` `3:4` `9:16` `3:2` `2:3` | First/last frame only (multi-frame: use `v5`) |
+| PixVerse v5.5 | `v5.5` | `360p` `540p` `720p` `1080p` | `1`–`10` (any integer) | `16:9` `4:3` `1:1` `3:4` `9:16` `3:2` `2:3` | First/last frame only (multi-frame: use `v5`) |
+| Veo 3.1 Standard | `veo-3.1-standard` | `720p` `1080p` | `4` `6` `8` | `16:9` `9:16` | — |
+| Veo 3.1 Fast | `veo-3.1-fast` | `720p` `1080p` | `4` `6` `8` | `16:9` `9:16` | — |
 
+> **V6 constraint:** V6 only supports **first/last frame** transitions (2 images). For multi-frame transitions (3+ images), use `v5.6` or `v5`.
+>
 > **Veo 3.1 constraint:** `1080p` only supports `8s` duration; `720p` supports `4` / `6` / `8`.
 
 ### 3+ image constraint: automatic model fallback
 
-When **3 or more images** are provided, models `v5.5` and `v5.6` do **not** support multi-frame transitions. The CLI automatically falls back to `v5` and prints a warning:
+When **3 or more images** are provided, only `v5` and `v4.5` support multi-frame transitions. V6, v5.6, and v5.5 do **not**. The CLI automatically falls back to `v5` and prints a warning:
 
 ```
 --model v5.6 does not support 3+ image transitions, using v5

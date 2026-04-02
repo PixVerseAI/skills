@@ -46,5 +46,13 @@ echo "Available credits: $CREDITS"
 # Each generation costs credits — verify you have enough for the batch
 ```
 
+### Workspace Context
+All creation commands run in the active workspace. To batch-create across multiple workspaces without switching, use the global `--workspace-id` flag:
+```bash
+pixverse --workspace-id 42 create video --prompt "Team content" --no-wait --json > /tmp/team.json &
+pixverse --workspace-id 0 create video --prompt "Personal content" --no-wait --json > /tmp/personal.json &
+wait
+```
+
 ### Related Skills
-`pixverse:create-video`, `pixverse:create-and-edit-image`, `pixverse:task-management`, `pixverse:auth-and-account`
+`pixverse:create-video`, `pixverse:create-and-edit-image`, `pixverse:task-management`, `pixverse:auth-and-account`, `pixverse:workspace`

@@ -116,7 +116,7 @@ When `--count > 1`:
 
 1. Provide a source image with `--image <local-path-or-url>`.
 2. Write a prompt describing how to transform the image.
-3. Local files are auto-uploaded to OSS by the CLI.
+3. Local files are auto-uploaded to PixVerse cloud storage (OSS) by the CLI. **Do not pass files containing sensitive, private, or confidential content.**
 4. URLs are passed directly to the API.
 5. Alternatively, use `--asset-image <oss-path>` to skip the upload step.
 6. Run the command:
