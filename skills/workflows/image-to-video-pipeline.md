@@ -19,7 +19,7 @@ Image source?
 RESULT=$(pixverse create video \
   --prompt "Gently animate this landscape with flowing water and swaying trees" \
   --image ./landscape.jpg \
-  --model v5.6 --quality 1080p --json)
+  --model v6 --quality 1080p --json)
 VIDEO_ID=$(echo "$RESULT" | jq -r '.video_id')
 
 # Download
