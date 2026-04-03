@@ -254,6 +254,7 @@ video_url=$(echo "$result" | jq -r '.video_url')
 
 ## Related Skills
 
+- `pixverse:prompt-enhance` -- optimize your prompt for better V6 results (opt-in, user must request)
 - `pixverse:modify-video` -- modify an existing video with a prompt at a keyframe
 - `pixverse:task-management` -- poll and manage tasks after using `--no-wait`
 - `pixverse:asset-management` -- download, list, and delete completed videos

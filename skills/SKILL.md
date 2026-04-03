@@ -97,6 +97,7 @@ Details:
 | I want to... | Use skill |
 |:---|:---|
 | Create a video from text or image | `pixverse:create-video` |
+| Enhance a video prompt for better results | `pixverse:prompt-enhance` |
 | Modify an existing video with a prompt | `pixverse:modify-video` |
 | Create or edit an image | `pixverse:create-and-edit-image` |
 | Extend, upscale, or add audio to a video | `pixverse:post-process-video` |
