@@ -160,6 +160,7 @@ For full parameter constraints (aspect ratios, quality per model, mode support),
 | Create multiple items in parallel | `pixverse:batch-creation` |
 | Generate a Mondo-style poster end-to-end | `pixverse:mondo-poster-pipeline` |
 | Generate poster then animate into video | `pixverse:mondo-poster-to-video-pipeline` |
+| Storyboard → 4-shot video from a single prompt | `pixverse:storyboard-to-video` |
 
 ---
 
