@@ -13,7 +13,7 @@ description: Full video production pipeline — create, extend, add audio, upsca
 ### Full Example
 ```bash
 # Step 1: Create base video
-RESULT=$(pixverse create video --prompt "A person walking through a forest" --model v5.6 --quality 720p --duration 5 --json)
+RESULT=$(pixverse create video --prompt "A person walking through a forest" --model v6 --quality 720p --duration 5 --json)
 VID=$(echo "$RESULT" | jq -r '.video_id')
 
 # Step 2: Extend to make it longer

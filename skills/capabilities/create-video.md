@@ -111,7 +111,7 @@ When `--count > 1`, the submitted output includes a list of IDs:
 4. Optionally set: `--seed`, `--count`, `--audio`, `--multi-shot`, `--off-peak`.
 5. Run the command:
    ```bash
-   pixverse create video --prompt "A sunset over mountains" --model v5.6 --quality 720p --json
+   pixverse create video --prompt "A sunset over mountains" --model v6 --quality 720p --json
    ```
 6. Parse `video_id` from JSON output:
    ```bash
@@ -254,6 +254,7 @@ video_url=$(echo "$result" | jq -r '.video_url')
 
 ## Related Skills
 
+- `pixverse:prompt-enhance` -- optimize your prompt for better V6 results (opt-in, user must request)
 - `pixverse:modify-video` -- modify an existing video with a prompt at a keyframe
 - `pixverse:task-management` -- poll and manage tasks after using `--no-wait`
 - `pixverse:asset-management` -- download, list, and delete completed videos

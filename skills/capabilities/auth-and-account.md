@@ -344,7 +344,7 @@ JSON output:
 ### Set per-mode creation defaults
 
 ```bash
-pixverse config defaults set --mode video --model v5.6 --quality 1080p --json
+pixverse config defaults set --mode video --model v6 --quality 1080p --json
 ```
 
 This sets default values that apply when you run `pixverse create video` without specifying those flags explicitly. Command-line flags always override defaults.
@@ -390,7 +390,7 @@ pixverse config defaults reset --json
 
 6. **Configure defaults** (optional)
    ```bash
-   pixverse config defaults set --mode video --model v5.6 --quality 1080p --json
+   pixverse config defaults set --mode video --model v6 --quality 1080p --json
    ```
 
 7. **Token refresh**: If any command exits with code 3, re-run `pixverse auth login --json`. The environment variable `PIXVERSE_TOKEN` overrides the stored token if set.

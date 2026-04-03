@@ -20,7 +20,7 @@ CREDITS=$(pixverse account info --json | jq -r '.credits.total')
 if [ "$CREDITS" -lt 1 ]; then echo "Insufficient credits"; exit 1; fi
 
 # Step 3: Create video (waits by default)
-RESULT=$(pixverse create video --prompt "A majestic eagle soaring over snow-capped mountains at golden hour" --model v5.6 --quality 1080p --aspect-ratio 16:9 --duration 5 --json)
+RESULT=$(pixverse create video --prompt "A majestic eagle soaring over snow-capped mountains at golden hour" --model v6 --quality 1080p --aspect-ratio 16:9 --duration 5 --json)
 VIDEO_ID=$(echo "$RESULT" | jq -r '.video_id')
 
 # Step 4: Download

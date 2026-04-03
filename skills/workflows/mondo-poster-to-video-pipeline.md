@@ -46,7 +46,7 @@ pixverse asset download $IMAGE_ID --json
 VID_RESULT=$(pixverse create video \
   --prompt "Camera slowly pulls back revealing the full sci-fi cityscape, neon elements pulse with subtle glow, gentle atmospheric particles floating, cinematic zoom out reveal" \
   --image "$IMAGE_URL" \
-  --model v5.6 \
+  --model v6 \
   --quality 1080p \
   --duration 5 \
   --json)
@@ -87,7 +87,7 @@ IMAGE_URL=$(echo "$IMG" | jq -r '.image_url')
 VID=$(pixverse create video \
   --prompt "Slow cinematic zoom out revealing the full poster, subtle dust particles floating" \
   --image "$IMAGE_URL" \
-  --model v5.6 --quality 1080p --duration 5 --json)
+  --model v6 --quality 1080p --duration 5 --json)
 
 VIDEO_ID=$(echo "$VID" | jq -r '.video_id')
 pixverse asset download $VIDEO_ID --json
