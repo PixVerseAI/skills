@@ -98,7 +98,7 @@ Details:
 |:---|:---|
 | Create a video from text or image | `pixverse:create-video` |
 | Enhance a video prompt for better results | `pixverse:prompt-enhance` |
-| Modify an existing video with a prompt | `pixverse:modify-video` |
+| Edit video content with AI (replace subjects, swap outfits, change backgrounds) | `pixverse:modify-video` |
 | Animate a character with motion from a reference video | `pixverse:motion-control` |
 | Create or edit an image | `pixverse:create-and-edit-image` |
 | Extend, upscale, or add audio to a video | `pixverse:post-process-video` |
