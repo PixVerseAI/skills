@@ -25,14 +25,14 @@ Want to create a video?
 | `--prompt <text>` | Prompt text (required) | -- |
 | `--image <pathOrUrl>` | Image path or URL (enables I2V) | local file or URL |
 | `--asset-image <path>` | OSS asset path (skips upload) | -- |
-| `-m, --model <model>` | Video model | `v6` (default), `v5.6`, `v5.5`, `v5`, `v5-fast`, `sora-2`, `sora-2-pro`, `veo-3.1-standard`, `veo-3.1-fast`, `grok-imagine` |
+| `-m, --model <model>` | Video model | `v6` (default), `pixverse-c1`, `v5.6`, `v5.5`, `v5`, `v5-fast`, `sora-2`, `sora-2-pro`, `veo-3.1-standard`, `veo-3.1-fast`, `grok-imagine` |
 | `-d, --duration <sec>` | Duration in seconds | `1`–`15` (any integer, default `5`; varies by model — see Model Reference) |
 | `-q, --quality <q>` | Video quality | `360p`, `480p`, `540p`, `720p` (default), `1080p` (availability varies by model — see Model Reference) |
 | `--aspect-ratio <ratio>` | Aspect ratio | `16:9`, `4:3`, `1:1`, `3:4`, `9:16`, `3:2`, `2:3`, `21:9` |
 | `--seed <number>` | Random seed | any integer |
 | `--count <number>` | Number of generations | `1` (default), `2`, `3`, `4` |
-| `--audio` | Enable audio generation | flag |
-| `--multi-shot` | Enable multi-shot mode | flag |
+| `--audio` / `--no-audio` | Enable or disable audio generation | boolean toggle (default: on for supported models) |
+| `--multi-shot` / `--no-multi-shot` | Enable or disable multi-shot mode | boolean toggle (forced off for `pixverse-c1`) |
 | `--off-peak` | Use off-peak pricing | flag |
 | `--no-wait` | Return immediately without polling | flag |
 | `--timeout <sec>` | Polling timeout | `300` (default) |
@@ -46,12 +46,12 @@ Want to create a video?
 |:---|:---|:---|
 | `--images <paths...>` | Image paths or URLs (1–7 required) | -- |
 | `--prompt <text>` | Prompt text (required) | -- |
-| `-m, --model <model>` | Video model | `v5` (default), `v5.6` |
+| `-m, --model <model>` | Video model | `pixverse-c1`, `v5` (default), `v5.6` |
 | `-q, --quality <q>` | Video quality | `360p`, `480p`, `540p`, `720p` (default), `1080p` (availability varies by model) |
 | `--aspect-ratio <ratio>` | Aspect ratio | `16:9`, `4:3`, `1:1`, `3:4`, `9:16`, `3:2`, `2:3` |
 | `-d, --duration <sec>` | Duration in seconds | `1`–`10` (any integer, default `5`) |
 
-> **Note:** Reference (fusion) only supports `v5` and `v5.6`. PixVerse V6 does **not** support multi-subject reference.
+> **Note:** Reference (fusion) supports `pixverse-c1`, `v5`, and `v5.6`. PixVerse V6 does **not** support multi-subject reference.
 | `--count <number>` | Number of generations | `1` (default), `2`, `3`, `4` |
 | `--seed <number>` | Random seed | any integer |
 | `--off-peak` | Use off-peak pricing | flag |
@@ -200,7 +200,8 @@ Each model has its own supported parameter combinations. **Always check this tab
 | Model | `--model` value | Modes | Quality | Duration | Aspect Ratio |
 |:---|:---|:---|:---|:---|:---|
 | PixVerse V6 | `v6` (default) | Video, Transition (first/last frame), Extend | `360p` `540p` `720p` `1080p` | `1`–`15` (any integer) | `16:9` `4:3` `1:1` `3:4` `9:16` `3:2` `2:3` `21:9` |
-| PixVerse v5.6 | `v5.6` | Video, Transition, Reference, Extend | `360p` `540p` `720p` `1080p` | `1`–`10` (any integer) | `16:9` `4:3` `1:1` `3:4` `9:16` `3:2` `2:3` |
+| PixVerse C1 | `pixverse-c1` | Video, Transition (first/last frame), Reference | `360p` `540p` `720p` `1080p` | `1`–`15` (any integer) | `16:9` `4:3` `1:1` `3:4` `9:16` `3:2` `2:3` |
+| PixVerse v5.6 | `v5.6` | Video, Transition, Reference, Extend, Motion Control | `360p` `540p` `720p` `1080p` | `1`–`10` (any integer) | `16:9` `4:3` `1:1` `3:4` `9:16` `3:2` `2:3` |
 | Sora 2 | `sora-2` | Video | `720p` | `4` `8` `12` | `16:9` `9:16` |
 | Sora 2 Pro | `sora-2-pro` | Video | `720p` `1080p` | `4` `8` `12` | `16:9` `9:16` |
 | Veo 3.1 Standard | `veo-3.1-standard` | Video, Transition | `720p` `1080p` | `4` `6` `8` | `16:9` `9:16` |
@@ -212,7 +213,8 @@ Each model has its own supported parameter combinations. **Always check this tab
 ### Model-specific constraints
 
 - **V6**: Duration up to 15s; supports `21:9`; native audio and multi-shot (on by default). Transition supports **first/last frame only** — no multi-frame transitions and no multi-subject reference. Use `v5.6` for those modes.
-- **v5.6**: Full mode support including multi-frame transitions and multi-subject reference (fusion). Duration capped at 10s; no `21:9`.
+- **C1** (`pixverse-c1`): Same duration and quality as V6 but **no `21:9` aspect ratio** and **multi-shot is forced off**. Supports Video, Transition (first/last frame), and Reference (fusion). Does not support Extend or Motion Control.
+- **v5.6**: Full mode support including multi-frame transitions, multi-subject reference (fusion), and motion control. Duration capped at 10s; no `21:9`.
 - **Sora 2**: Fixed at `720p`; only `16:9` / `9:16`.
 - **Sora 2 Pro**: Adds `1080p` over Sora 2; same aspect ratio limits.
 - **Veo 3.1 (Standard & Fast)**: `1080p` only supports `8s` duration; `720p` supports `4` / `6` / `8`. These are the only third-party models that support `Transition` mode.
@@ -256,6 +258,7 @@ video_url=$(echo "$result" | jq -r '.video_url')
 
 - `pixverse:prompt-enhance` -- optimize your prompt for better V6 results (opt-in, user must request)
 - `pixverse:modify-video` -- modify an existing video with a prompt at a keyframe
+- `pixverse:motion-control` -- animate a character image with motion from a reference video
 - `pixverse:task-management` -- poll and manage tasks after using `--no-wait`
 - `pixverse:asset-management` -- download, list, and delete completed videos
 - `pixverse:post-process-video` -- extend, upscale, or add audio to existing videos

@@ -4,7 +4,7 @@ description: Full video production pipeline — create, extend, add audio, upsca
 ---
 
 ### Pipeline
-1. Create base video (T2V or I2V)
+1. Create base video (T2V, I2V, or Motion Control)
 2. Optionally extend duration
 3. Add speech (lip sync) or sound effects
 4. Upscale to final resolution
@@ -33,9 +33,10 @@ pixverse asset download $FINAL --json
 ```
 
 ### Variations
+- **Motion control start**: Replace Step 1 with `pixverse create motion-control --image ./char.jpg --video <ref-id> --json` to animate a character with reference motion, then continue with extend/sound/upscale
 - Add speech instead of sound: `pixverse create speech --video $VID --tts-text "..." --json`
 - Skip extend if original duration is sufficient
 - Use `--audio <file>` for custom audio instead of TTS
 
 ### Related Skills
-`pixverse:create-video`, `pixverse:post-process-video`, `pixverse:task-management`, `pixverse:asset-management`
+`pixverse:create-video`, `pixverse:motion-control`, `pixverse:post-process-video`, `pixverse:task-management`, `pixverse:asset-management`
