@@ -32,17 +32,25 @@ skills/
     auth-and-account.md             #   Authentication & account management
     create-video.md                 #   Text-to-video, image-to-video, fusion
     create-and-edit-image.md        #   Text-to-image, image-to-image
+    modify-video.md                 #   AI content editing (replace subjects, swap outfits, change backgrounds)
+    motion-control.md               #   Character animation with motion reference video
     transition.md                   #   Keyframe transition animations
     post-process-video.md           #   Extend, upscale, speech, sound
+    prompt-enhance.md               #   Prompt optimization for V6 video generation
     task-management.md              #   Poll and wait for generation tasks
     asset-management.md             #   List, download, delete assets
+    template.md                     #   Browse and create from effect templates
+    workspace.md                    #   Team workspace management
     mondo-poster-design.md          #   Mondo-style poster, book cover, album art design
   workflows/                        # Multi-step pipeline skills
     text-to-video-pipeline.md       #   End-to-end text-to-video
     image-to-video-pipeline.md      #   Animate an image into video
     text-to-image-to-video.md       #   Generate image then animate it
     image-editing-pipeline.md       #   Iterative image editing
+    modify-video-pipeline.md        #   Modify video content then enhance
+    motion-control-pipeline.md      #   Character animation end-to-end
     video-production.md             #   Full production (create + extend + audio + upscale)
+    storyboard-to-video.md          #   Multi-shot storyboard → concatenated video
     batch-creation.md               #   Parallel batch generation
     mondo-poster-pipeline.md        #   End-to-end Mondo poster generation
     mondo-poster-to-video-pipeline.md #  Animate poster into cinematic video
@@ -62,7 +70,8 @@ skills/
 | Model | CLI value | Modes | Quality | Duration | Aspect Ratio |
 |:---|:---|:---|:---|:---|:---|
 | PixVerse V6 | `v6` (default) | Video, Transition (first/last frame), Extend | `360p` `540p` `720p` `1080p` | `1`-`15` (any integer) | `16:9` `4:3` `1:1` `3:4` `9:16` `3:2` `2:3` `21:9` |
-| PixVerse v5.6 | `v5.6` | Video, Transition, Reference, Extend | `360p` `540p` `720p` `1080p` | `1`-`10` (any integer) | `16:9` `4:3` `1:1` `3:4` `9:16` `3:2` `2:3` |
+| PixVerse C1 | `pixverse-c1` | Video, Transition (first/last frame), Reference | `360p` `540p` `720p` `1080p` | `1`-`15` (any integer) | `16:9` `4:3` `1:1` `3:4` `9:16` `3:2` `2:3` |
+| PixVerse v5.6 | `v5.6` | Video, Transition, Reference, Extend, Motion Control | `360p` `540p` `720p` `1080p` | `1`-`10` (any integer) | `16:9` `4:3` `1:1` `3:4` `9:16` `3:2` `2:3` |
 | Sora 2 | `sora-2` | Video | `720p` | `4` `8` `12` | `16:9` `9:16` |
 | Sora 2 Pro | `sora-2-pro` | Video | `720p` `1080p` | `4` `8` `12` | `16:9` `9:16` |
 | Veo 3.1 Standard | `veo-3.1-standard` | Video, Transition | `720p` `1080p` | `4` `6` `8` | `16:9` `9:16` |
