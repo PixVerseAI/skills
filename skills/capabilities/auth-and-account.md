@@ -393,7 +393,7 @@ pixverse config defaults reset --json
    pixverse config defaults set --mode video --model v6 --quality 1080p --json
    ```
 
-7. **Token refresh**: If any command exits with code 3, re-run `pixverse auth login --json`. The environment variable `PIXVERSE_TOKEN` overrides the stored token if set.
+7. **Token refresh**: If any command exits with code 3, re-run `pixverse auth login --json`.
 
 ---
 

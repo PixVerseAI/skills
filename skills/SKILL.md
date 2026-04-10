@@ -87,7 +87,6 @@ Details:
 - Token is valid for 30 days
 - CLI sessions are independent from your web/app sessions
 - If token expires (exit code 3), re-run `pixverse auth login --json`
-- Set `PIXVERSE_TOKEN` environment variable to override the stored token
 - Run `pixverse auth status --json` to check login state and credits
 
 ---
