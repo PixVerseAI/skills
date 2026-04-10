@@ -1,7 +1,7 @@
 ---
 name: pixverse-ai-image-and-video-generator
 description: PixVerse CLI — generate AI videos and images from the command line. Supports PixVerse V6, Veo, Sora, Grok video models; Nano Banana (Gemini), Seedream, Qwen image models; and PixVerse's rich effect template library. Start here.
-version: 1.5.0
+version: 1.6.0
 homepage: https://pixverse.ai
 source: https://github.com/PixVerseAI/skills
 ---
@@ -98,7 +98,8 @@ Details:
 |:---|:---|
 | Create a video from text or image | `pixverse:create-video` |
 | Enhance a video prompt for better results | `pixverse:prompt-enhance` |
-| Modify an existing video with a prompt | `pixverse:modify-video` |
+| Edit video content with AI (replace subjects, swap outfits, change backgrounds) | `pixverse:modify-video` |
+| Animate a character with motion from a reference video | `pixverse:motion-control` |
 | Create or edit an image | `pixverse:create-and-edit-image` |
 | Extend, upscale, or add audio to a video | `pixverse:post-process-video` |
 | Create transition animation between frames | `pixverse:transition` |
@@ -124,6 +125,7 @@ Use this to pick a model before diving into a sub-skill.
 | Model | `--model` value | Max Quality | Duration |
 |:---|:---|:---|:---|
 | PixVerse V6 *(default)* | `v6` | `1080p` | `1`–`15`s |
+| PixVerse C1 | `pixverse-c1` | `1080p` | `1`–`15`s |
 | PixVerse v5.6 | `v5.6` | `1080p` | `1`–`10`s |
 | Sora 2 | `sora-2` | `720p` | `4` `8` `12`s |
 | Sora 2 Pro | `sora-2-pro` | `1080p` | `4` `8` `12`s |
@@ -157,9 +159,11 @@ For full parameter constraints (aspect ratios, quality per model, mode support),
 | Iteratively edit an image | `pixverse:image-editing-pipeline` |
 | Modify a video and enhance it | `pixverse:modify-video-pipeline` |
 | Full video production (create + extend + audio + upscale) | `pixverse:video-production` |
+| Animate a character with a motion reference | `pixverse:motion-control-pipeline` |
 | Create multiple items in parallel | `pixverse:batch-creation` |
 | Generate a Mondo-style poster end-to-end | `pixverse:mondo-poster-pipeline` |
 | Generate poster then animate into video | `pixverse:mondo-poster-to-video-pipeline` |
+| Storyboard → 4-shot video from a single prompt | `pixverse:storyboard-to-video` |
 
 ---
 
@@ -191,6 +195,7 @@ Located in `skills/references/`. These are read-only knowledge bases that capabi
 | `create extend` | Extend video duration |
 | `create upscale` | Upscale video resolution |
 | `create reference` | Generate video with character references |
+| `create motion-control` | Generate video with character image + motion reference video |
 | `create template` | Create video or image from an effect template |
 | `template categories` | List template categories |
 | `template list` | Browse templates (with optional category filter) |

@@ -1,6 +1,6 @@
 ---
 name: pixverse:modify-video-pipeline
-description: Complete pipeline — modify an existing video with a prompt, then optionally enhance and download
+description: Complete pipeline — edit video content with AI (replace subjects, swap outfits, change scenes), then optionally add audio, upscale, and download
 ---
 
 ### Decision: Video Source

@@ -38,6 +38,29 @@ for SEED in 42 123 999 2024; do
 done
 ```
 
+### Batch Exit Codes
+
+When using `--count > 1` with default wait mode, the CLI polls all generated items and reports:
+
+| Exit Code | Meaning |
+|:---|:---|
+| 0 | All items completed successfully |
+| 5 | All items failed |
+| 6 | **Partial failure** — some items completed, some failed |
+
+On partial failure (exit code 6), the JSON output includes a `failed_ids` array:
+
+```json
+{
+  "video_ids": [111, 112, 113, 114],
+  "failed_ids": [113],
+  "trace_id": "...",
+  "status": "partial_failure"
+}
+```
+
+Handle partial failures by retrying only the failed items or downloading the successful ones.
+
 ### Credit Awareness
 Always check balance before batch creation:
 ```bash

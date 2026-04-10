@@ -1,27 +1,39 @@
 ---
 name: pixverse:modify-video
-description: Modify an existing video with a text prompt at a chosen keyframe — re-generate content while preserving the original scene context
+description: Edit video content with AI — replace subjects, swap outfits, add accessories, change backgrounds, or transform scenes using a text prompt. Use when the user wants to modify, change, alter, or edit what appears IN a video (not trim/cut/splice). Examples — "replace the cat with a dog", "change her dress to red", "add sunglasses", "swap the background to a beach".
 ---
 
 # Modify Video
 
-Re-generate or alter the content of an existing video using a text prompt. The CLI extracts a keyframe at a specified timestamp, then generates a new video based on the prompt and that keyframe.
+Edit the visual content of an existing video using a text prompt. This is **AI content modification** — replacing subjects, changing appearances, transforming scenes — not traditional video editing (trimming, cutting, splicing, or timeline operations).
+
+Examples of what this skill does:
+- Replace a subject: "change the cat to a dog"
+- Swap clothing or accessories: "put sunglasses on the character", "change his shirt to a red jacket"
+- Transform the scene: "replace the background with a snowy mountain"
+- Alter visual style: "make the scene look like a watercolor painting"
 
 ## Prerequisites
 
 - PixVerse CLI installed and authenticated (`pixverse auth login`)
 - An existing video (by ID or local file path)
-- A prompt describing the desired modification
+- A prompt describing the desired content change
 
 ## When to Use
 
 ```
-Have an existing video you want to change?
-├── Change the content/scene?     → pixverse create modify --video <id-or-path> --prompt "..." --json
-├── Make it longer?               → pixverse create extend  (see pixverse:post-process-video)
-├── Higher resolution?            → pixverse create upscale (see pixverse:post-process-video)
-└── Add audio/speech?             → pixverse create sound / speech (see pixverse:post-process-video)
+Want to change what appears IN a video?
+├── Replace/swap subjects?           → pixverse create modify (this skill)
+├── Change clothing/accessories?     → pixverse create modify (this skill)
+├── Transform background/scene?      → pixverse create modify (this skill)
+├── Alter visual style?              → pixverse create modify (this skill)
+│
+├── Make it longer?                  → pixverse create extend  (see pixverse:post-process-video)
+├── Higher resolution?               → pixverse create upscale (see pixverse:post-process-video)
+└── Add audio/speech?                → pixverse create sound / speech (see pixverse:post-process-video)
 ```
+
+> **Not for traditional editing:** This skill does not trim, cut, splice, or rearrange video clips. It uses AI to re-generate video content based on a text prompt. For timeline-based editing, use external tools (e.g., ffmpeg).
 
 ---
 
