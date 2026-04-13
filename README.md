@@ -38,7 +38,8 @@ skills/
     post-process-video.md           #   Extend, upscale, speech, sound
     prompt-enhance.md               #   Prompt optimization for V6 video generation
     task-management.md              #   Poll and wait for generation tasks
-    asset-management.md             #   List, download, delete assets
+    asset-management.md             #   List, download, upload, delete assets
+    saved-folders.md                #   Organize assets into named folders
     template.md                     #   Browse and create from effect templates
     workspace.md                    #   Team workspace management
     mondo-poster-design.md          #   Mondo-style poster, book cover, album art design
@@ -77,6 +78,12 @@ skills/
 | Veo 3.1 Standard | `veo-3.1-standard` | Video, Transition | `720p` `1080p` | `4` `6` `8` | `16:9` `9:16` |
 | Veo 3.1 Fast | `veo-3.1-fast` | Video, Transition | `720p` `1080p` | `4` `6` `8` | `16:9` `9:16` |
 | Grok Imagine | `grok-imagine` | Video | `480p` `720p` | `1`-`15` | `16:9` `4:3` `1:1` `9:16` `3:4` `3:2` `2:3` |
+| Seedance 2.0 Standard | `seedance-2.0-standard` | Video, Reference, Transition | `480p` `720p` | `4`-`15` | `16:9` `4:3` `1:1` `3:4` `9:16` `21:9` |
+| Seedance 2.0 Fast | `seedance-2.0-fast` | Video, Reference, Transition | `480p` `720p` | `4`-`15` | `16:9` `4:3` `1:1` `3:4` `9:16` `21:9` |
+| Kling O3 Pro | `kling-o3-pro` | Video, Reference, Transition | `720p` | `3`-`15` | `16:9` `9:16` `1:1` |
+| Kling O3 Standard | `kling-o3-standard` | Video, Reference, Transition | `720p` | `3`-`15` | `16:9` `9:16` `1:1` |
+| Kling 3.0 Pro | `kling-3.0-pro` | Video, Transition | `720p` | `3`-`15` | `16:9` `9:16` `1:1` |
+| Kling 3.0 Standard | `kling-3.0-standard` | Video, Transition | `720p` | `3`-`15` | `16:9` `9:16` `1:1` |
 
 ### Image Models
 
@@ -89,6 +96,8 @@ skills/
 | Gemini 2.5 Flash (aka Nanobanana) | `gemini-2.5-flash` | `1080p` | `auto` `1:1` `16:9` `9:16` `4:3` `3:4` `5:4` `4:5` `3:2` `2:3` `21:9` |
 | Gemini 3.0 (aka Nano Banana Pro) | `gemini-3.0` | `1080p` `1440p` `2160p` | `auto` `1:1` `16:9` `9:16` `4:3` `3:4` `5:4` `4:5` `3:2` `2:3` `21:9` |
 | Gemini 3.1 Flash (aka Nano Banana 2) | `gemini-3.1-flash` | `512p` `1080p` `1440p` `2160p` | `auto` `1:1` `16:9` `9:16` `4:3` `3:4` `5:4` `4:5` `3:2` `2:3` `21:9` |
+| Kling Image O3 | `kling-image-o3` | `1080p` `1440p` `2160p` | `16:9` `9:16` `1:1` `4:3` `3:4` `3:2` `2:3` `21:9` |
+| Kling Image V3 | `kling-image-v3` | `1080p` `1440p` | `16:9` `9:16` `1:1` `4:3` `3:4` `3:2` `2:3` `21:9` |
 
 ## For AI Agent Developers
 
