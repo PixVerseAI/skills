@@ -26,7 +26,7 @@ Want an image?
 | `--image <pathOrUrl>` | Single image input (enables I2I) | local file or URL |
 | `--images <paths...>` | Multiple image inputs (enables I2I) | local files or URLs |
 | `--asset-image <path>` | OSS asset path (skips upload) | -- |
-| `-m, --model <model>` | Image model | `qwen-image` (default), `seedream-5.0-lite`, `seedream-4.5`, `seedream-4.0`, `gemini-2.5-flash`, `gemini-3.0`, `gemini-3.1-flash` |
+| `-m, --model <model>` | Image model | `qwen-image` (default), `seedream-5.0-lite`, `seedream-4.5`, `seedream-4.0`, `gemini-2.5-flash`, `gemini-3.0`, `gemini-3.1-flash`, `kling-image-o3`, `kling-image-v3` |
 | `-q, --quality <q>` | Image quality | `512p`, `720p`, `1080p` (default), `1440p`, `1800p`, `2160p` (availability varies by model — see table below) |
 | `--aspect-ratio <ratio>` | Aspect ratio | `1:1` (default), `16:9`, `9:16`, `4:3`, `3:4`, `3:2`, `2:3`, `5:4`, `4:5`, `21:9`, `auto` |
 | `--count <number>` | Number of generations | `1` (default), `2`, `3`, `4` |
@@ -48,10 +48,14 @@ Each model has its own supported parameter combinations. **Always check this tab
 | Gemini 2.5 Flash (aka Nanobanana) | `gemini-2.5-flash` | `1080p` | `auto` `1:1` `16:9` `9:16` `4:3` `3:4` `5:4` `4:5` `3:2` `2:3` `21:9` |
 | Gemini 3.0 (aka Nano Banana Pro) | `gemini-3.0` | `1080p` `1440p` `2160p` | `auto` `1:1` `16:9` `9:16` `4:3` `3:4` `5:4` `4:5` `3:2` `2:3` `21:9` |
 | Gemini 3.1 Flash (aka Nano Banana 2) | `gemini-3.1-flash` | `512p` `1080p` `1440p` `2160p` | `auto` `1:1` `16:9` `9:16` `4:3` `3:4` `5:4` `4:5` `3:2` `2:3` `21:9` |
+| Kling Image O3 | `kling-image-o3` | `1080p` `1440p` `2160p` | `16:9` `9:16` `1:1` `4:3` `3:4` `3:2` `2:3` `21:9` |
+| Kling Image V3 | `kling-image-v3` | `1080p` `1440p` | `16:9` `9:16` `1:1` `4:3` `3:4` `3:2` `2:3` `21:9` |
 
 > **Recommended:** For best image quality, prefer `gemini-3.1-flash` (up to `2160p`, widest resolution range) or `seedream-5.0-lite` (up to `1800p`). The default `qwen-image` is fast but capped at `1080p`.
 
 > **Important:** Each model only accepts specific quality values. Using an unsupported quality for a model will return `invalid param` (error 400017). Always match quality to the model's supported values above.
+
+> **Kling image models:** `kling-image-o3` supports up to 10 reference images for I2I; `kling-image-v3` supports only 1 reference image. Neither supports `auto` aspect ratio or the `5:4`/`4:5` ratios.
 
 ---
 
