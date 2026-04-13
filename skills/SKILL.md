@@ -1,7 +1,7 @@
 ---
 name: pixverse-ai-image-and-video-generator
-description: PixVerse CLI — generate AI videos and images from the command line. Supports PixVerse V6, Veo, Sora, Grok video models; Nano Banana (Gemini), Seedream, Qwen image models; and PixVerse's rich effect template library. Start here.
-version: 1.6.0
+description: PixVerse CLI — generate AI videos and images from the command line. Supports PixVerse V6, Veo, Sora, Grok, Seedance, Kling video models; Nano Banana (Gemini), Seedream, Qwen, Kling image models; and PixVerse's rich effect template library. Start here.
+version: 1.7.0
 homepage: https://pixverse.ai
 source: https://github.com/PixVerseAI/skills
 ---
@@ -87,7 +87,6 @@ Details:
 - Token is valid for 30 days
 - CLI sessions are independent from your web/app sessions
 - If token expires (exit code 3), re-run `pixverse auth login --json`
-- Set `PIXVERSE_TOKEN` environment variable to override the stored token
 - Run `pixverse auth status --json` to check login state and credits
 
 ---
@@ -104,7 +103,8 @@ Details:
 | Extend, upscale, or add audio to a video | `pixverse:post-process-video` |
 | Create transition animation between frames | `pixverse:transition` |
 | Check generation progress | `pixverse:task-management` |
-| Browse, download, or delete assets | `pixverse:asset-management` |
+| Browse, download, upload, or delete assets | `pixverse:asset-management` |
+| Organize assets into named folders | `pixverse:saved-folders` |
 | Set up auth or check account | `pixverse:auth-and-account` |
 | Browse and create from effect templates | `pixverse:template` |
 | Manage workspaces (list, switch, status) | `pixverse:workspace` |
@@ -132,6 +132,12 @@ Use this to pick a model before diving into a sub-skill.
 | Veo 3.1 Standard | `veo-3.1-standard` | `1080p` | `4` `6` `8`s |
 | Veo 3.1 Fast | `veo-3.1-fast` | `1080p` | `4` `6` `8`s |
 | Grok Imagine | `grok-imagine` | `720p` | `1`–`15`s |
+| Seedance 2.0 Standard | `seedance-2.0-standard` | `720p` | `4`–`15`s |
+| Seedance 2.0 Fast | `seedance-2.0-fast` | `720p` | `4`–`15`s |
+| Kling O3 Pro | `kling-o3-pro` | `720p` | `3`–`15`s |
+| Kling O3 Standard | `kling-o3-standard` | `720p` | `3`–`15`s |
+| Kling 3.0 Pro | `kling-3.0-pro` | `720p` | `3`–`15`s |
+| Kling 3.0 Standard | `kling-3.0-standard` | `720p` | `3`–`15`s |
 
 ### Image Models (`pixverse create image --model <value>`)
 
@@ -144,6 +150,8 @@ Use this to pick a model before diving into a sub-skill.
 | Gemini 2.5 Flash (Nanobanana) | `gemini-2.5-flash` | `1080p` |
 | Gemini 3.0 (Nano Banana Pro) | `gemini-3.0` | `2160p` |
 | Gemini 3.1 Flash (Nano Banana 2) | `gemini-3.1-flash` | `2160p` |
+| Kling Image O3 | `kling-image-o3` | `2160p` |
+| Kling Image V3 | `kling-image-v3` | `1440p` |
 
 For full parameter constraints (aspect ratios, quality per model, mode support), read the capabilities files listed above.
 
@@ -203,10 +211,18 @@ Located in `skills/references/`. These are read-only knowledge bases that capabi
 | `template info` | Get template details |
 | `task status` | Check task status |
 | `task wait` | Wait for task completion |
-| `asset list` | List generated assets |
+| `asset list` | List generated assets (with `--source` and `--off-peak` filters) |
 | `asset info` | Get asset details |
 | `asset download` | Download a generated asset |
+| `asset upload` | Upload a local file or HTTPS URL to asset library |
 | `asset delete` | Delete an asset |
+| `saved list` | List saved folders |
+| `saved items` | List items in a saved folder |
+| `saved new` | Create a new saved folder |
+| `saved rename` | Rename a saved folder |
+| `saved add` | Add assets to a saved folder |
+| `saved remove` | Remove assets from a saved folder |
+| `saved delete` | Delete a saved folder |
 | `account info` | View account info and credits |
 | `account usage` | View credit usage records |
 | `workspace list` | List all workspaces |

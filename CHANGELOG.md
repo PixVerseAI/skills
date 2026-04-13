@@ -4,6 +4,59 @@ All notable changes to PixVerse Skills will be documented in this file.
 
 Format follows [Keep a Changelog](https://keepachangelog.com/).
 
+## [1.7.0] - 2026-04-13
+
+### Added
+- 6 new video models: Seedance 2.0 Standard/Fast, Kling O3 Pro/Standard, Kling 3.0 Pro/Standard — with full parameter constraints documented in create-video, transition, and master SKILL.md
+- 2 new image models: Kling Image O3, Kling Image V3 — added to create-and-edit-image with reference image limits
+- Saved folders capability (`pixverse:saved-folders`) — organize assets into named folders with list, items, new, rename, add, remove, delete commands
+- `asset upload` command in asset-management — upload local files or HTTPS URLs to the asset library
+- `--source` filter (create/upload) and `--off-peak` filter on `asset list`
+
+### Changed
+- Updated SKILL.md frontmatter description to include Seedance and Kling model families
+- Updated Model Quick Reference tables in SKILL.md with all new video and image models
+- Updated All Commands table with `asset upload` and all `saved` subcommands
+- Capabilities Overview table now includes saved-folders skill
+- Reference (fusion) mode model list expanded with Seedance 2.0 and Kling O3 models
+
+## [1.6.0] - 2026-04-10
+
+### Added
+- Motion control capability (`pixverse:motion-control`) — generate camera motion-controlled videos via `create motion-control` command (CLI v1.0.10)
+- `motion-control-pipeline` workflow skill for end-to-end motion control video production
+- Storyboard-to-video workflow (`pixverse:storyboard-to-video`) — decompose prompt into multi-shot storyboard, generate frames, run parallel I2V generations, and concatenate with ffmpeg
+- `pixverse-c1` model added to create-video, transition, and master SKILL.md model references (CLI v1.0.12)
+- Batch partial failure (exit code 6) documented in `batch-creation` workflow
+
+### Changed
+- Improved modify-video skill trigger conditions — clarified AI content modification vs traditional editing, added concrete trigger examples
+- Clarified audio and multi-shot toggle flags in create-video capability
+- Updated README with all new skills and pixverse-c1 model
+
+### Fixed
+- Removed undocumented `PIXVERSE_TOKEN` env var reference from SKILL.md and auth-and-account docs
+
+## [1.5.0] - 2026-04-03
+
+### Added
+- Prompt enhancement capability (`pixverse:prompt-enhance`) — optimize user prompts for V6 video generation with improved structure, verb precision, and multi-shot sequencing
+
+### Changed
+- All skill examples aligned with V6 as default model (commands updated from `--model v5.6` to `--model v6`)
+- Removed phantom models (Kling, Hailuo, Wan) from SKILL.md frontmatter that were never shipped
+- Config defaults examples updated to use V6
+
+## [1.4.0] - 2026-04-02
+
+### Added
+- Video modification capability (`pixverse:modify-video`) — AI-powered content modification: replace subjects, swap outfits, change backgrounds in existing videos (CLI v1.0.9)
+- `modify-video-pipeline` workflow skill for end-to-end video modification
+
+### Changed
+- `create-video` capability updated with cross-reference to modify-video
+- `post-process-video` updated with modify-video context
+
 ## [1.3.0] - 2026-04-01
 
 ### Added

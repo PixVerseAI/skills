@@ -44,7 +44,7 @@ Use transitions when you need to:
 |:---|:---|:---|
 | `--images <paths...>` | Image paths or URLs (2+ required) | -- |
 | `--prompt <text>` | Optional prompt to guide transition | -- |
-| `-m, --model <model>` | Video model | `v6` (default, first/last frame only), `pixverse-c1` (first/last frame only), `v5.6`, `v5.5`, `v5`, `v4.5`, `veo-3.1-standard`, `veo-3.1-fast` |
+| `-m, --model <model>` | Video model | `v6` (default, first/last frame only), `pixverse-c1` (first/last frame only), `v5.6`, `v5.5`, `v5`, `v4.5`, `seedance-2.0-standard`, `seedance-2.0-fast`, `veo-3.1-standard`, `veo-3.1-fast`, `kling-o3-pro`, `kling-o3-standard`, `kling-3.0-pro`, `kling-3.0-standard` |
 | `-q, --quality <q>` | Video quality | `360p`, `540p`, `720p` (default), `1080p` |
 | `-d, --duration <sec>` | Duration | `5` (default), `8`, `10` |
 | `--count <n>` | Generations | `1`-`4` |
@@ -62,8 +62,14 @@ Only specific models support Transition mode. Using other models will result in 
 | PixVerse C1 | `pixverse-c1` | `360p` `540p` `720p` `1080p` | `1`–`15` (any integer) | `16:9` `4:3` `1:1` `3:4` `9:16` `3:2` `2:3` | **First/last frame only** — no multi-frame; no `21:9` |
 | PixVerse v5.6 | `v5.6` | `360p` `540p` `720p` `1080p` | `1`–`10` (any integer) | `16:9` `4:3` `1:1` `3:4` `9:16` `3:2` `2:3` | First/last frame only (multi-frame: use `v5`) |
 | PixVerse v5.5 | `v5.5` | `360p` `540p` `720p` `1080p` | `1`–`10` (any integer) | `16:9` `4:3` `1:1` `3:4` `9:16` `3:2` `2:3` | First/last frame only (multi-frame: use `v5`) |
+| Seedance 2.0 Standard | `seedance-2.0-standard` | `480p` `720p` | `4`–`15` (any integer) | `16:9` `4:3` `1:1` `3:4` `9:16` `21:9` | External model; no off-peak |
+| Seedance 2.0 Fast | `seedance-2.0-fast` | `480p` `720p` | `4`–`15` (any integer) | `16:9` `4:3` `1:1` `3:4` `9:16` `21:9` | External model; no off-peak |
 | Veo 3.1 Standard | `veo-3.1-standard` | `720p` `1080p` | `4` `6` `8` | `16:9` `9:16` | — |
 | Veo 3.1 Fast | `veo-3.1-fast` | `720p` `1080p` | `4` `6` `8` | `16:9` `9:16` | — |
+| Kling O3 Pro | `kling-o3-pro` | `720p` | `3`–`15` (any integer) | `16:9` `9:16` `1:1` | External model; no off-peak |
+| Kling O3 Standard | `kling-o3-standard` | `720p` | `3`–`15` (any integer) | `16:9` `9:16` `1:1` | External model; no off-peak |
+| Kling 3.0 Pro | `kling-3.0-pro` | `720p` | `3`–`15` (any integer) | `16:9` `9:16` `1:1` | External model; no off-peak |
+| Kling 3.0 Standard | `kling-3.0-standard` | `720p` | `3`–`15` (any integer) | `16:9` `9:16` `1:1` | External model; no off-peak |
 
 > **V6 / C1 constraint:** V6 and `pixverse-c1` only support **first/last frame** transitions (2 images). For multi-frame transitions (3+ images), use `v5.6` or `v5`.
 >
