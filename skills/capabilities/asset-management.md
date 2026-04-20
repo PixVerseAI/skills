@@ -100,6 +100,8 @@ Upload a local file or HTTPS URL to the asset library.
 | `<input>` | Local file path or HTTPS URL (required argument) | jpg, png, webp, mp4, mov |
 | `--json` | Output as JSON | flag |
 
+> **Image auto-compression:** Local images exceeding `1920×1920` pixels or `5 MB` are auto-resized and re-encoded before upload (progressive JPEG/WebP, transparency preserved). The original file on disk is not modified. Videos are uploaded as-is. Only `https://` URLs are accepted; `http://` is rejected.
+
 JSON output:
 
 ```json
