@@ -25,7 +25,7 @@ Want to create a video?
 | `--prompt <text>` | Prompt text (required) | -- |
 | `--image <pathOrUrl>` | Image path or URL (enables I2V) | local file or URL |
 | `--asset-image <path>` | OSS asset path (skips upload) | -- |
-| `-m, --model <model>` | Video model | `v6` (default), `pixverse-c1`, `v5.6`, `v5.5`, `v5`, `v5-fast`, `sora-2`, `sora-2-pro`, `veo-3.1-standard`, `veo-3.1-fast`, `grok-imagine`, `seedance-2.0-standard`, `seedance-2.0-fast`, `kling-o3-pro`, `kling-o3-standard`, `kling-3.0-pro`, `kling-3.0-standard` |
+| `-m, --model <model>` | Video model | `v6` (default), `pixverse-c1`, `v5.6`, `v5.5`, `v5`, `v5-fast`, `sora-2`, `sora-2-pro`, `veo-3.1-standard`, `veo-3.1-fast`, `veo-3.1-lite`, `grok-imagine`, `seedance-2.0-standard`, `seedance-2.0-fast`, `kling-o3-pro`, `kling-o3-standard`, `kling-3.0-pro`, `kling-3.0-standard` |
 | `-d, --duration <sec>` | Duration in seconds | `1`–`15` (any integer, default `5`; varies by model — see Model Reference) |
 | `-q, --quality <q>` | Video quality | `360p`, `480p`, `540p`, `720p` (default), `1080p` (availability varies by model — see Model Reference) |
 | `--aspect-ratio <ratio>` | Aspect ratio | `16:9`, `4:3`, `1:1`, `3:4`, `9:16`, `3:2`, `2:3`, `21:9` |
@@ -124,7 +124,7 @@ When `--count > 1`, the submitted output includes a list of IDs:
 
 1. Same as T2V, plus provide `--image <local-path-or-url>`.
 2. Local file paths are auto-uploaded to PixVerse cloud storage (OSS) by the CLI. **Do not pass files containing sensitive, private, or confidential content.**
-3. URLs are passed directly to the API.
+3. URLs are passed directly to the API. Only `https://` URLs are accepted (`http://` is rejected for security).
 4. Alternatively, use `--asset-image <oss-path>` to skip the upload step.
 5. Run the command:
    ```bash
@@ -193,6 +193,16 @@ done
 
 ---
 
+## Input Handling
+
+How the CLI processes `--image` / `--video` inputs before submitting to the API:
+
+- **Local images** that exceed `1920×1920` pixels or `5 MB` are auto-resized and re-encoded (progressive JPEG/WebP, transparency preserved). Agents do **not** need to pre-compress images — pass them as-is. The original file on disk is not modified.
+- **Local videos** are uploaded as-is.
+- **Remote URLs** are streamed to a temp file and then uploaded. Only `https://` is accepted; `http://` URLs are rejected with a validation error (exit code 6).
+
+---
+
 ## Model Reference
 
 Each model has its own supported parameter combinations. **Always check this table before selecting flags.**
@@ -206,8 +216,9 @@ Each model has its own supported parameter combinations. **Always check this tab
 | Sora 2 Pro | `sora-2-pro` | Video | `720p` `1080p` | `4` `8` `12` | `16:9` `9:16` |
 | Veo 3.1 Standard | `veo-3.1-standard` | Video, Transition | `720p` `1080p` | `4` `6` `8` | `16:9` `9:16` |
 | Veo 3.1 Fast | `veo-3.1-fast` | Video, Transition | `720p` `1080p` | `4` `6` `8` | `16:9` `9:16` |
+| Veo 3.1 Lite | `veo-3.1-lite` | Video | `720p` `1080p` | `4` `5` `6` | `16:9` `9:16` |
 | Grok Imagine | `grok-imagine` | Video | `480p` `720p` | `1`–`15` (any integer) | `16:9` `4:3` `1:1` `9:16` `3:4` `3:2` `2:3` |
-| Seedance 2.0 Standard | `seedance-2.0-standard` | Video, Reference, Transition | `480p` `720p` | `4`–`15` (any integer) | `16:9` `4:3` `1:1` `3:4` `9:16` `21:9` |
+| Seedance 2.0 Standard | `seedance-2.0-standard` | Video, Reference, Transition | `480p` `720p` `1080p` | `4`–`15` (any integer) | `16:9` `4:3` `1:1` `3:4` `9:16` `21:9` |
 | Seedance 2.0 Fast | `seedance-2.0-fast` | Video, Reference, Transition | `480p` `720p` | `4`–`15` (any integer) | `16:9` `4:3` `1:1` `3:4` `9:16` `21:9` |
 | Kling O3 Pro | `kling-o3-pro` | Video, Reference, Transition | `720p` | `3`–`15` (any integer) | `16:9` `9:16` `1:1` |
 | Kling O3 Standard | `kling-o3-standard` | Video, Reference, Transition | `720p` | `3`–`15` (any integer) | `16:9` `9:16` `1:1` |
@@ -224,8 +235,10 @@ Each model has its own supported parameter combinations. **Always check this tab
 - **Sora 2**: Fixed at `720p`; only `16:9` / `9:16`.
 - **Sora 2 Pro**: Adds `1080p` over Sora 2; same aspect ratio limits.
 - **Veo 3.1 (Standard & Fast)**: `1080p` only supports `8s` duration; `720p` supports `4` / `6` / `8`. These are the only third-party models that support `Transition` mode.
+- **Veo 3.1 Lite**: Cheaper Veo tier; supports `720p` / `1080p` and durations `4` / `5` / `6`; only `16:9` and `9:16`. Video mode only (no Transition).
 - **Grok Imagine**: Supports `480p` and `720p`; duration is any integer from `1` to `15`; widest aspect ratio selection among third-party models but no `21:9`.
-- **Seedance 2.0 (Standard & Fast)**: External models; `480p` / `720p` only; duration starts at `4s` (minimum); supports `21:9`; available in Video, Reference, and Transition modes. No off-peak pricing.
+- **Seedance 2.0 Standard**: External model; supports `480p` / `720p` / `1080p`; duration starts at `4s` (minimum); supports `21:9`; available in Video, Reference, and Transition modes. No off-peak pricing.
+- **Seedance 2.0 Fast**: External model; `480p` / `720p` only; duration starts at `4s` (minimum); supports `21:9`; available in Video, Reference, and Transition modes. No off-peak pricing.
 - **Kling O3 (Pro & Standard)**: External models; `720p` only; duration starts at `3s` (minimum); limited aspect ratios (`16:9` `9:16` `1:1`). Available in Video, Reference, and Transition modes. No off-peak pricing.
 - **Kling 3.0 (Pro & Standard)**: External models; `720p` only; duration starts at `3s` (minimum); same aspect ratios as Kling O3. Available in Video and Transition modes only (no Reference). No off-peak pricing.
 

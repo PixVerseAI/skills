@@ -52,6 +52,8 @@ Motion control currently supports **v5.6 only**. Other models will fail with a v
 
 The CLI validates the character image before submission. The image must be a **clear half-body or full-body image of a character**. Cropped faces, group photos, or abstract images will be rejected with a validation error.
 
+Images exceeding `1920×1920` pixels or `5 MB` are auto-resized and re-encoded before upload — pass the source file as-is, no pre-compression needed. Remote URLs (`--image https://...`) must use `https://`.
+
 ---
 
 ## How It Works

@@ -1,7 +1,7 @@
 ---
 name: pixverse-ai-image-and-video-generator
 description: PixVerse CLI — generate AI videos and images from the command line. Supports PixVerse V6, Veo, Sora, Grok, Seedance, Kling video models; Nano Banana (Gemini), Seedream, Qwen, Kling image models; and PixVerse's rich effect template library. Start here.
-version: 1.7.0
+version: 1.7.1
 homepage: https://pixverse.ai
 source: https://github.com/PixVerseAI/skills
 ---
@@ -131,8 +131,9 @@ Use this to pick a model before diving into a sub-skill.
 | Sora 2 Pro | `sora-2-pro` | `1080p` | `4` `8` `12`s |
 | Veo 3.1 Standard | `veo-3.1-standard` | `1080p` | `4` `6` `8`s |
 | Veo 3.1 Fast | `veo-3.1-fast` | `1080p` | `4` `6` `8`s |
+| Veo 3.1 Lite | `veo-3.1-lite` | `1080p` | `4`–`6`s |
 | Grok Imagine | `grok-imagine` | `720p` | `1`–`15`s |
-| Seedance 2.0 Standard | `seedance-2.0-standard` | `720p` | `4`–`15`s |
+| Seedance 2.0 Standard | `seedance-2.0-standard` | `1080p` | `4`–`15`s |
 | Seedance 2.0 Fast | `seedance-2.0-fast` | `720p` | `4`–`15`s |
 | Kling O3 Pro | `kling-o3-pro` | `720p` | `3`–`15`s |
 | Kling O3 Standard | `kling-o3-standard` | `720p` | `3`–`15`s |

@@ -17,6 +17,10 @@ OAuth device flow — the CLI prints an authorization URL, the user opens it in 
 pixverse auth login --json
 ```
 
+**Browser auto-open behavior:**
+- In **interactive mode** (no `--json` / `-p`), the CLI tries to open the authorization URL in the system default browser (`open` on macOS, `xdg-open` on Linux, `Start-Process` on Windows). Failure to open is non-fatal — the URL is still printed.
+- In **JSON / pipe mode** (`--json` or `-p`), the CLI does **not** auto-open a browser, so automation environments stay side-effect-free. Agents must read `verification_uri_complete` (or the printed URL) from the output and route the user to it themselves.
+
 JSON output on success:
 ```json
 {

@@ -4,6 +4,17 @@ All notable changes to PixVerse Skills will be documented in this file.
 
 Format follows [Keep a Changelog](https://keepachangelog.com/).
 
+## [1.7.1] - 2026-04-20
+
+### Added
+- `veo-3.1-lite` video model (CLI v1.1.1) — added to SKILL.md Model Quick Reference and create-video Model Reference (720p / 1080p, durations 4 / 5 / 6, `16:9` and `9:16` only, Video mode only)
+- `seedance-2.0-standard` now supports `1080p` quality (CLI v1.1.2) — updated quality column in SKILL.md and create-video Model Reference
+
+### Changed
+- create-video, asset-management, motion-control: documented new auto-compression behavior (CLI v1.1.3) — local images exceeding `1920×1920` or `5 MB` are auto-resized and re-encoded before upload; agents no longer need to pre-compress
+- create-video, asset-management: clarified that remote inputs accept only `https://` URLs (`http://` is rejected)
+- auth-and-account: documented browser auto-open behavior — interactive mode opens the authorization URL in the system default browser; `--json` / `-p` modes suppress browser opening to keep automation side-effect-free
+
 ## [1.7.0] - 2026-04-13
 
 ### Added
