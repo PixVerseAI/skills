@@ -4,6 +4,22 @@ All notable changes to PixVerse Skills will be documented in this file.
 
 Format follows [Keep a Changelog](https://keepachangelog.com/).
 
+## [1.7.2] - 2026-04-24
+
+### Added
+- `gpt-image-2.0` image model (CLI v1.1.4) — added to SKILL.md Model Quick Reference (max `2160p`) and create-and-edit-image Model Reference with per-quality aspect ratio map (`1080p`: `1:1` `3:2` `2:3` · `1440p`: `1:1` `16:9` `9:16` · `2160p`: `16:9` `9:16`), max `--count 9`, plus a dedicated example.
+- `--detail-level` flag on `create image` (CLI v1.1.4) — values `low` (default) / `medium` / `high`; only valid with `--model gpt-image-2.0`. Passing it with any other model or an invalid value fails with exit code 6 (validation).
+- SKILL.md Output Contract: new **Universal JSON fields** section documenting that `trace_id` is auto-injected on every `--json` object payload (success on stdout, errors on stderr) from the backend `Ai-Trace-Id` header, and that error payloads additionally carry `code` (backend `ApiError` code) and `error` (message).
+- SKILL.md Output Contract and create-and-edit-image: documented the new `cost_credits` field on `create …` success payloads — present **only when the API returns a positive integer** (absent for `0` / `null` / missing); in text mode it surfaces as `Cost: N credits` after `Submitted!`.
+- auth-and-account: new step 8 documenting the `PIXVERSE_ACCESS_KEY` server-to-server access key env var, including auth priority order (explicit `Token` header → stored token → `PIXVERSE_ACCESS_KEY`).
+
+### Changed
+- SKILL.md Output Contract clarifies that in `--json` mode, `pixverse task …` and `pixverse template …` error payloads now correctly route to **stderr** (CLI v1.1.4 fix), preserving the stdout-is-success contract for all commands.
+- SKILL.md frontmatter description now mentions GPT Image family alongside Nano Banana / Seedream / Qwen / Kling.
+
+### Fixed
+- auth-and-account: removed stale reference to `PIXVERSE_TOKEN` env var — current CLI versions ignore it; use `PIXVERSE_ACCESS_KEY` instead.
+
 ## [1.7.1] - 2026-04-20
 
 ### Added

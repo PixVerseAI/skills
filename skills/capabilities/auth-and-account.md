@@ -397,7 +397,13 @@ pixverse config defaults reset --json
    pixverse config defaults set --mode video --model v6 --quality 1080p --json
    ```
 
-7. **Token refresh**: If any command exits with code 3, re-run `pixverse auth login --json`. The environment variable `PIXVERSE_TOKEN` overrides the stored token if set.
+7. **Token refresh**: If any command exits with code 3, re-run `pixverse auth login --json`.
+
+8. **Server-to-server access key** (optional, for automation without interactive login):
+   - Set `PIXVERSE_ACCESS_KEY=<your-access-key>` in the environment.
+   - The CLI sends it as the `Access-Key` header when no user token is available.
+   - **Auth priority** (first match wins): explicit `Token` header → stored token (from `pixverse auth login`) → `PIXVERSE_ACCESS_KEY` env var.
+   - `PIXVERSE_TOKEN` is **not** a supported env var and is ignored by current CLI versions.
 
 ---
 
