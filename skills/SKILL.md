@@ -1,7 +1,7 @@
 ---
 name: pixverse-ai-image-and-video-generator
-description: PixVerse CLI — generate AI videos and images from the command line. Supports PixVerse V6, Veo, Sora, Grok, Seedance, Kling video models; Nano Banana (Gemini), Seedream, Qwen, Kling image models; and PixVerse's rich effect template library. Start here.
-version: 1.7.1
+description: PixVerse CLI — generate AI videos and images from the command line. Supports PixVerse V6, Veo, Sora, Grok, Seedance, Kling video models; Nano Banana (Gemini), Seedream, Qwen, Kling, GPT Image image models; and PixVerse's rich effect template library. Start here.
+version: 1.7.2
 homepage: https://pixverse.ai
 source: https://github.com/PixVerseAI/skills
 ---
@@ -145,6 +145,7 @@ Use this to pick a model before diving into a sub-skill.
 | Model | `--model` value | Max Quality |
 |:---|:---|:---|
 | Qwen Image *(default)* | `qwen-image` | `1080p` |
+| GPT Image 2 | `gpt-image-2.0` | `2160p` |
 | Seedream 5.0 Lite | `seedream-5.0-lite` | `1800p` |
 | Seedream 4.5 | `seedream-4.5` | `2160p` |
 | Seedream 4.0 | `seedream-4.0` | `2160p` |
@@ -260,8 +261,21 @@ Every command supports `--json`. All examples in skills use `--json` for machine
 ### JSON mode (`--json`)
 
 - **stdout**: Pure JSON only. No spinners, no progress text, no decorative output.
-- **stderr**: All errors, warnings, and diagnostic messages.
+- **stderr**: All errors, warnings, and diagnostic messages — including error payloads in `--json` mode (as of CLI v1.1.4: `pixverse task …` and `pixverse template …` errors are also routed to stderr, preserving the stdout-is-success contract).
 - Parse stdout with `jq` or any JSON parser.
+
+### Universal JSON fields
+
+All `--json` object payloads (both success on stdout and errors on stderr) automatically include:
+
+| Field | When present | Meaning |
+|:---|:---|:---|
+| `trace_id` | Whenever the command made an HTTP request and the API returned an `Ai-Trace-Id` header | Upstream request id — include this when reporting bugs. Array / primitive payloads are not augmented. |
+| `code` | Error payloads from API failures | Backend error code (from `ApiError`). Pair with `trace_id` for support. |
+| `error` | Error payloads | Human-readable error message. |
+| `cost_credits` | `create …` success payloads, only when backend returns a **positive** integer | Credits charged for this creation request. Absent when the API returns `0`, `null`, or omits the field. |
+
+In interactive (non-JSON) text mode, `cost_credits` surfaces as `Cost: N credits` after `Submitted!`.
 
 ### Exit Codes
 

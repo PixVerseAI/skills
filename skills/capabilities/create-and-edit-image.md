@@ -26,9 +26,10 @@ Want an image?
 | `--image <pathOrUrl>` | Single image input (enables I2I) | local file or URL |
 | `--images <paths...>` | Multiple image inputs (enables I2I) | local files or URLs |
 | `--asset-image <path>` | OSS asset path (skips upload) | -- |
-| `-m, --model <model>` | Image model | `qwen-image` (default), `seedream-5.0-lite`, `seedream-4.5`, `seedream-4.0`, `gemini-2.5-flash`, `gemini-3.0`, `gemini-3.1-flash`, `kling-image-o3`, `kling-image-v3` |
+| `-m, --model <model>` | Image model | `qwen-image` (default), `gpt-image-2.0`, `seedream-5.0-lite`, `seedream-4.5`, `seedream-4.0`, `gemini-2.5-flash`, `gemini-3.0`, `gemini-3.1-flash`, `kling-image-o3`, `kling-image-v3` |
 | `-q, --quality <q>` | Image quality | `512p`, `720p`, `1080p` (default), `1440p`, `1800p`, `2160p` (availability varies by model — see table below) |
 | `--aspect-ratio <ratio>` | Aspect ratio | `1:1` (default), `16:9`, `9:16`, `4:3`, `3:4`, `3:2`, `2:3`, `5:4`, `4:5`, `21:9`, `auto` |
+| `--detail-level <level>` | **`gpt-image-2.0` only** — rendering detail | `low` (default), `medium`, `high`. Passing this with any other model fails with exit code 6 (validation). |
 | `--count <number>` | Number of generations | `1` (default), `2`, `3`, `4` |
 | `--seed <number>` | Random seed | any integer |
 | `--no-wait` | Return immediately without polling | flag |
@@ -42,6 +43,7 @@ Each model has its own supported parameter combinations. **Always check this tab
 | Model | `--model` value | Resolution | Aspect Ratio |
 |:---|:---|:---|:---|
 | Qwen Image | `qwen-image` (default) | `720p` `1080p` | `1:1` `16:9` `9:16` `4:3` `3:4` `5:4` `4:5` `3:2` `2:3` `21:9` |
+| GPT Image 2 | `gpt-image-2.0` | `1080p` `1440p` `2160p` | **Depends on quality** — `1080p`: `1:1` `3:2` `2:3` · `1440p`: `1:1` `16:9` `9:16` · `2160p`: `16:9` `9:16`. Also requires `--detail-level`. Max `--count`: 9. |
 | Seedream 5.0 Lite | `seedream-5.0-lite` | `1440p` `1800p` | `auto` `1:1` `16:9` `9:16` `4:3` `3:4` `5:4` `4:5` `3:2` `2:3` `21:9` |
 | Seedream 4.5 | `seedream-4.5` | `1440p` `2160p` | `auto` `1:1` `16:9` `9:16` `4:3` `3:4` `5:4` `4:5` `3:2` `2:3` `21:9` |
 | Seedream 4.0 | `seedream-4.0` | `1080p` `1440p` `2160p` | `auto` `1:1` `16:9` `9:16` `4:3` `3:4` `5:4` `4:5` `3:2` `2:3` `21:9` |
@@ -57,6 +59,8 @@ Each model has its own supported parameter combinations. **Always check this tab
 
 > **Kling image models:** `kling-image-o3` supports up to 10 reference images for I2I; `kling-image-v3` supports only 1 reference image. Neither supports `auto` aspect ratio or the `5:4`/`4:5` ratios.
 
+> **GPT Image 2 (`gpt-image-2.0`):** Requires the `--detail-level` flag (`low` / `medium` / `high`). Aspect ratios allowed depend on the chosen `--quality` (see row above) — picking an unsupported combo is adjusted to the first valid ratio for that quality and a warning goes to stderr. Supports up to `--count 9`.
+
 ---
 
 ## JSON Output
@@ -67,7 +71,8 @@ Each model has its own supported parameter combinations. **Always check this tab
 {
   "image_id": 789012,
   "trace_id": "def-456",
-  "status": "submitted"
+  "status": "submitted",
+  "cost_credits": 20
 }
 ```
 
@@ -77,9 +82,12 @@ When `--count > 1`:
 {
   "image_ids": [789012, 789013, 789014, 789015],
   "trace_id": "def-456",
-  "status": "submitted"
+  "status": "submitted",
+  "cost_credits": 80
 }
 ```
+
+> `cost_credits` is present **only when the API returns a positive integer**; omit-handling code should treat it as optional. `trace_id` is auto-injected on every `--json` object payload (success on stdout, errors on stderr). See master `SKILL.md → Output Contract → Universal JSON fields`.
 
 ### Completed
 
@@ -180,6 +188,18 @@ pixverse create image \
 
 ```bash
 pixverse create image --prompt "A cyberpunk cityscape" --count 4 --json
+```
+
+### GPT Image 2 (requires `--detail-level`)
+
+```bash
+pixverse create image \
+  --prompt "A cinematic portrait with dramatic lighting" \
+  --model gpt-image-2.0 \
+  --quality 1440p \
+  --aspect-ratio 16:9 \
+  --detail-level high \
+  --json
 ```
 
 ### Parse output and use in pipeline
