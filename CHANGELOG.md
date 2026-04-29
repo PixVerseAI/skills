@@ -4,6 +4,16 @@ All notable changes to PixVerse Skills will be documented in this file.
 
 Format follows [Keep a Changelog](https://keepachangelog.com/).
 
+## [1.7.3] - 2026-04-29
+
+### Added
+- `happyhorse-1.0` video model (CLI v1.1.5) — added to SKILL.md Model Quick Reference (max `1080p`, `3`–`15`s), create-video Model Reference table and constraints (Video mode only; aspect ratios `16:9` `9:16` `1:1` `4:3` `3:4`), and README video models table.
+- `grok-imagine` Extend and Reference modes (CLI v1.1.6) — updated in create-video Model Reference table, constraints note, and README; also added `grok-imagine` to `create extend --model` options in post-process-video.
+- `pixverse:character-design` skill — generates a three-view character sheet (front/side/back + head detail) and persists it locally for reuse across image/video generations; registered in SKILL.md skill directory table.
+
+### Changed
+- SKILL.md frontmatter description now mentions Happy Horse alongside other video model families.
+
 ## [1.7.2] - 2026-04-24
 
 ### Added
