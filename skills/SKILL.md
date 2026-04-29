@@ -1,7 +1,7 @@
 ---
 name: pixverse-ai-image-and-video-generator
-description: PixVerse CLI — generate AI videos and images from the command line. Supports PixVerse V6, Veo, Sora, Grok, Seedance, Kling video models; Nano Banana (Gemini), Seedream, Qwen, Kling, GPT Image image models; and PixVerse's rich effect template library. Start here.
-version: 1.7.2
+description: PixVerse CLI — generate AI videos and images from the command line. Supports PixVerse V6, Veo, Sora, Grok, Seedance, Kling, Happy Horse video models; Nano Banana (Gemini), Seedream, Qwen, Kling, GPT Image image models; and PixVerse's rich effect template library. Start here.
+version: 1.7.3
 homepage: https://pixverse.ai
 source: https://github.com/PixVerseAI/skills
 ---
@@ -109,6 +109,7 @@ Details:
 | Browse and create from effect templates | `pixverse:template` |
 | Manage workspaces (list, switch, status) | `pixverse:workspace` |
 | Generate Mondo-style posters and covers | `pixverse:mondo-poster-design` |
+| Design and reuse persistent characters across a story | `pixverse:character-design` |
 
 > **Looking up models or parameters?** Don't wait until you're generating — read the relevant capabilities file directly:
 > - Video models & constraints → `skills/capabilities/create-video.md` (Model Reference section)
@@ -133,6 +134,7 @@ Use this to pick a model before diving into a sub-skill.
 | Veo 3.1 Fast | `veo-3.1-fast` | `1080p` | `4` `6` `8`s |
 | Veo 3.1 Lite | `veo-3.1-lite` | `1080p` | `4`–`6`s |
 | Grok Imagine | `grok-imagine` | `720p` | `1`–`15`s |
+| Happy Horse 1.0 | `happyhorse-1.0` | `1080p` | `3`–`15`s |
 | Seedance 2.0 Standard | `seedance-2.0-standard` | `1080p` | `4`–`15`s |
 | Seedance 2.0 Fast | `seedance-2.0-fast` | `720p` | `4`–`15`s |
 | Kling O3 Pro | `kling-o3-pro` | `720p` | `3`–`15`s |
