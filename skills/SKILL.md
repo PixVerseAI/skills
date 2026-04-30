@@ -110,6 +110,7 @@ Details:
 | Manage workspaces (list, switch, status) | `pixverse:workspace` |
 | Generate Mondo-style posters and covers | `pixverse:mondo-poster-design` |
 | Design and reuse persistent characters across a story | `pixverse:character-design` |
+| Design and reuse persistent key items / props / objects | `pixverse:item-design` |
 
 > **Looking up models or parameters?** Don't wait until you're generating — read the relevant capabilities file directly:
 > - Video models & constraints → `skills/capabilities/create-video.md` (Model Reference section)
