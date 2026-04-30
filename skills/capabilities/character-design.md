@@ -168,8 +168,12 @@ Wrapped in the fixed layout instruction:
 Three-view character sheet layout: front full-body view, side full-body view,
 and back full-body view aligned in a row; enlarged head-and-face detail on
 the far left; clothing details and accessories showcase strip displayed below
-the character views. Neutral light-gray studio background. Overall composition
-is neat, balanced, symmetrical, and professional.
+the character views. Pure solid white (#FFFFFF) background filling the entire
+canvas — no gradient, no texture, no colored tint, no studio backdrop curve.
+The white background must extend edge-to-edge behind every panel and through
+all gutters between views; only the soft drop shadow directly under the
+character's feet is allowed on the background. Overall composition is neat,
+balanced, symmetrical, and professional.
 ```
 
 ---
