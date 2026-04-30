@@ -4,6 +4,17 @@ All notable changes to PixVerse Skills will be documented in this file.
 
 Format follows [Keep a Changelog](https://keepachangelog.com/).
 
+## [1.8.0] - 2026-04-30
+
+### Added
+- **`pixverse:item-design` skill** — sister skill to `pixverse:character-design` for creating and reusing persistent key items, props, and objects across stories. Cloud-first (PixVerse `image_id` as source of truth), FS + session persistence modes, v2 registry schema, hybrid field collection (`category`, `material`, `color_palette`, `size_scale`, `era_style`, `distinctive_features`, `condition`, `style_tags`), model fallback chain (`gpt-image-2.0` → `gemini-3.1-flash` → `gemini-3.0` → `seedream-5.0-lite`). Generates a 1:1 four-panel orthographic grid (front / left / top-down / right) with a pure-white #FFFFFF background. Includes panel-sizing guidance for tall items (sword, staff, rifle), long-horizontal items (motorcycle, car, boat), flat items (book, plate, phone), and cubic / spherical items. Documents the canonical "compose with character" pattern (`pixverse create image --images <character_id> <item_id> ...`).
+- README capabilities/skills tree gains `character-design.md` and `item-design.md` under `capabilities/`.
+- README image models table now lists **GPT Image 2** (`gpt-image-2.0`, `1080p` / `1440p` / `2160p`, per-quality aspect-ratio map). The model was added to the CLI in v1.1.4 and to SKILL.md in v1.7.2 but the README table was never synced — fixed here.
+- README video models table now lists **Veo 3.1 Lite** (`veo-3.1-lite`, `720p` / `1080p`, durations `4` `5` `6`, `16:9` / `9:16`). The model was added in v1.7.0 but the README table was never synced — fixed here.
+
+### Changed
+- **`pixverse:character-design`** — prompt-template layout instruction now requires a **pure solid white (#FFFFFF) background filling the entire canvas** (no gradient, no texture, no colored tint, no studio backdrop curve). Replaces the previous "neutral light-gray studio background" wording. The same requirement is codified in `pixverse:item-design`, so a future reader can spot the contract identically in either file. Only the soft drop shadow directly under the character's feet (or under each item view) is allowed on the background.
+
 ## [1.7.3] - 2026-04-29
 
 ### Added

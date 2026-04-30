@@ -43,6 +43,8 @@ skills/
     template.md                     #   Browse and create from effect templates
     workspace.md                    #   Team workspace management
     mondo-poster-design.md          #   Mondo-style poster, book cover, album art design
+    character-design.md             #   Persistent characters — three-view sheet + cloud asset id reuse
+    item-design.md                  #   Persistent items / props — four-panel orthographic sheet + cloud asset id reuse
   workflows/                        # Multi-step pipeline skills
     text-to-video-pipeline.md       #   End-to-end text-to-video
     image-to-video-pipeline.md      #   Animate an image into video
@@ -77,6 +79,7 @@ skills/
 | Sora 2 Pro | `sora-2-pro` | Video | `720p` `1080p` | `4` `8` `12` | `16:9` `9:16` |
 | Veo 3.1 Standard | `veo-3.1-standard` | Video, Transition | `720p` `1080p` | `4` `6` `8` | `16:9` `9:16` |
 | Veo 3.1 Fast | `veo-3.1-fast` | Video, Transition | `720p` `1080p` | `4` `6` `8` | `16:9` `9:16` |
+| Veo 3.1 Lite | `veo-3.1-lite` | Video | `720p` `1080p` | `4` `5` `6` | `16:9` `9:16` |
 | Grok Imagine | `grok-imagine` | Video, Extend, Reference | `480p` `720p` | `1`-`15` | `16:9` `4:3` `1:1` `9:16` `3:4` `3:2` `2:3` |
 | Happy Horse 1.0 | `happyhorse-1.0` | Video | `720p` `1080p` | `3`-`15` | `16:9` `9:16` `1:1` `4:3` `3:4` |
 | Seedance 2.0 Standard | `seedance-2.0-standard` | Video, Reference, Transition | `480p` `720p` | `4`-`15` | `16:9` `4:3` `1:1` `3:4` `9:16` `21:9` |
@@ -91,6 +94,7 @@ skills/
 | Model | CLI value | Resolution | Aspect Ratio |
 |:---|:---|:---|:---|
 | Qwen Image | `qwen-image` | `720p` `1080p` | `1:1` `16:9` `9:16` `4:3` `3:4` `5:4` `4:5` `3:2` `2:3` `21:9` |
+| GPT Image 2 | `gpt-image-2.0` | `1080p` `1440p` `2160p` | Depends on quality — `1080p`: `1:1` `3:2` `2:3` · `1440p`: `1:1` `16:9` `9:16` · `2160p`: `16:9` `9:16`. Requires `--detail-level`. |
 | Seedream 5.0 Lite | `seedream-5.0-lite` | `1440p` `1800p` | `auto` `1:1` `16:9` `9:16` `4:3` `3:4` `5:4` `4:5` `3:2` `2:3` `21:9` |
 | Seedream 4.5 | `seedream-4.5` | `1440p` `2160p` | `auto` `1:1` `16:9` `9:16` `4:3` `3:4` `5:4` `4:5` `3:2` `2:3` `21:9` |
 | Seedream 4.0 | `seedream-4.0` | `1080p` `1440p` `2160p` | `auto` `1:1` `16:9` `9:16` `4:3` `3:4` `5:4` `4:5` `3:2` `2:3` `21:9` |
