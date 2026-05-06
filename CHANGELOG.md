@@ -4,6 +4,16 @@ All notable changes to PixVerse Skills will be documented in this file.
 
 Format follows [Keep a Changelog](https://keepachangelog.com/).
 
+## [1.8.1] - 2026-05-06
+
+### Added
+- **`pixverse:seedance-prompt-optimize` skill** — Seedance 2.0-specific prompt optimizer for `seedance-2.0-standard` and `seedance-2.0-fast`. Model-gated with smart auto-detection: runs an 8-flag triage on every Seedance prompt and only invokes when meaningful headroom exists (missing core elements; raw paths, URLs, or `video_id` numbers in body; ambiguous multi-asset roles; camera-move conflicts; vague verbs; tokenizer-disambiguation violations; hollow filler dominance; multi-character action without position lock). Skips silently when the prompt is already clean. Produces a three-section structured rewrite (Setup → Time-Sliced Shot Script → Edit Instructions → Quality/Style/Constraint pad), grounded in the eight core elements from Volcengine's Seedance 2.0 prompt guide. Codifies canonical principles: Positional Reference Binding, Tokenizer Disambiguation, Single-Camera-Move-Per-Slice, Verb Precision Over Adjective Stacking, First-Last-Frame Anchoring, Common-Glyph Rule. For non-Seedance models, the existing `pixverse:prompt-enhance` continues to apply.
+- Master `SKILL.md` capabilities table updated to register the new skill alongside `pixverse:prompt-enhance`, with the auto-trigger / skip behavior surfaced inline.
+
+### Notes
+- PixVerse's Seedance 2.0 integration does **not** accept audio as an input reference — the skill explicitly drops audio assets and avoids audio-output cues in the optimized prompt body, to stay aligned with the current pipeline surface.
+- Asset references in optimized prompts bind to **positional `@imageN` / `@videoN` labels matching the CLI flag order** (`--images <p1> <p2> ...`, source video order, or `video_id`), instead of any fabricated opaque ID format.
+
 ## [1.8.0] - 2026-04-30
 
 ### Added
