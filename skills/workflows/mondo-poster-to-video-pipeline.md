@@ -7,9 +7,8 @@ description: Generate a Mondo-style poster then animate it into a cinematic reve
 1. Generate poster image (Mondo prompt + `pixverse create image`)
 2. Get `image_url` from result
 3. Create animated video from poster (`pixverse create video --image`)
-4. Optionally add ambient sound (`pixverse create sound`)
-5. Optionally upscale video (`pixverse create upscale`)
-6. Download both poster and video
+4. Optionally upscale video (`pixverse create upscale`)
+5. Download both poster and video
 
 ### Animation Prompt Templates for Posters
 
@@ -52,24 +51,17 @@ VID_RESULT=$(pixverse create video \
   --json)
 
 VIDEO_ID=$(echo "$VID_RESULT" | jq -r '.video_id')
+pixverse task wait $VIDEO_ID --json
 
-# Step 4: Add ambient sound
-SOUND_RESULT=$(pixverse create sound \
-  --video $VIDEO_ID \
-  --prompt "Ambient sci-fi atmosphere, gentle electronic hum, distant city sounds" \
-  --json)
-
-SOUND_VIDEO_ID=$(echo "$SOUND_RESULT" | jq -r '.video_id')
-
-# Step 5: Upscale to 1080p
+# Step 4: Upscale to 1080p
 UPSCALE_RESULT=$(pixverse create upscale \
-  --video $SOUND_VIDEO_ID \
+  --video $VIDEO_ID \
   --quality 1080p \
   --json)
 
 FINAL_VIDEO_ID=$(echo "$UPSCALE_RESULT" | jq -r '.video_id')
 
-# Step 6: Download final video
+# Step 5: Download final video
 pixverse asset download $FINAL_VIDEO_ID --json
 ```
 

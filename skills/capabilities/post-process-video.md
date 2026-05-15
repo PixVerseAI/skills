@@ -1,18 +1,17 @@
 ---
 name: pixverse:post-process-video
-description: Enhance existing videos — extend duration, upscale resolution, add speech (lip sync), or add sound effects
+description: Enhance existing videos — extend duration, upscale resolution, or add speech (lip sync)
 ---
 
 # Post-Process Video
 
-Enhance existing PixVerse videos with additional capabilities: extend duration, upscale resolution, add speech/lip sync, or add sound effects.
+Enhance existing PixVerse videos with additional capabilities: extend duration, upscale resolution, or add speech/lip sync.
 
 ## Prerequisites
 
 - PixVerse CLI installed and authenticated (`pixverse auth login`)
 - An existing video (by ID or local file path)
 - For speech: an audio file or TTS text
-- For sound: a prompt describing the desired sound effect
 
 ## When to Use
 
@@ -22,16 +21,15 @@ Have an existing video?
 │                           (see pixverse:modify-video)
 ├── Make it longer? → pixverse create extend --video <id-or-path> --json
 ├── Higher resolution? → pixverse create upscale --video <id-or-path> --json
-├── Add voice/speech?
-│   ├── From audio file? → pixverse create speech --video <id> --audio <path> --json
-│   └── From text (TTS)? → pixverse create speech --video <id> --tts-text "..." --tts-speaker <id> --json
-└── Add sound effects? → pixverse create sound --video <id> --prompt "..." --json
+└── Add voice/speech?
+    ├── From audio file? → pixverse create speech --video <id> --audio <path> --json
+    └── From text (TTS)? → pixverse create speech --video <id> --tts-text "..." --tts-speaker <id> --json
 ```
 
 ## Steps
 
 1. Identify the source video (ID from a previous generation, or a local file path).
-2. Choose the post-processing operation (extend, upscale, speech, or sound).
+2. Choose the post-processing operation (extend, upscale, or speech).
 3. Run the appropriate `pixverse create` subcommand with `--json`.
 4. Parse the JSON output to get the `video_id`.
 5. If using `--no-wait`, poll with `pixverse task wait <video_id> --json`.
@@ -47,7 +45,7 @@ Extend a video's duration.
 |:---|:---|:---|
 | `--video <id-or-path>` | Video ID or local file (required) | -- |
 | `--prompt <text>` | Prompt for extension | optional |
-| `-m, --model <model>` | Video model | `v6` (default), `v5.5`, `v5`, `grok-imagine` |
+| `-m, --model <model>` | Video model | `v6` (default), `grok-imagine` |
 | `-q, --quality <q>` | Video quality | `360p`, `540p`, `720p` (default), `1080p` |
 | `-d, --duration <sec>` | Duration | `4`, `5`, `8`, `10` (NOTE: extend supports 4s, unlike standard creation) |
 | `--count <n>` | Generations | `1`-`4` |
@@ -75,20 +73,6 @@ Add speech or voice to a video via audio file or TTS.
 | `--audio <path>` | Audio file (alternative to --tts-text) | local file |
 | `--tts-text <text>` | TTS text (alternative to --audio) | -- |
 | `--tts-speaker <id>` | TTS speaker ID | -- |
-| `-m, --model <model>` | Video model | same set |
-| `--keep-original-sound` | Keep original sound | flag |
-| `--count <n>` | Generations | `1`-`4` |
-| `--off-peak` | Off-peak pricing | flag |
-| `--no-wait` / `--timeout <sec>` / `--json` | Standard flags | -- |
-
-### create sound
-
-Add sound effects to a video.
-
-| Flag | Description | Values |
-|:---|:---|:---|
-| `--video <id-or-path>` | Video ID or local file (required) | -- |
-| `--prompt <text>` | Sound effect description (required) | -- |
 | `-m, --model <model>` | Video model | same set |
 | `--keep-original-sound` | Keep original sound | flag |
 | `--count <n>` | Generations | `1`-`4` |
@@ -135,12 +119,6 @@ Add speech from audio file:
 
 ```bash
 pixverse create speech --video 123456 --audio ./voiceover.mp3 --json
-```
-
-Add sound effects:
-
-```bash
-pixverse create sound --video 123456 --prompt "gentle rain and thunder" --json
 ```
 
 Combined pipeline -- extend, add speech, then upscale:

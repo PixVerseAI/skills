@@ -1,7 +1,7 @@
 ---
 name: pixverse-ai-image-and-video-generator
 description: PixVerse CLI — generate AI videos and images from the command line. Supports PixVerse V6, Veo, Sora, Grok, Seedance, Kling, Happy Horse video models; Nano Banana (Gemini), Seedream, Qwen, Kling, GPT Image image models; and PixVerse's rich effect template library. Start here.
-version: 1.8.1
+version: 1.9.0
 homepage: https://pixverse.ai
 source: https://github.com/PixVerseAI/skills
 ---
@@ -70,7 +70,7 @@ pixverse task wait $VIDEO_ID --json
 pixverse asset download $VIDEO_ID --json
 ```
 
-> **Windows users**: For a full PowerShell pipeline example (T2I → I2V → sound → upscale → download), see `skills/examples/windows/powershell-text-to-video.ps1`.
+> **Windows users**: For a full PowerShell pipeline example (T2I → I2V → upscale → download), see `skills/examples/windows/powershell-text-to-video.ps1`.
 
 ---
 
@@ -150,7 +150,7 @@ Use this to pick a model before diving into a sub-skill.
 |:---|:---|:---|
 | Qwen Image *(default)* | `qwen-image` | `1080p` |
 | GPT Image 2 | `gpt-image-2.0` | `2160p` |
-| Seedream 5.0 Lite | `seedream-5.0-lite` | `1800p` |
+| Seedream 5.0 Lite | `seedream-5.0-lite` | `2160p` |
 | Seedream 4.5 | `seedream-4.5` | `2160p` |
 | Seedream 4.0 | `seedream-4.0` | `2160p` |
 | Gemini 2.5 Flash (Nanobanana) | `gemini-2.5-flash` | `1080p` |
@@ -204,7 +204,6 @@ Located in `skills/references/`. These are read-only knowledge bases that capabi
 | `create image` | Text-to-image or image-to-image |
 | `create transition` | Create transitions between keyframes |
 | `create speech` | Add lip-sync speech to video |
-| `create sound` | Add AI sound effects to video |
 | `create modify` | Modify video content with a prompt at a keyframe |
 | `create extend` | Extend video duration |
 | `create upscale` | Upscale video resolution |

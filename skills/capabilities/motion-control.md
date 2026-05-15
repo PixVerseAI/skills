@@ -173,21 +173,15 @@ VID=$(pixverse create motion-control \
   --image ./character.jpg \
   --video 123456 \
   --quality 720p --json | jq -r '.video_id')
+pixverse task wait $VID --json
 
-# Step 2: Add sound effects
-WITH_SOUND=$(pixverse create sound \
-  --video $VID \
-  --prompt "upbeat dance music" \
-  --json | jq -r '.video_id')
-pixverse task wait $WITH_SOUND --json
-
-# Step 3: Upscale
+# Step 2: Upscale
 FINAL=$(pixverse create upscale \
-  --video $WITH_SOUND \
+  --video $VID \
   --quality 1080p --json | jq -r '.video_id')
 pixverse task wait $FINAL --json
 
-# Step 4: Download
+# Step 3: Download
 pixverse asset download $FINAL --json
 ```
 

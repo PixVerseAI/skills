@@ -87,7 +87,7 @@ vintage 1940s noir aesthetic, limited edition poster art
 | Use Case | Model | `--model` value | Max Quality | Why |
 |:---|:---|:---|:---|:---|
 | **Best for posters** (default) | Gemini 3.1 Flash | `gemini-3.1-flash` | `2160p` | Widest resolution range, best detail for line work and textures |
-| Painterly / illustrated | Seedream 5.0 Lite | `seedream-5.0-lite` | `1800p` | Strong at artistic and illustrated styles |
+| Painterly / illustrated | Seedream 5.0 Lite | `seedream-5.0-lite` | `2160p` | Strong at artistic and illustrated styles |
 | High-res photorealistic | Seedream 4.5 | `seedream-4.5` | `2160p` | Best photorealistic rendering |
 | Creative / experimental | Gemini 3.0 | `gemini-3.0` | `2160p` | Good creative interpretation |
 | Fast drafts / iteration | Qwen Image | `qwen-image` | `1080p` | Fastest, good for prompt testing |

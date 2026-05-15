@@ -4,6 +4,28 @@ All notable changes to PixVerse Skills will be documented in this file.
 
 Format follows [Keep a Changelog](https://keepachangelog.com/).
 
+## [1.9.0] - 2026-05-15
+
+Sync with PixVerse CLI **v1.1.8**, which offlined the `create sound` command and dropped deprecated models from several creation modes.
+
+### Removed
+- **`create sound` command** — the sound effect reference was offlined upstream on 2026-04-17 and the CLI removed the subcommand in v1.1.8. Master `SKILL.md` "All Commands" table, `pixverse:post-process-video` (frontmatter, decision tree, dedicated `### create sound` section, and example), and the decision-tree branches in `pixverse:modify-video` have all been cleaned up.
+- Sound-effect steps in workflow examples: `pixverse:video-production`, `pixverse:motion-control-pipeline`, `pixverse:modify-video-pipeline`, `pixverse:mondo-poster-to-video-pipeline`, plus the motion-control capability example and `examples/windows/powershell-text-to-video.ps1`. Pipelines now flow create → (extend / modify / motion-control) → upscale → download, with optional speech as the only audio post-process.
+
+### Changed
+- **Per-mode model whitelists tightened** to match CLI v1.1.8 validation:
+  - `pixverse:create-video` (`create video` flags): dropped `v5.5`, `v5`, `v5-fast` from `--model`.
+  - `pixverse:create-video` (`create reference` flags): dropped `v5`; default model is now `pixverse-c1`; added `grok-imagine` to the supported list.
+  - `pixverse:post-process-video` (`create extend` flags): dropped `v5.5`, `v5`; remaining set is `v6` (default) and `grok-imagine`.
+  - `pixverse:transition` (`create transition` flags): dropped `v5.5` and `v4.5` from the model list; the `v5.5` row was removed from the Transition-capable models table; added a dedicated `v5` row tagged **Multi-frame only**.
+- `pixverse:transition` 3+ image constraint rewritten: only `v5` supports multi-frame transitions now (previously `v5` and `v4.5`). The V6/C1 multi-frame note now points to `v5` only, and the "use a specific model" example was switched to a valid 3-frame `v5` call (the old 2-frame `--model v5` example is no longer valid under the new whitelist).
+
+### Added
+- `seedream-5.0-lite` now supports `2160p` quality (CLI v1.1.8). Updated quality columns and "up to" phrasing in top-level `README.md`, master `SKILL.md` Model Quick Reference, `pixverse:create-and-edit-image` Model Reference + recommendation lines, and `pixverse:mondo-poster-design` Model Selection Guide.
+
+### Fixed
+- `pixverse:transition` Transition-capable models table and `--model` value list now include **Veo 3.1 Lite** (`veo-3.1-lite`, `720p` / `1080p`, durations `4` / `5` / `6`, `16:9` / `9:16`, first/last frame only). The model has been a valid transition target upstream for some time but the skill docs never reflected it. `pixverse:create-video` Model Reference table and `Veo 3.1 Lite` constraint note updated accordingly.
+
 ## [1.8.1] - 2026-05-06
 
 ### Added

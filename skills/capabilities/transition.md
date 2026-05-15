@@ -44,7 +44,7 @@ Use transitions when you need to:
 |:---|:---|:---|
 | `--images <paths...>` | Image paths or URLs (2+ required) | -- |
 | `--prompt <text>` | Optional prompt to guide transition | -- |
-| `-m, --model <model>` | Video model | `v6` (default, first/last frame only), `pixverse-c1` (first/last frame only), `v5.6`, `v5.5`, `v5`, `v4.5`, `seedance-2.0-standard`, `seedance-2.0-fast`, `veo-3.1-standard`, `veo-3.1-fast`, `kling-o3-pro`, `kling-o3-standard`, `kling-3.0-pro`, `kling-3.0-standard` |
+| `-m, --model <model>` | Video model | `v6` (default, first/last frame only), `pixverse-c1` (first/last frame only), `v5.6`, `v5` (3+ frame only), `seedance-2.0-standard`, `seedance-2.0-fast`, `veo-3.1-standard`, `veo-3.1-fast`, `veo-3.1-lite`, `kling-o3-pro`, `kling-o3-standard`, `kling-3.0-pro`, `kling-3.0-standard` |
 | `-q, --quality <q>` | Video quality | `360p`, `540p`, `720p` (default), `1080p` |
 | `-d, --duration <sec>` | Duration | `5` (default), `8`, `10` |
 | `--count <n>` | Generations | `1`-`4` |
@@ -61,23 +61,24 @@ Only specific models support Transition mode. Using other models will result in 
 | PixVerse V6 | `v6` (default) | `360p` `540p` `720p` `1080p` | `1`–`15` (any integer) | `16:9` `4:3` `1:1` `3:4` `9:16` `3:2` `2:3` `21:9` | **First/last frame only** — no multi-frame |
 | PixVerse C1 | `pixverse-c1` | `360p` `540p` `720p` `1080p` | `1`–`15` (any integer) | `16:9` `4:3` `1:1` `3:4` `9:16` `3:2` `2:3` | **First/last frame only** — no multi-frame; no `21:9` |
 | PixVerse v5.6 | `v5.6` | `360p` `540p` `720p` `1080p` | `1`–`10` (any integer) | `16:9` `4:3` `1:1` `3:4` `9:16` `3:2` `2:3` | First/last frame only (multi-frame: use `v5`) |
-| PixVerse v5.5 | `v5.5` | `360p` `540p` `720p` `1080p` | `1`–`10` (any integer) | `16:9` `4:3` `1:1` `3:4` `9:16` `3:2` `2:3` | First/last frame only (multi-frame: use `v5`) |
+| PixVerse v5 | `v5` | `360p` `540p` `720p` `1080p` | `1`–`10` (any integer) | `16:9` `4:3` `1:1` `3:4` `9:16` `3:2` `2:3` | **Multi-frame only** (3+ images); not valid for 2-frame transition |
 | Seedance 2.0 Standard | `seedance-2.0-standard` | `480p` `720p` | `4`–`15` (any integer) | `16:9` `4:3` `1:1` `3:4` `9:16` `21:9` | External model; no off-peak |
 | Seedance 2.0 Fast | `seedance-2.0-fast` | `480p` `720p` | `4`–`15` (any integer) | `16:9` `4:3` `1:1` `3:4` `9:16` `21:9` | External model; no off-peak |
 | Veo 3.1 Standard | `veo-3.1-standard` | `720p` `1080p` | `4` `6` `8` | `16:9` `9:16` | — |
 | Veo 3.1 Fast | `veo-3.1-fast` | `720p` `1080p` | `4` `6` `8` | `16:9` `9:16` | — |
+| Veo 3.1 Lite | `veo-3.1-lite` | `720p` `1080p` | `4` `5` `6` | `16:9` `9:16` | First/last frame only |
 | Kling O3 Pro | `kling-o3-pro` | `720p` | `3`–`15` (any integer) | `16:9` `9:16` `1:1` | External model; no off-peak |
 | Kling O3 Standard | `kling-o3-standard` | `720p` | `3`–`15` (any integer) | `16:9` `9:16` `1:1` | External model; no off-peak |
 | Kling 3.0 Pro | `kling-3.0-pro` | `720p` | `3`–`15` (any integer) | `16:9` `9:16` `1:1` | External model; no off-peak |
 | Kling 3.0 Standard | `kling-3.0-standard` | `720p` | `3`–`15` (any integer) | `16:9` `9:16` `1:1` | External model; no off-peak |
 
-> **V6 / C1 constraint:** V6 and `pixverse-c1` only support **first/last frame** transitions (2 images). For multi-frame transitions (3+ images), use `v5.6` or `v5`.
+> **V6 / C1 constraint:** V6 and `pixverse-c1` only support **first/last frame** transitions (2 images). For multi-frame transitions (3+ images), only `v5` is supported.
 >
 > **Veo 3.1 constraint:** `1080p` only supports `8s` duration; `720p` supports `4` / `6` / `8`.
 
 ### 3+ image constraint: automatic model fallback
 
-When **3 or more images** are provided, only `v5` and `v4.5` support multi-frame transitions. V6, v5.6, and v5.5 do **not**. The CLI automatically falls back to `v5` and prints a warning:
+When **3 or more images** are provided, only `v5` supports multi-frame transitions. V6, `pixverse-c1`, and `v5.6` do **not**. The CLI automatically falls back to `v5` and prints a warning:
 
 ```
 --model v5.6 does not support 3+ image transitions, using v5
@@ -130,10 +131,10 @@ Multiple frames with longer duration:
 pixverse create transition --images ./f1.jpg ./f2.jpg ./f3.jpg --duration 10 --json
 ```
 
-Using a specific model:
+Using a specific model (3+ frame transition requires `v5`):
 
 ```bash
-pixverse create transition --images ./before.png ./after.png --model v5 --json
+pixverse create transition --images ./f1.jpg ./f2.jpg ./f3.jpg --model v5 --json
 ```
 
 Submit without waiting:
