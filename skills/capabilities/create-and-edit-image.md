@@ -44,7 +44,7 @@ Each model has its own supported parameter combinations. **Always check this tab
 |:---|:---|:---|:---|
 | Qwen Image | `qwen-image` (default) | `720p` `1080p` | `1:1` `16:9` `9:16` `4:3` `3:4` `5:4` `4:5` `3:2` `2:3` `21:9` |
 | GPT Image 2 | `gpt-image-2.0` | `1080p` `1440p` `2160p` | **Depends on quality** — `1080p`: `1:1` `3:2` `2:3` · `1440p`: `1:1` `16:9` `9:16` · `2160p`: `16:9` `9:16`. Also requires `--detail-level`. Max `--count`: 9. |
-| Seedream 5.0 Lite | `seedream-5.0-lite` | `1440p` `1800p` | `auto` `1:1` `16:9` `9:16` `4:3` `3:4` `5:4` `4:5` `3:2` `2:3` `21:9` |
+| Seedream 5.0 Lite | `seedream-5.0-lite` | `1440p` `1800p` `2160p` | `auto` `1:1` `16:9` `9:16` `4:3` `3:4` `5:4` `4:5` `3:2` `2:3` `21:9` |
 | Seedream 4.5 | `seedream-4.5` | `1440p` `2160p` | `auto` `1:1` `16:9` `9:16` `4:3` `3:4` `5:4` `4:5` `3:2` `2:3` `21:9` |
 | Seedream 4.0 | `seedream-4.0` | `1080p` `1440p` `2160p` | `auto` `1:1` `16:9` `9:16` `4:3` `3:4` `5:4` `4:5` `3:2` `2:3` `21:9` |
 | Gemini 2.5 Flash (aka Nanobanana) | `gemini-2.5-flash` | `1080p` | `auto` `1:1` `16:9` `9:16` `4:3` `3:4` `5:4` `4:5` `3:2` `2:3` `21:9` |
@@ -53,7 +53,7 @@ Each model has its own supported parameter combinations. **Always check this tab
 | Kling Image O3 | `kling-image-o3` | `1080p` `1440p` `2160p` | `16:9` `9:16` `1:1` `4:3` `3:4` `3:2` `2:3` `21:9` |
 | Kling Image V3 | `kling-image-v3` | `1080p` `1440p` | `16:9` `9:16` `1:1` `4:3` `3:4` `3:2` `2:3` `21:9` |
 
-> **Recommended:** For best image quality, prefer `gemini-3.1-flash` (up to `2160p`, widest resolution range) or `seedream-5.0-lite` (up to `1800p`). The default `qwen-image` is fast but capped at `1080p`.
+> **Recommended:** For best image quality, prefer `gemini-3.1-flash` (up to `2160p`, widest resolution range) or `seedream-5.0-lite` (up to `2160p`). The default `qwen-image` is fast but capped at `1080p`.
 
 > **Important:** Each model only accepts specific quality values. Using an unsupported quality for a model will return `invalid param` (error 400017). Always match quality to the model's supported values above.
 
@@ -110,7 +110,7 @@ When `--count > 1`:
 ## Steps for T2I
 
 1. Compose your prompt describing the desired image.
-2. Choose a model — prefer `gemini-3.1-flash` (up to `2160p`) or `seedream-5.0-lite` (up to `1800p`) for higher quality; fall back to `qwen-image` for speed.
+2. Choose a model — prefer `gemini-3.1-flash` (up to `2160p`) or `seedream-5.0-lite` (up to `2160p`) for higher quality; fall back to `qwen-image` for speed.
 3. Set quality to the model's highest supported value for best results (see Model Reference table), then choose aspect ratio.
 4. Optionally set: `--seed`, `--count`.
 5. Run the command:

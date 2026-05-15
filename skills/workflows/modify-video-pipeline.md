@@ -44,19 +44,14 @@ MODIFIED=$(pixverse create modify \
   --video 123456 \
   --prompt "Add dramatic storm clouds and lightning" \
   --json | jq -r '.video_id')
+pixverse task wait $MODIFIED --json
 
-# Step 2: Add sound effects
-WITH_SOUND=$(pixverse create sound \
-  --video $MODIFIED \
-  --prompt "thunder and heavy rain" \
-  --json | jq -r '.video_id')
-
-# Step 3: Upscale
+# Step 2: Upscale
 FINAL=$(pixverse create upscale \
-  --video $WITH_SOUND \
+  --video $MODIFIED \
   --quality 1080p --json | jq -r '.video_id')
 
-# Step 4: Download
+# Step 3: Download
 pixverse asset download $FINAL --json
 ```
 
