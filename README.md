@@ -1,3 +1,5 @@
+Link demo: https://drive.google.com/file/d/1D3zYj9oDrCYKss_gqaA9b3uadXDZig4P/view?usp=drive_link
+
 # PixVerse Skills
 
 Agent skill library for [PixVerse CLI](https://www.npmjs.com/package/pixverse) — helps AI agents (Claude Code, Cursor, Codex, etc.) generate videos and images through structured, composable workflows.
