@@ -221,7 +221,7 @@ Each model has its own supported parameter combinations. **Always check this tab
 | Grok Imagine | `grok-imagine` | Video, Extend, Reference | `480p` `720p` | `1`–`15` (any integer) | `16:9` `4:3` `1:1` `9:16` `3:4` `3:2` `2:3` |
 | Grok Imagine 1.5 | `grok-imagine-1.5` | Video (I2V only) | `480p` `720p` | `1`–`15` (any integer) | derived from input image |
 | Happy Horse 1.0 | `happyhorse-1.0` | Video | `720p` `1080p` | `3`–`15` (any integer) | `16:9` `9:16` `1:1` `4:3` `3:4` |
-| Seedance 2.0 Standard | `seedance-2.0-standard` | Video, Reference, Transition | `480p` `720p` `1080p` | `4`–`15` (any integer) | `16:9` `4:3` `1:1` `3:4` `9:16` `21:9` |
+| Seedance 2.0 Standard | `seedance-2.0-standard` | Video, Reference, Transition | `480p` `720p` `1080p` `2160p` | `4`–`15` (any integer) | `16:9` `4:3` `1:1` `3:4` `9:16` `21:9` |
 | Seedance 2.0 Fast | `seedance-2.0-fast` | Video, Reference, Transition | `480p` `720p` | `4`–`15` (any integer) | `16:9` `4:3` `1:1` `3:4` `9:16` `21:9` |
 | Kling O3 Pro | `kling-o3-pro` | Video, Reference, Transition | `720p` | `3`–`15` (any integer) | `16:9` `9:16` `1:1` |
 | Kling O3 Standard | `kling-o3-standard` | Video, Reference, Transition | `720p` | `3`–`15` (any integer) | `16:9` `9:16` `1:1` |
@@ -242,7 +242,7 @@ Each model has its own supported parameter combinations. **Always check this tab
 - **Grok Imagine**: Supports `480p` and `720p`; duration is any integer from `1` to `15`; widest aspect ratio selection among third-party models but no `21:9`. Also supports **Extend** and **Reference** (fusion) modes (added in CLI v1.1.6).
 - **Grok Imagine 1.5** (`grok-imagine-1.5`): **Image-to-video only** — `--image` is required (no text-only generation); aspect ratio is derived from the input image. Supports `480p` / `720p`; duration any integer `1`–`15`. Added in CLI v1.2.0.
 - **Happy Horse 1.0** (`happyhorse-1.0`): External model; `720p` / `1080p`; duration starts at `3s` (minimum); aspect ratios `16:9` `9:16` `1:1` `4:3` `3:4`. Video (T2V/I2V) only — no Extend, Transition, or Reference modes.
-- **Seedance 2.0 Standard**: External model; supports `480p` / `720p` / `1080p`; duration starts at `4s` (minimum); supports `21:9`; available in Video, Reference, and Transition modes. No off-peak pricing.
+- **Seedance 2.0 Standard**: External model; supports `480p` / `720p` / `1080p` / `2160p` (4K); duration starts at `4s` (minimum); supports `21:9`; available in Video, Reference, and Transition modes. No off-peak pricing.
 - **Seedance 2.0 Fast**: External model; `480p` / `720p` only; duration starts at `4s` (minimum); supports `21:9`; available in Video, Reference, and Transition modes. No off-peak pricing.
 - **Kling O3 (Pro & Standard)**: External models; `720p` only; duration starts at `3s` (minimum); limited aspect ratios (`16:9` `9:16` `1:1`). Available in Video, Reference, and Transition modes. No off-peak pricing.
 - **Kling 3.0 (Pro & Standard)**: External models; `720p` only; duration starts at `3s` (minimum); same aspect ratios as Kling O3. Available in Video and Transition modes only (no Reference). No off-peak pricing.

@@ -1,7 +1,7 @@
 ---
 name: pixverse-ai-image-and-video-generator
 description: PixVerse CLI — generate AI videos, images, and audio from the command line. Supports PixVerse V6, Veo, Sora, Grok, Seedance, Kling, Happy Horse video models; Nano Banana (Gemini), Seedream, Qwen, Kling, GPT Image image models; MiniMax / ElevenLabs voice (TTS) and MiniMax / ElevenLabs / Google Lyria music models; and PixVerse's rich effect template library. Start here.
-version: 1.11.0
+version: 1.11.1
 homepage: https://pixverse.ai
 source: https://github.com/PixVerseAI/skills
 ---
@@ -140,7 +140,7 @@ Use this to pick a model before diving into a sub-skill.
 | Grok Imagine | `grok-imagine` | `720p` | `1`–`15`s |
 | Grok Imagine 1.5 *(image-to-video only)* | `grok-imagine-1.5` | `720p` | `1`–`15`s |
 | Happy Horse 1.0 | `happyhorse-1.0` | `1080p` | `3`–`15`s |
-| Seedance 2.0 Standard | `seedance-2.0-standard` | `1080p` | `4`–`15`s |
+| Seedance 2.0 Standard | `seedance-2.0-standard` | `2160p` | `4`–`15`s |
 | Seedance 2.0 Fast | `seedance-2.0-fast` | `720p` | `4`–`15`s |
 | Kling O3 Pro | `kling-o3-pro` | `720p` | `3`–`15`s |
 | Kling O3 Standard | `kling-o3-standard` | `720p` | `3`–`15`s |

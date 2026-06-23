@@ -4,6 +4,13 @@ All notable changes to PixVerse Skills will be documented in this file.
 
 Format follows [Keep a Changelog](https://keepachangelog.com/).
 
+## [1.11.1] - 2026-06-23
+
+Sync the skill docs to PixVerse CLI **v1.2.3** — add 4K (`2160p`) quality for the `seedance-2.0-standard` model.
+
+### Added
+- **Seedance 2.0 Standard 4K (`2160p`) quality** — `seedance-2.0-standard` now accepts `--quality 2160p`, available everywhere the model is supported (`create video`, `create reference`, `create transition`). Updated the master video-model table in `SKILL.md` (Max Quality `1080p` → `2160p`) and the per-mode quality lists in `create-video` and `transition`.
+
 ## [1.11.0] - 2026-06-23
 
 Sync the skill docs to PixVerse CLI **v1.2.3** — the CLI's audio overhaul (standalone voice/music, removed lip-sync), the OSS→media-path rename, and several model/flag changes. (Versions 1.10.x are reserved for the in-progress screenplay/storyboard pipeline on a separate branch, so this release jumps 1.9.0 → 1.11.0.)
