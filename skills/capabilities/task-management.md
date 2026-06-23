@@ -41,7 +41,7 @@ Check the current status of a generation task without waiting.
 
 | Flag | Description | Values |
 |:---|:---|:---|
-| `--type <video\|image>` | Asset type | `video` (default), `image` |
+| `--type <video\|image\|audio>` | Asset type | `video` (default), `image`, `audio` |
 | `--json` | Output as JSON | flag |
 
 JSON output (video):
@@ -82,7 +82,7 @@ Block until a generation task completes or times out.
 
 | Flag | Description | Values |
 |:---|:---|:---|
-| `--type <video\|image>` | Asset type | `video` (default), `image` |
+| `--type <video\|image\|audio>` | Asset type | `video` (default), `image`, `audio` |
 | `--timeout <seconds>` | Max wait time | default `300` |
 | `--json` | Output as JSON | flag |
 

@@ -4,6 +4,30 @@ All notable changes to PixVerse Skills will be documented in this file.
 
 Format follows [Keep a Changelog](https://keepachangelog.com/).
 
+## [1.11.0] - 2026-06-23
+
+Sync the skill docs to PixVerse CLI **v1.2.3** — the CLI's audio overhaul (standalone voice/music, removed lip-sync), the OSS→media-path rename, and several model/flag changes. (Versions 1.10.x are reserved for the in-progress screenplay/storyboard pipeline on a separate branch, so this release jumps 1.9.0 → 1.11.0.)
+
+### Added
+- **`pixverse:create-voice` capability** — text-to-speech (TTS) with MiniMax and ElevenLabs voices. Documents `create voice`, the read-only `voice models` / `voice presets` groups, provider-specific flags (stability/similarity/style/speaker-boost for ElevenLabs; volume/pitch/emotion for MiniMax), the 5-model registry, and `--output` download.
+- **`pixverse:create-music` capability** — prompt-to-music with MiniMax (`music-2.6`), ElevenLabs (`music-v1`), and Google Lyria (`lyria-3-pro-preview`). Documents `create music`, the `music models` group, lyrics/instrumental/auto-lyrics options, Lyria image references, and duration controls.
+- **Seedance 2.0 extra reference inputs** — `create reference --videos` (video references) and `--audios` (audio references), seedance-2.0 only, with the count/duration limits. Documented in `create-video`, `character-design`, and `seedance-prompt-optimize`.
+- **`grok-imagine-1.5`** video model (image-to-video only) added to the master and `create-video` model tables.
+- **New master commands** — `voice models`, `voice presets`, `music models`, `account slots`, `update`, and the `config defaults show|set|reset` subcommands added to the All Commands table.
+- **Global `--trace-id`** flag and the common `-` (stdin) / `--idempotency-key` creation conventions documented in `SKILL.md`.
+- `--type audio` documented for `asset list|info|download|delete` and `task status|wait`.
+
+### Changed
+- **Default image model is now `gpt-image-2.0`** (was incorrectly documented as `qwen-image`). Updated the master Image Models table and `create-and-edit-image`.
+- **PixVerse `v6` now supports Reference (fusion)** and is the default reference model (was `pixverse-c1`). Corrected the stale "V6 does not support multi-subject reference" notes in `create-video`.
+- **OSS path → media path.** Removed the deprecated `--asset-image` flag everywhere; `--image` / `--images` / `--video` now accept a file path, HTTPS URL, asset ID, or media path. Updated `create-video`, `create-and-edit-image`, `motion-control`, `seedance-prompt-optimize`, `image-to-video-pipeline`, and `motion-control-pipeline`.
+- `create reference` image cap is now model-aware: 7 by default, up to 9 on seedance-2.0.
+- `pixverse:post-process-video` and `pixverse:video-production` reframed around extend/upscale; voiceover and music are now generated as standalone audio assets and muxed on with `ffmpeg`.
+
+### Removed
+- **`create speech` (Lip Sync)** — removed from all docs (the command was dropped in CLI v1.2.0). The `post-process-video` "add speech" section, the `SKILL.md` command-table row, the `modify-video` / `video-production` references, and the `tts-text` / `tts-speaker` flag examples are gone. Remaining mentions are explicit "removed in v1.2.0" migration notes only.
+- The stale "audio references are not supported by Seedance 2.0" note (audio references are now supported — see Added).
+
 ## [1.9.0] - 2026-05-15
 
 Sync with PixVerse CLI **v1.1.8**, which offlined the `create sound` command and dropped deprecated models from several creation modes.

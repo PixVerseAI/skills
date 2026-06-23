@@ -30,7 +30,7 @@ Want to change what appears IN a video?
 │
 ├── Make it longer?                  → pixverse create extend  (see pixverse:post-process-video)
 ├── Higher resolution?               → pixverse create upscale (see pixverse:post-process-video)
-└── Add voice/speech?                → pixverse create speech (see pixverse:post-process-video)
+└── Add voice/music?                 → pixverse create voice / create music (see pixverse:create-voice, pixverse:create-music)
 ```
 
 > **Not for traditional editing:** This skill does not trim, cut, splice, or rearrange video clips. It uses AI to re-generate video content based on a text prompt. For timeline-based editing, use external tools (e.g., ffmpeg).

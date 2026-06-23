@@ -23,9 +23,8 @@ Want to create a video?
 | Flag | Description | Values / Default |
 |:---|:---|:---|
 | `--prompt <text>` | Prompt text (required) | -- |
-| `--image <pathOrUrl>` | Image path or URL (enables I2V) | local file or URL |
-| `--asset-image <path>` | OSS asset path (skips upload) | -- |
-| `-m, --model <model>` | Video model | `v6` (default), `pixverse-c1`, `v5.6`, `sora-2`, `sora-2-pro`, `veo-3.1-standard`, `veo-3.1-fast`, `veo-3.1-lite`, `grok-imagine`, `seedance-2.0-standard`, `seedance-2.0-fast`, `kling-o3-pro`, `kling-o3-standard`, `kling-3.0-pro`, `kling-3.0-standard`, `happyhorse-1.0` |
+| `--image <input>` | Image input (enables I2V): local file path, HTTPS URL, image ID, or media path | local files auto-upload; pass an existing asset's image ID or media path to skip upload |
+| `-m, --model <model>` | Video model | `v6` (default), `pixverse-c1`, `v5.6`, `sora-2`, `sora-2-pro`, `veo-3.1-standard`, `veo-3.1-fast`, `veo-3.1-lite`, `grok-imagine`, `grok-imagine-1.5` (I2V only — requires `--image`), `seedance-2.0-standard`, `seedance-2.0-fast`, `kling-o3-pro`, `kling-o3-standard`, `kling-3.0-pro`, `kling-3.0-standard`, `happyhorse-1.0` |
 | `-d, --duration <sec>` | Duration in seconds | `1`–`15` (any integer, default `5`; varies by model — see Model Reference) |
 | `-q, --quality <q>` | Video quality | `360p`, `480p`, `540p`, `720p` (default), `1080p` (availability varies by model — see Model Reference) |
 | `--aspect-ratio <ratio>` | Aspect ratio | `16:9`, `4:3`, `1:1`, `3:4`, `9:16`, `3:2`, `2:3`, `21:9` |
@@ -44,14 +43,16 @@ Want to create a video?
 
 | Flag | Description | Values / Default |
 |:---|:---|:---|
-| `--images <paths...>` | Image paths or URLs (1–7 required) | -- |
+| `--images <inputs...>` | Image inputs: file paths, HTTPS URLs, image IDs, or media paths (1–7 required; up to 9 on `seedance-2.0`) | -- |
+| `--videos <inputs...>` | **`seedance-2.0` only** — video reference inputs (max 3, total ≤ 15s): file paths, HTTPS URLs, video IDs, or media paths | -- |
+| `--audios <inputs...>` | **`seedance-2.0` only** — audio reference inputs (max 3, each 2–15s, total ≤ 15s; requires ≥1 image or video reference) | -- |
 | `--prompt <text>` | Prompt text (required) | -- |
-| `-m, --model <model>` | Video model | `pixverse-c1` (default), `v5.6`, `seedance-2.0-standard`, `seedance-2.0-fast`, `kling-o3-pro`, `kling-o3-standard`, `grok-imagine` |
+| `-m, --model <model>` | Video model | `v6` (default), `pixverse-c1`, `v5.6`, `seedance-2.0-standard`, `seedance-2.0-fast`, `kling-o3-pro`, `kling-o3-standard`, `grok-imagine` |
 | `-q, --quality <q>` | Video quality | `360p`, `480p`, `540p`, `720p` (default), `1080p` (availability varies by model) |
 | `--aspect-ratio <ratio>` | Aspect ratio | `16:9`, `4:3`, `1:1`, `3:4`, `9:16`, `3:2`, `2:3` |
 | `-d, --duration <sec>` | Duration in seconds | `1`–`10` (any integer, default `5`) |
 
-> **Note:** Reference (fusion) supports `pixverse-c1`, `v5.6`, `seedance-2.0-standard`, `seedance-2.0-fast`, `kling-o3-pro`, `kling-o3-standard`, and `grok-imagine`. PixVerse V6 does **not** support multi-subject reference.
+> **Note:** Reference (fusion) supports `v6` (default), `pixverse-c1`, `v5.6`, `seedance-2.0-standard`, `seedance-2.0-fast`, `kling-o3-pro`, `kling-o3-standard`, and `grok-imagine`. (V6 reference support was added in CLI v1.1.9.)
 | `--count <number>` | Number of generations | `1` (default), `2`, `3`, `4` |
 | `--seed <number>` | Random seed | any integer |
 | `--off-peak` | Use off-peak pricing | flag |
@@ -125,7 +126,7 @@ When `--count > 1`, the submitted output includes a list of IDs:
 1. Same as T2V, plus provide `--image <local-path-or-url>`.
 2. Local file paths are auto-uploaded to PixVerse cloud storage (OSS) by the CLI. **Do not pass files containing sensitive, private, or confidential content.**
 3. URLs are passed directly to the API. Only `https://` URLs are accepted (`http://` is rejected for security).
-4. Alternatively, use `--asset-image <oss-path>` to skip the upload step.
+4. Alternatively, pass an already-uploaded asset's **image ID** or **media path** directly to `--image` to skip the upload step.
 5. Run the command:
    ```bash
    pixverse create video --prompt "Animate this scene" --image ./photo.jpg --json
@@ -133,7 +134,7 @@ When `--count > 1`, the submitted output includes a list of IDs:
 
 ## Steps for Fusion (Character Reference)
 
-1. Prepare 1–7 character reference images.
+1. Prepare 1–7 character reference images (up to 9 on `seedance-2.0`).
 2. Write a prompt describing the desired scene with those characters.
 3. Run the command:
    ```bash
@@ -209,7 +210,7 @@ Each model has its own supported parameter combinations. **Always check this tab
 
 | Model | `--model` value | Modes | Quality | Duration | Aspect Ratio |
 |:---|:---|:---|:---|:---|:---|
-| PixVerse V6 | `v6` (default) | Video, Transition (first/last frame), Extend | `360p` `540p` `720p` `1080p` | `1`–`15` (any integer) | `16:9` `4:3` `1:1` `3:4` `9:16` `3:2` `2:3` `21:9` |
+| PixVerse V6 | `v6` (default) | Video, Transition (first/last frame), Extend, Reference | `360p` `540p` `720p` `1080p` | `1`–`15` (any integer) | `16:9` `4:3` `1:1` `3:4` `9:16` `3:2` `2:3` `21:9` |
 | PixVerse C1 | `pixverse-c1` | Video, Transition (first/last frame), Reference | `360p` `540p` `720p` `1080p` | `1`–`15` (any integer) | `16:9` `4:3` `1:1` `3:4` `9:16` `3:2` `2:3` |
 | PixVerse v5.6 | `v5.6` | Video, Transition, Reference, Extend, Motion Control | `360p` `540p` `720p` `1080p` | `1`–`10` (any integer) | `16:9` `4:3` `1:1` `3:4` `9:16` `3:2` `2:3` |
 | Sora 2 | `sora-2` | Video | `720p` | `4` `8` `12` | `16:9` `9:16` |
@@ -218,6 +219,7 @@ Each model has its own supported parameter combinations. **Always check this tab
 | Veo 3.1 Fast | `veo-3.1-fast` | Video, Transition | `720p` `1080p` | `4` `6` `8` | `16:9` `9:16` |
 | Veo 3.1 Lite | `veo-3.1-lite` | Video, Transition | `720p` `1080p` | `4` `5` `6` | `16:9` `9:16` |
 | Grok Imagine | `grok-imagine` | Video, Extend, Reference | `480p` `720p` | `1`–`15` (any integer) | `16:9` `4:3` `1:1` `9:16` `3:4` `3:2` `2:3` |
+| Grok Imagine 1.5 | `grok-imagine-1.5` | Video (I2V only) | `480p` `720p` | `1`–`15` (any integer) | derived from input image |
 | Happy Horse 1.0 | `happyhorse-1.0` | Video | `720p` `1080p` | `3`–`15` (any integer) | `16:9` `9:16` `1:1` `4:3` `3:4` |
 | Seedance 2.0 Standard | `seedance-2.0-standard` | Video, Reference, Transition | `480p` `720p` `1080p` | `4`–`15` (any integer) | `16:9` `4:3` `1:1` `3:4` `9:16` `21:9` |
 | Seedance 2.0 Fast | `seedance-2.0-fast` | Video, Reference, Transition | `480p` `720p` | `4`–`15` (any integer) | `16:9` `4:3` `1:1` `3:4` `9:16` `21:9` |
@@ -226,11 +228,11 @@ Each model has its own supported parameter combinations. **Always check this tab
 | Kling 3.0 Pro | `kling-3.0-pro` | Video, Transition | `720p` | `3`–`15` (any integer) | `16:9` `9:16` `1:1` |
 | Kling 3.0 Standard | `kling-3.0-standard` | Video, Transition | `720p` | `3`–`15` (any integer) | `16:9` `9:16` `1:1` |
 
-> **Recommended:** PixVerse V6 (`v6`) is the new default — longest duration (up to 15s), widest aspect ratio support (including `21:9`), native audio and multi-shot. Use `v5.6` when you need multi-frame transitions or multi-subject reference (fusion).
+> **Recommended:** PixVerse V6 (`v6`) is the new default — longest duration (up to 15s), widest aspect ratio support (including `21:9`), native audio and multi-shot, and now supports multi-subject reference (fusion). Use `v5.6` when you need multi-frame transitions (3+ keyframes).
 
 ### Model-specific constraints
 
-- **V6**: Duration up to 15s; supports `21:9`; native audio and multi-shot (on by default). Transition supports **first/last frame only** — no multi-frame transitions and no multi-subject reference. Use `v5.6` for those modes.
+- **V6**: Duration up to 15s; supports `21:9`; native audio and multi-shot (on by default). Supports Video, Extend, Reference (fusion), and Transition (**first/last frame only**). For multi-frame transitions (3+ keyframes), use `v5.6`.
 - **C1** (`pixverse-c1`): Same duration and quality as V6 but **no `21:9` aspect ratio** and **multi-shot is forced off**. Supports Video, Transition (first/last frame), and Reference (fusion). Does not support Extend or Motion Control.
 - **v5.6**: Full mode support including multi-frame transitions, multi-subject reference (fusion), and motion control. Duration capped at 10s; no `21:9`.
 - **Sora 2**: Fixed at `720p`; only `16:9` / `9:16`.
@@ -238,6 +240,7 @@ Each model has its own supported parameter combinations. **Always check this tab
 - **Veo 3.1 (Standard & Fast)**: `1080p` only supports `8s` duration; `720p` supports `4` / `6` / `8`. These are the only third-party models that support `Transition` mode.
 - **Veo 3.1 Lite**: Cheaper Veo tier; supports `720p` / `1080p` and durations `4` / `5` / `6`; only `16:9` and `9:16`. Supports Video and Transition (first/last frame only) modes.
 - **Grok Imagine**: Supports `480p` and `720p`; duration is any integer from `1` to `15`; widest aspect ratio selection among third-party models but no `21:9`. Also supports **Extend** and **Reference** (fusion) modes (added in CLI v1.1.6).
+- **Grok Imagine 1.5** (`grok-imagine-1.5`): **Image-to-video only** — `--image` is required (no text-only generation); aspect ratio is derived from the input image. Supports `480p` / `720p`; duration any integer `1`–`15`. Added in CLI v1.2.0.
 - **Happy Horse 1.0** (`happyhorse-1.0`): External model; `720p` / `1080p`; duration starts at `3s` (minimum); aspect ratios `16:9` `9:16` `1:1` `4:3` `3:4`. Video (T2V/I2V) only — no Extend, Transition, or Reference modes.
 - **Seedance 2.0 Standard**: External model; supports `480p` / `720p` / `1080p`; duration starts at `4s` (minimum); supports `21:9`; available in Video, Reference, and Transition modes. No off-peak pricing.
 - **Seedance 2.0 Fast**: External model; `480p` / `720p` only; duration starts at `4s` (minimum); supports `21:9`; available in Video, Reference, and Transition modes. No off-peak pricing.

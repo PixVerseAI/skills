@@ -1,7 +1,7 @@
 ---
 name: pixverse-ai-image-and-video-generator
-description: PixVerse CLI — generate AI videos and images from the command line. Supports PixVerse V6, Veo, Sora, Grok, Seedance, Kling, Happy Horse video models; Nano Banana (Gemini), Seedream, Qwen, Kling, GPT Image image models; and PixVerse's rich effect template library. Start here.
-version: 1.9.0
+description: PixVerse CLI — generate AI videos, images, and audio from the command line. Supports PixVerse V6, Veo, Sora, Grok, Seedance, Kling, Happy Horse video models; Nano Banana (Gemini), Seedream, Qwen, Kling, GPT Image image models; MiniMax / ElevenLabs voice (TTS) and MiniMax / ElevenLabs / Google Lyria music models; and PixVerse's rich effect template library. Start here.
+version: 1.11.0
 homepage: https://pixverse.ai
 source: https://github.com/PixVerseAI/skills
 ---
@@ -10,7 +10,7 @@ source: https://github.com/PixVerseAI/skills
 
 ## What is PixVerse CLI
 
-PixVerse CLI is the official command-line interface for [PixVerse](https://pixverse.ai) — an AI-powered creative platform for generating videos and images. It is essentially **a UI-free version of the PixVerse website**: all features, models, and parameters are aligned with the web experience at [app.pixverse.ai](https://app.pixverse.ai).
+PixVerse CLI is the official command-line interface for [PixVerse](https://pixverse.ai) — an AI-powered creative platform for generating videos, images, and audio (speech & music). It is essentially **a UI-free version of the PixVerse website**: all features, models, and parameters are aligned with the web experience at [app.pixverse.ai](https://app.pixverse.ai).
 
 It is designed for:
 - **AI agents** (primary) — structured JSON output, deterministic exit codes, and pipeable commands for autonomous workflows (Claude Code, Cursor, Codex, custom agents)
@@ -101,7 +101,9 @@ Details:
 | Edit video content with AI (replace subjects, swap outfits, change backgrounds) | `pixverse:modify-video` |
 | Animate a character with motion from a reference video | `pixverse:motion-control` |
 | Create or edit an image | `pixverse:create-and-edit-image` |
-| Extend, upscale, or add audio to a video | `pixverse:post-process-video` |
+| Generate speech / voiceover from text (TTS) | `pixverse:create-voice` |
+| Generate music or a soundtrack from a prompt | `pixverse:create-music` |
+| Extend or upscale a video | `pixverse:post-process-video` |
 | Create transition animation between frames | `pixverse:transition` |
 | Check generation progress | `pixverse:task-management` |
 | Browse, download, upload, or delete assets | `pixverse:asset-management` |
@@ -136,6 +138,7 @@ Use this to pick a model before diving into a sub-skill.
 | Veo 3.1 Fast | `veo-3.1-fast` | `1080p` | `4` `6` `8`s |
 | Veo 3.1 Lite | `veo-3.1-lite` | `1080p` | `4`–`6`s |
 | Grok Imagine | `grok-imagine` | `720p` | `1`–`15`s |
+| Grok Imagine 1.5 *(image-to-video only)* | `grok-imagine-1.5` | `720p` | `1`–`15`s |
 | Happy Horse 1.0 | `happyhorse-1.0` | `1080p` | `3`–`15`s |
 | Seedance 2.0 Standard | `seedance-2.0-standard` | `1080p` | `4`–`15`s |
 | Seedance 2.0 Fast | `seedance-2.0-fast` | `720p` | `4`–`15`s |
@@ -148,8 +151,8 @@ Use this to pick a model before diving into a sub-skill.
 
 | Model | `--model` value | Max Quality |
 |:---|:---|:---|
-| Qwen Image *(default)* | `qwen-image` | `1080p` |
-| GPT Image 2 | `gpt-image-2.0` | `2160p` |
+| GPT Image 2 *(default)* | `gpt-image-2.0` | `2160p` |
+| Qwen Image | `qwen-image` | `1080p` |
 | Seedream 5.0 Lite | `seedream-5.0-lite` | `2160p` |
 | Seedream 4.5 | `seedream-4.5` | `2160p` |
 | Seedream 4.0 | `seedream-4.0` | `2160p` |
@@ -159,7 +162,25 @@ Use this to pick a model before diving into a sub-skill.
 | Kling Image O3 | `kling-image-o3` | `2160p` |
 | Kling Image V3 | `kling-image-v3` | `1440p` |
 
-For full parameter constraints (aspect ratios, quality per model, mode support), read the capabilities files listed above.
+### Voice / TTS Models (`pixverse create voice --model <value>`)
+
+| Model | `--model` value | Provider | Max characters |
+|:---|:---|:---|---:|
+| MiniMax Speech 2.8 HD *(default)* | `speech-2.8-hd` | MiniMax | 10,000 |
+| MiniMax Speech 2.8 Turbo | `speech-2.8-turbo` | MiniMax | 10,000 |
+| Eleven Multilingual v2 | `eleven-multilingual-v2` | ElevenLabs | 10,000 |
+| Eleven v3 | `eleven-v3` | ElevenLabs | 5,000 |
+| Eleven Turbo v2.5 | `eleven-turbo-v2.5` | ElevenLabs | 40,000 |
+
+### Music Models (`pixverse create music --model <value>`)
+
+| Model | `--model` value | Provider | Lyrics | Image ref |
+|:---|:---|:---|:---|:---|
+| MiniMax Music 2.6 *(default)* | `music-2.6` | MiniMax | Yes | No |
+| ElevenLabs Music | `music-v1` | ElevenLabs | Yes | No |
+| Google Lyria 3 Pro | `lyria-3-pro-preview` | Google | No (use prompt) | Up to 10 |
+
+For full parameter constraints (aspect ratios, quality per model, mode support, voice/music flags), read the capabilities files listed above.
 
 ---
 
@@ -203,7 +224,8 @@ Located in `skills/references/`. These are read-only knowledge bases that capabi
 | `create video` | Text-to-video or image-to-video |
 | `create image` | Text-to-image or image-to-image |
 | `create transition` | Create transitions between keyframes |
-| `create speech` | Add lip-sync speech to video |
+| `create voice` | Generate speech audio from text (TTS) |
+| `create music` | Generate music audio from a prompt |
 | `create modify` | Modify video content with a prompt at a keyframe |
 | `create extend` | Extend video duration |
 | `create upscale` | Upscale video resolution |
@@ -214,6 +236,9 @@ Located in `skills/references/`. These are read-only knowledge bases that capabi
 | `template list` | Browse templates (with optional category filter) |
 | `template search` | Search templates by keyword |
 | `template info` | Get template details |
+| `voice models` | List voice/TTS providers, models, and languages |
+| `voice presets` | List preset voices |
+| `music models` | List music providers and models |
 | `task status` | Check task status |
 | `task wait` | Wait for task completion |
 | `asset list` | List generated assets (with `--source` and `--off-peak` filters) |
@@ -230,6 +255,7 @@ Located in `skills/references/`. These are read-only knowledge bases that capabi
 | `saved delete` | Delete a saved folder |
 | `account info` | View account info and credits |
 | `account usage` | View credit usage records |
+| `account slots` | Show current concurrent generation slots (image / video) |
 | `workspace list` | List all workspaces |
 | `workspace status` | Show currently active workspace |
 | `workspace switch` | Switch to a different workspace |
@@ -240,7 +266,10 @@ Located in `skills/references/`. These are read-only knowledge bases that capabi
 | `config set` | Set a config value |
 | `config reset` | Reset config to defaults |
 | `config path` | Show config file path |
-| `config defaults` | Manage per-mode creation defaults |
+| `config defaults show` | Show creation defaults (all modes or a specific mode) |
+| `config defaults set` | Set a per-mode creation default value |
+| `config defaults reset` | Reset creation defaults to built-in values |
+| `update` | Update the CLI to the latest version (`npm i -g pixverse@latest`) |
 
 ---
 
@@ -250,10 +279,15 @@ Located in `skills/references/`. These are read-only knowledge bases that capabi
 |:---|:---|
 | `--json` or `-p` | Pure JSON output to stdout (required for agent use) |
 | `--workspace-id <id>` | Per-command workspace override (0 = personal). Not persisted — only affects the single invocation. |
+| `--trace-id <id>` | Attach a caller-supplied UUIDv4 to all API requests in this invocation (for end-to-end tracing). Must be a valid UUIDv4. |
 | `-V, --version` | Show CLI version |
 | `-h, --help` | Show help for any command |
 
 Every command supports `--json`. All examples in skills use `--json` for machine-readable output.
+
+**Common creation conventions** (apply across `create …` commands):
+- **`-` for stdin** — text inputs (`--prompt`, `--text`, `--lyrics`) accept a literal string, a local file path, or `-` to read from stdin. Pipe long or multi-line prompts: `cat prompt.txt | pixverse create video --prompt - --json`.
+- **`--idempotency-key <key>`** — supply a stable key for safe retries; the backend dedupes by key, so a repeated submission returns the original task without re-charging credits.
 
 **Interactive mode**: Run any creation command without arguments (and without `--json`) to enter the interactive wizard.
 

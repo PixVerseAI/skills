@@ -1,13 +1,13 @@
 ---
 name: pixverse:video-production
-description: Full video production pipeline — create, extend, add speech, upscale, and download
+description: Full video production pipeline — create, extend, upscale, add voiceover/music, and download
 ---
 
 ### Pipeline
 1. Create base video (T2V, I2V, or Motion Control)
 2. Optionally extend duration
-3. Optionally add speech (lip sync)
-4. Upscale to final resolution
+3. Upscale to final resolution
+4. Optionally generate a voiceover (`create voice`) or music track (`create music`) and mux it on with `ffmpeg`
 5. Download
 
 ### Full Example
@@ -30,9 +30,14 @@ pixverse asset download $FINAL --json
 
 ### Variations
 - **Motion control start**: Replace Step 1 with `pixverse create motion-control --image ./char.jpg --video <ref-id> --json` to animate a character with reference motion, then continue with extend/upscale
-- Add lip-sync speech before upscale: `pixverse create speech --video $EXTENDED --tts-text "..." --json`
+- **Add a voiceover** (after upscale): generate the audio standalone, then mux it on — speech is no longer a video command:
+  ```bash
+  pixverse create voice --text "Welcome to the forest" --output ./vo.mp3 --json
+  pixverse asset download $FINAL --output ./clip.mp4 --json
+  ffmpeg -i ./clip.mp4 -i ./vo.mp3 -c:v copy -c:a aac -shortest ./final.mp4
+  ```
+- **Add a music track**: `pixverse create music --prompt "calm ambient forest score" --output ./score.mp3 --json`, then mux the same way
 - Skip extend if original duration is sufficient
-- Use `--audio <file>` for custom audio instead of TTS
 
 ### Related Skills
-`pixverse:create-video`, `pixverse:motion-control`, `pixverse:post-process-video`, `pixverse:task-management`, `pixverse:asset-management`
+`pixverse:create-video`, `pixverse:motion-control`, `pixverse:post-process-video`, `pixverse:create-voice`, `pixverse:create-music`, `pixverse:task-management`, `pixverse:asset-management`

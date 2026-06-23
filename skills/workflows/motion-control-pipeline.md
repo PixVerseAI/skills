@@ -9,7 +9,7 @@ description: Complete pipeline — animate a character image with motion from a 
 Character image source?
 ├── Local file   → --image ./character.jpg (auto-uploads)
 ├── URL          → --image "https://example.com/character.jpg"
-└── OSS path     → --asset-image <oss-path> (skips upload)
+└── Uploaded asset → --image <image-id-or-media-path> (skips upload)
 ```
 
 > **Image requirement**: Must be a clear **half-body or full-body** shot of a character. Cropped faces, group photos, or abstract images will be rejected.

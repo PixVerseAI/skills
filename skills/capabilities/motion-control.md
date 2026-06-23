@@ -33,9 +33,8 @@ Use motion control when you need to:
 
 | Flag | Description | Values / Default |
 |:---|:---|:---|
-| `--image <pathOrUrl>` | Character image file path or URL (required) | local file or URL |
-| `--asset-image <path>` | Character image OSS path (skips upload) | -- |
-| `--video <idOrPath>` | Motion reference video ID or file path (required) | -- |
+| `--image <input>` | Character image: local file path, HTTPS URL, image ID, or media path (required) | local files auto-upload; pass an image ID or media path to skip upload |
+| `--video <input>` | Motion reference video: file path, HTTPS URL, video ID, or media path (required) | -- |
 | `-m, --model <model>` | Video model | `v5.6` (only supported model) |
 | `-q, --quality <q>` | Video quality | `360p`, `480p`, `540p`, `720p` (default), `1080p` |
 | `--count <number>` | Number of generations | `1` (default), `2`, `3`, `4` |
@@ -58,7 +57,7 @@ Images exceeding `1920×1920` pixels or `5 MB` are auto-resized and re-encoded b
 
 ## How It Works
 
-1. **Resolve character image** -- If `--image` is a local file, the CLI uploads it to PixVerse cloud storage. If `--asset-image` is provided, the OSS path is used directly.
+1. **Resolve character image** -- If `--image` is a local file, the CLI uploads it to PixVerse cloud storage. If it's an image ID or media path, the already-uploaded asset is used directly.
 2. **Validate character image** -- The CLI calls a precheck endpoint to verify the image contains a suitable character (half-body or full-body).
 3. **Resolve motion reference** -- If `--video` is a numeric ID, the CLI fetches the video detail. If it's a local file, the CLI uploads it.
 4. **Submit motion control** -- The character image, motion reference, and parameters are sent to `POST /video/mimic`.

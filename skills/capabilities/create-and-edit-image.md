@@ -23,10 +23,9 @@ Want an image?
 | Flag | Description | Values / Default |
 |:---|:---|:---|
 | `--prompt <text>` | Prompt text (required) | -- |
-| `--image <pathOrUrl>` | Single image input (enables I2I) | local file or URL |
-| `--images <paths...>` | Multiple image inputs (enables I2I) | local files or URLs |
-| `--asset-image <path>` | OSS asset path (skips upload) | -- |
-| `-m, --model <model>` | Image model | `qwen-image` (default), `gpt-image-2.0`, `seedream-5.0-lite`, `seedream-4.5`, `seedream-4.0`, `gemini-2.5-flash`, `gemini-3.0`, `gemini-3.1-flash`, `kling-image-o3`, `kling-image-v3` |
+| `--image <input>` | Single image input (enables I2I): local file path, HTTPS URL, image ID, or media path | local files auto-upload; pass an image ID or media path to skip upload |
+| `--images <inputs...>` | Multiple image inputs (enables I2I): file paths, HTTPS URLs, image IDs, or media paths | -- |
+| `-m, --model <model>` | Image model | `gpt-image-2.0` (default), `gemini-3.1-flash`, `qwen-image`, `gemini-3.0`, `gemini-2.5-flash`, `seedream-5.0-lite`, `seedream-4.5`, `seedream-4.0`, `kling-image-o3`, `kling-image-v3` |
 | `-q, --quality <q>` | Image quality | `512p`, `720p`, `1080p` (default), `1440p`, `1800p`, `2160p` (availability varies by model — see table below) |
 | `--aspect-ratio <ratio>` | Aspect ratio | `1:1` (default), `16:9`, `9:16`, `4:3`, `3:4`, `3:2`, `2:3`, `5:4`, `4:5`, `21:9`, `auto` |
 | `--detail-level <level>` | **`gpt-image-2.0` only** — rendering detail | `low` (default), `medium`, `high`. Passing this with any other model fails with exit code 6 (validation). |
@@ -42,8 +41,8 @@ Each model has its own supported parameter combinations. **Always check this tab
 
 | Model | `--model` value | Resolution | Aspect Ratio |
 |:---|:---|:---|:---|
-| Qwen Image | `qwen-image` (default) | `720p` `1080p` | `1:1` `16:9` `9:16` `4:3` `3:4` `5:4` `4:5` `3:2` `2:3` `21:9` |
-| GPT Image 2 | `gpt-image-2.0` | `1080p` `1440p` `2160p` | **Depends on quality** — `1080p`: `1:1` `3:2` `2:3` · `1440p`: `1:1` `16:9` `9:16` · `2160p`: `16:9` `9:16`. Also requires `--detail-level`. Max `--count`: 9. |
+| GPT Image 2 | `gpt-image-2.0` (default) | `1080p` `1440p` `2160p` | **Depends on quality** — `1080p`: `1:1` `3:2` `2:3` · `1440p`: `1:1` `16:9` `9:16` · `2160p`: `16:9` `9:16`. Also requires `--detail-level`. Max `--count`: 9. |
+| Qwen Image | `qwen-image` | `720p` `1080p` | `1:1` `16:9` `9:16` `4:3` `3:4` `5:4` `4:5` `3:2` `2:3` `21:9` |
 | Seedream 5.0 Lite | `seedream-5.0-lite` | `1440p` `1800p` `2160p` | `auto` `1:1` `16:9` `9:16` `4:3` `3:4` `5:4` `4:5` `3:2` `2:3` `21:9` |
 | Seedream 4.5 | `seedream-4.5` | `1440p` `2160p` | `auto` `1:1` `16:9` `9:16` `4:3` `3:4` `5:4` `4:5` `3:2` `2:3` `21:9` |
 | Seedream 4.0 | `seedream-4.0` | `1080p` `1440p` `2160p` | `auto` `1:1` `16:9` `9:16` `4:3` `3:4` `5:4` `4:5` `3:2` `2:3` `21:9` |
@@ -53,7 +52,7 @@ Each model has its own supported parameter combinations. **Always check this tab
 | Kling Image O3 | `kling-image-o3` | `1080p` `1440p` `2160p` | `16:9` `9:16` `1:1` `4:3` `3:4` `3:2` `2:3` `21:9` |
 | Kling Image V3 | `kling-image-v3` | `1080p` `1440p` | `16:9` `9:16` `1:1` `4:3` `3:4` `3:2` `2:3` `21:9` |
 
-> **Recommended:** For best image quality, prefer `gemini-3.1-flash` (up to `2160p`, widest resolution range) or `seedream-5.0-lite` (up to `2160p`). The default `qwen-image` is fast but capped at `1080p`.
+> **Recommended:** The default is `gpt-image-2.0` (up to `2160p`; note it requires `--detail-level`). For the widest resolution/aspect-ratio range prefer `gemini-3.1-flash` (up to `2160p`) or `seedream-5.0-lite` (up to `2160p`). Use `qwen-image` when you want a fast, lighter model (capped at `1080p`).
 
 > **Important:** Each model only accepts specific quality values. Using an unsupported quality for a model will return `invalid param` (error 400017). Always match quality to the model's supported values above.
 
@@ -130,7 +129,7 @@ When `--count > 1`:
 2. Write a prompt describing how to transform the image.
 3. Local files are auto-uploaded to PixVerse cloud storage (OSS) by the CLI. **Do not pass files containing sensitive, private, or confidential content.**
 4. URLs are passed directly to the API.
-5. Alternatively, use `--asset-image <oss-path>` to skip the upload step.
+5. Alternatively, pass an already-uploaded asset's **image ID** or **media path** directly to `--image` to skip the upload step.
 6. Run the command:
    ```bash
    pixverse create image --prompt "Make it look like watercolor" --image ./photo.jpg --json

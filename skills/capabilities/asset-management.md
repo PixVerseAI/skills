@@ -41,7 +41,7 @@ Browse generation history with pagination.
 
 | Flag | Description | Values |
 |:---|:---|:---|
-| `--type <video\|image>` | Asset type | `video` (default), `image` |
+| `--type <video\|image\|audio>` | Asset type | `video` (default), `image`, `audio` |
 | `--source <create\|upload>` | Asset source | `create` (default), `upload` |
 | `--off-peak` | Filter off-peak generations only | flag (only valid with `--type video --source create`) |
 | `--limit <n>` | Items per page | `1`–`100`, default `20` |
@@ -66,7 +66,7 @@ Get full details of a specific asset.
 
 | Flag | Description | Values |
 |:---|:---|:---|
-| `--type <video\|image>` | Asset type (auto-detected if omitted) | `video`, `image` |
+| `--type <video\|image\|audio>` | Asset type (auto-detected if omitted) | `video`, `image`, `audio` |
 | `--json` | Output as JSON | flag |
 
 JSON output: full VideoDetail or ImageDetail object from the API.
@@ -77,7 +77,7 @@ Download an asset to the local filesystem.
 
 | Flag | Description | Values |
 |:---|:---|:---|
-| `--type <video\|image>` | Asset type (auto-detected if omitted) | `video`, `image` |
+| `--type <video\|image\|audio>` | Asset type (auto-detected if omitted) | `video`, `image`, `audio` |
 | `--dest <path>` | Destination directory | default: current directory |
 | `--json` | Output as JSON | flag |
 
@@ -121,7 +121,7 @@ Delete an asset from your account.
 
 | Flag | Description | Values |
 |:---|:---|:---|
-| `--type <video\|image>` | Asset type (auto-detected if omitted) | `video`, `image` |
+| `--type <video\|image\|audio>` | Asset type (auto-detected if omitted) | `video`, `image`, `audio` |
 | `--json` | Output as JSON | flag |
 
 JSON output:

@@ -77,12 +77,12 @@ This shapes how aggressively you should describe motion vs. nuance.
 ### Step 2 — Asset Parsing & Mapping (multi-modal auto-mapping)
 
 1. **CLI flag mapping.** Determine how the assets will reach Seedance 2.0 via the PixVerse CLI:
-   - Single image (I2V) → `--image <pathOrUrl>` (or `--asset-image <ossPath>` for an already-uploaded asset). Bind it to `@image1`.
-   - Multi-image fusion (R2V) → `pixverse create reference --images <p1> <p2> ...`. Bind them in flag order: 1st → `@image1`, 2nd → `@image2`, …  (Seedance supports up to 7 images.)
-   - Source video (V2V / video edit) → bind to `@video1`, `@video2`, … in the order the user introduces them. Up to 3 input videos, total ≤ 15 s.
+   - Single image (I2V) → `--image <input>` (local file, HTTPS URL, image ID, or media path for an already-uploaded asset). Bind it to `@image1`.
+   - Multi-image fusion (R2V) → `pixverse create reference --images <p1> <p2> ...`. Bind them in flag order: 1st → `@image1`, 2nd → `@image2`, …  (Seedance 2.0 supports up to 9 images.)
+   - Source video (V2V / video edit) → `pixverse create reference --videos <v1> <v2> ...` (seedance-2.0 only). Bind to `@video1`, `@video2`, … in the order the user introduces them. Up to 3 input videos, total ≤ 15 s.
    - Generated assets the user references by `video_id` (e.g. `123456`) → bind them up front (`@video1 is video_id 123456 — [description]`) before using them in the body.
-   - **Audio assets are not supported** by PixVerse's Seedance 2.0 — if any are present, drop them and inform the user.
-2. **Long-text / JSON parsing.** If the user pasted a payload containing a `"content"` array or any structure with attached image / video items, scan it the same way: number items in the order they appear (audio items dropped), and in the `text` portion replace any inline raw paths / URLs / `video_id` numbers with the corresponding `@imageN` / `@videoN` label.
+   - **Audio references** → `pixverse create reference --audios <a1> ...` (seedance-2.0 only). Up to 3 audio inputs, each 2–15 s, total ≤ 15 s; requires at least one image or video reference. Bind to `@audio1`, `@audio2`, … in order.
+2. **Long-text / JSON parsing.** If the user pasted a payload containing a `"content"` array or any structure with attached image / video items, scan it the same way: number items in the order they appear (images, videos, and audio each numbered in their own sequence), and in the `text` portion replace any inline raw paths / URLs / `video_id` numbers with the corresponding `@imageN` / `@videoN` / `@audioN` label.
 3. **Long-image / grid check.** Ask the user whether any uploaded asset is a long image or N-up grid. If so, instruct them to split it into separate single-frame images first.
 4. **Mapping confirmation.** When multiple images / videos exist but their roles are ambiguous (who is on the left, who is the first frame vs. the last frame, which is reference vs. subject), explicitly ask the user before rewriting.
 

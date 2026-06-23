@@ -1,17 +1,18 @@
 ---
 name: pixverse:post-process-video
-description: Enhance existing videos — extend duration, upscale resolution, or add speech (lip sync)
+description: Enhance existing videos — extend duration or upscale resolution
 ---
 
 # Post-Process Video
 
-Enhance existing PixVerse videos with additional capabilities: extend duration, upscale resolution, or add speech/lip sync.
+Enhance existing PixVerse videos: extend duration or upscale resolution.
+
+> **Looking to add a voiceover or music track?** Speech and music are now standalone audio generations, not video post-processing. Generate audio with `pixverse:create-voice` (TTS) or `pixverse:create-music`, then mux it onto the video yourself (e.g. `ffmpeg`). The old `create speech` / lip-sync command was removed in CLI v1.2.0.
 
 ## Prerequisites
 
 - PixVerse CLI installed and authenticated (`pixverse auth login`)
 - An existing video (by ID or local file path)
-- For speech: an audio file or TTS text
 
 ## When to Use
 
@@ -20,16 +21,13 @@ Have an existing video?
 ├── Change content/scene? → pixverse create modify --video <id-or-path> --prompt "..." --json
 │                           (see pixverse:modify-video)
 ├── Make it longer? → pixverse create extend --video <id-or-path> --json
-├── Higher resolution? → pixverse create upscale --video <id-or-path> --json
-└── Add voice/speech?
-    ├── From audio file? → pixverse create speech --video <id> --audio <path> --json
-    └── From text (TTS)? → pixverse create speech --video <id> --tts-text "..." --tts-speaker <id> --json
+└── Higher resolution? → pixverse create upscale --video <id-or-path> --json
 ```
 
 ## Steps
 
 1. Identify the source video (ID from a previous generation, or a local file path).
-2. Choose the post-processing operation (extend, upscale, or speech).
+2. Choose the post-processing operation (extend or upscale).
 3. Run the appropriate `pixverse create` subcommand with `--json`.
 4. Parse the JSON output to get the `video_id`.
 5. If using `--no-wait`, poll with `pixverse task wait <video_id> --json`.
@@ -51,6 +49,7 @@ Extend a video's duration.
 | `--count <n>` | Generations | `1`-`4` |
 | `--seed <n>` | Random seed | any integer |
 | `--off-peak` | Off-peak pricing | flag |
+| `--idempotency-key <key>` | Safe-retry key — backend dedupes by key, so repeated submissions return the original task without re-charging | optional |
 | `--no-wait` / `--timeout <sec>` / `--json` | Standard flags | -- |
 
 ### create upscale
@@ -63,25 +62,9 @@ Upscale a video to higher resolution.
 | `-q, --quality <q>` | Target quality | `1080p`, `1440p`, `2160p` (dedicated upscale set) |
 | `--no-wait` / `--timeout <sec>` / `--json` | Standard flags | -- |
 
-### create speech
-
-Add speech or voice to a video via audio file or TTS.
-
-| Flag | Description | Values |
-|:---|:---|:---|
-| `--video <id-or-path>` | Video ID or local file (required) | -- |
-| `--audio <path>` | Audio file (alternative to --tts-text) | local file |
-| `--tts-text <text>` | TTS text (alternative to --audio) | -- |
-| `--tts-speaker <id>` | TTS speaker ID | -- |
-| `-m, --model <model>` | Video model | same set |
-| `--keep-original-sound` | Keep original sound | flag |
-| `--count <n>` | Generations | `1`-`4` |
-| `--off-peak` | Off-peak pricing | flag |
-| `--no-wait` / `--timeout <sec>` / `--json` | Standard flags | -- |
-
 ## JSON Output
 
-All post-processing commands produce the same video result format.
+Both post-processing commands produce the same video result format.
 
 Submitted (with `--no-wait`):
 
@@ -109,29 +92,26 @@ Upscale to 1080p:
 pixverse create upscale --video 123456 --quality 1080p --json
 ```
 
-Add TTS speech:
-
-```bash
-pixverse create speech --video 123456 --tts-text "Welcome to the future" --tts-speaker 1 --json
-```
-
-Add speech from audio file:
-
-```bash
-pixverse create speech --video 123456 --audio ./voiceover.mp3 --json
-```
-
-Combined pipeline -- extend, add speech, then upscale:
+Combined pipeline -- extend, then upscale:
 
 ```bash
 VID=<original_video_id>
 EXTENDED=$(pixverse create extend --video $VID --prompt "continue the scene" --json | jq -r '.video_id')
 pixverse task wait $EXTENDED --json
-WITH_SPEECH=$(pixverse create speech --video $EXTENDED --tts-text "Hello world" --json | jq -r '.video_id')
-pixverse task wait $WITH_SPEECH --json
-FINAL=$(pixverse create upscale --video $WITH_SPEECH --quality 1080p --json | jq -r '.video_id')
+FINAL=$(pixverse create upscale --video $EXTENDED --quality 1080p --json | jq -r '.video_id')
 pixverse task wait $FINAL --json
 pixverse asset download $FINAL --json
+```
+
+Add a generated voiceover, then mux it on yourself (speech is no longer a video command):
+
+```bash
+# 1. Generate the voiceover as a standalone audio asset (see pixverse:create-voice)
+pixverse create voice --text "Welcome to the future" --output ./voiceover.mp3 --json
+# 2. Download the finished video
+pixverse asset download 123456 --output ./clip.mp4 --json
+# 3. Mux audio onto video with ffmpeg
+ffmpeg -i ./clip.mp4 -i ./voiceover.mp3 -c:v copy -c:a aac -shortest ./final.mp4
 ```
 
 ## Error Handling
@@ -148,6 +128,8 @@ pixverse asset download $FINAL --json
 ## Related Skills
 
 - `pixverse:create-video` -- create videos from text or images
+- `pixverse:create-voice` -- generate speech audio (TTS) to add as a voiceover
+- `pixverse:create-music` -- generate a music track
 - `pixverse:modify-video` -- modify video content with a prompt at a keyframe
 - `pixverse:task-management` -- check status and wait for tasks
 - `pixverse:asset-management` -- browse, download, and delete assets

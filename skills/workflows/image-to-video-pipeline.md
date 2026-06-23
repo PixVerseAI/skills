@@ -8,7 +8,7 @@ description: Complete pipeline — animate an image into a video and download it
 Image source?
 ├── Local file → --image ./photo.jpg (auto-uploads to PixVerse cloud storage)
 ├── URL → --image "https://example.com/photo.jpg"
-└── OSS path → --asset-image "upload/xxx.jpg" (skip upload)
+└── Uploaded asset → --image <image-id-or-media-path> (skip upload)
 ```
 
 > **Privacy note**: Local files passed via `--image` are uploaded to PixVerse cloud storage for processing. Do not use sensitive or private files.
