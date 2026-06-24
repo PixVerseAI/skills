@@ -1,6 +1,6 @@
 # PixVerse Skills
 
-Agent skill library for [PixVerse CLI](https://www.npmjs.com/package/pixverse) — helps AI agents (Claude Code, Cursor, Codex, etc.) generate videos and images through structured, composable workflows.
+Agent skill library for [PixVerse CLI](https://www.npmjs.com/package/pixverse) — helps AI agents (Claude Code, Cursor, Codex, etc.) generate videos, images, and audio (speech & music) through structured, composable workflows.
 
 ## What is this?
 
@@ -32,11 +32,14 @@ skills/
     auth-and-account.md             #   Authentication & account management
     create-video.md                 #   Text-to-video, image-to-video, fusion
     create-and-edit-image.md        #   Text-to-image, image-to-image
+    create-voice.md                 #   Text-to-speech (TTS) — MiniMax, ElevenLabs voices
+    create-music.md                 #   Prompt-to-music — MiniMax, ElevenLabs, Google Lyria
     modify-video.md                 #   AI content editing (replace subjects, swap outfits, change backgrounds)
     motion-control.md               #   Character animation with motion reference video
     transition.md                   #   Keyframe transition animations
-    post-process-video.md           #   Extend, upscale, speech, sound
+    post-process-video.md           #   Extend duration, upscale resolution
     prompt-enhance.md               #   Prompt optimization for V6 video generation
+    seedance-prompt-optimize.md     #   Prompt optimization for Seedance 2.0
     task-management.md              #   Poll and wait for generation tasks
     asset-management.md             #   List, download, upload, delete assets
     saved-folders.md                #   Organize assets into named folders
@@ -81,8 +84,9 @@ skills/
 | Veo 3.1 Fast | `veo-3.1-fast` | Video, Transition | `720p` `1080p` | `4` `6` `8` | `16:9` `9:16` |
 | Veo 3.1 Lite | `veo-3.1-lite` | Video | `720p` `1080p` | `4` `5` `6` | `16:9` `9:16` |
 | Grok Imagine | `grok-imagine` | Video, Extend, Reference | `480p` `720p` | `1`-`15` | `16:9` `4:3` `1:1` `9:16` `3:4` `3:2` `2:3` |
+| Grok Imagine 1.5 | `grok-imagine-1.5` | Video (image-to-video only) | `480p` `720p` | `1`-`15` | derived from input image |
 | Happy Horse 1.0 | `happyhorse-1.0` | Video | `720p` `1080p` | `3`-`15` | `16:9` `9:16` `1:1` `4:3` `3:4` |
-| Seedance 2.0 Standard | `seedance-2.0-standard` | Video, Reference, Transition | `480p` `720p` | `4`-`15` | `16:9` `4:3` `1:1` `3:4` `9:16` `21:9` |
+| Seedance 2.0 Standard | `seedance-2.0-standard` | Video, Reference, Transition | `480p` `720p` `1080p` `2160p` | `4`-`15` | `16:9` `4:3` `1:1` `3:4` `9:16` `21:9` |
 | Seedance 2.0 Fast | `seedance-2.0-fast` | Video, Reference, Transition | `480p` `720p` | `4`-`15` | `16:9` `4:3` `1:1` `3:4` `9:16` `21:9` |
 | Kling O3 Pro | `kling-o3-pro` | Video, Reference, Transition | `720p` | `3`-`15` | `16:9` `9:16` `1:1` |
 | Kling O3 Standard | `kling-o3-standard` | Video, Reference, Transition | `720p` | `3`-`15` | `16:9` `9:16` `1:1` |
@@ -103,6 +107,24 @@ skills/
 | Gemini 3.1 Flash (aka Nano Banana 2) | `gemini-3.1-flash` | `512p` `1080p` `1440p` `2160p` | `auto` `1:1` `16:9` `9:16` `4:3` `3:4` `5:4` `4:5` `3:2` `2:3` `21:9` |
 | Kling Image O3 | `kling-image-o3` | `1080p` `1440p` `2160p` | `16:9` `9:16` `1:1` `4:3` `3:4` `3:2` `2:3` `21:9` |
 | Kling Image V3 | `kling-image-v3` | `1080p` `1440p` | `16:9` `9:16` `1:1` `4:3` `3:4` `3:2` `2:3` `21:9` |
+
+### Voice / TTS Models
+
+| Model | CLI value | Provider | Max characters |
+|:---|:---|:---|---:|
+| MiniMax Speech 2.8 HD | `speech-2.8-hd` (default) | MiniMax | 10,000 |
+| MiniMax Speech 2.8 Turbo | `speech-2.8-turbo` | MiniMax | 10,000 |
+| Eleven Multilingual v2 | `eleven-multilingual-v2` | ElevenLabs | 10,000 |
+| Eleven v3 | `eleven-v3` | ElevenLabs | 5,000 |
+| Eleven Turbo v2.5 | `eleven-turbo-v2.5` | ElevenLabs | 40,000 |
+
+### Music Models
+
+| Model | CLI value | Provider | Lyrics | Image ref |
+|:---|:---|:---|:---|:---|
+| MiniMax Music 2.6 | `music-2.6` (default) | MiniMax | Yes | No |
+| ElevenLabs Music | `music-v1` | ElevenLabs | Yes | No |
+| Google Lyria 3 Pro | `lyria-3-pro-preview` | Google | No (use prompt) | Up to 10 |
 
 ## For AI Agent Developers
 
