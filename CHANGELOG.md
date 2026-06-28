@@ -4,6 +4,24 @@ All notable changes to PixVerse Skills will be documented in this file.
 
 Format follows [Keep a Changelog](https://keepachangelog.com/).
 
+## [1.12.0] - 2026-06-28
+
+Major rewrite of the `seedance-prompt-optimize` skill into a fuller multi-modal directing model — task classification, complexity-based output routing, subject tags, an audio channel, ASCII audio/text markup, and conditional constraint packs.
+
+### Added
+- **Task classification** for `seedance-prompt-optimize` — every prompt is first sorted into multi-modal reference / edit / extend / combination, each with its own recommended sentence pattern, plus a guard against writing "reference @videoN" on edit/extend tasks (which would misclassify them).
+- **Path A / Path B output routing** — simple single-scene prompts now assemble into one paragraph instead of being forced into sections; only ≥ 2-shot / multi-subject / cinematic *reference* prompts use the strict three-part structure. Complexity is judged on temporal + spatial event density, not asset count.
+- **Subject-tag binding** — `<subjectN>@imageN`, or "define [2–3 stable features] as `<subjectN>`" for reuse across shots, layered on top of the existing positional `@imageN` binding.
+- **Audio channel** — timbre reference, single-language consistency (with non-default-language tagging), homophone pronunciation fallback, and a tail-noise fade-out suggestion.
+- **ASCII audio/text markup** — `()` background music, `<>` sound effect, `{}` dialogue, `[]` subtitle/title — plus three text-generation templates (ad copy / subtitle / speech bubble).
+- **Conditional constraint packs** — quality, stability, subtitle guard, watermark/logo guard, twin/clone guard (multi-person), style anchor (anime/non-photoreal), and strong-position lock (multi-person frontal dynamic).
+- **Asset best-practice guidance** — split multi-view sheets into headshot + full-body, group > 4 people before image-to-video, place precision-critical assets first, and target ~4–5 assets rather than the cap.
+- Two new triage red flags — absolute-second timing, and unanchored anime / non-photoreal style.
+
+### Changed
+- **Shot timing now uses `Shot 1 / Shot 2 / …` ordering; absolute seconds (`0–3s`) are forbidden.** Seedance 2.0's precise-timing support is unstable, so the shot script is ordered, not wall-clock-timed. All examples were rewritten accordingly. (Supersedes the previous time-sliced shot script.)
+- **Interruption policy reversed** in `seedance-prompt-optimize`. The skill no longer blocks on every missing element; it now stops only for four critical ambiguities (position / frame mapping, task-type misjudgment, camera-move conflict, contradictory subject features) and auto-fills non-critical gaps with transparent disclosure under "Issues Found".
+
 ## [1.11.2] - 2026-06-28
 
 Sync the skill docs to PixVerse CLI **v1.2.5** (add `seedance-2.0-mini`), and correct stale Seedance 2.0 guidance now that audio references and real human faces are accepted.
