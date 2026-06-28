@@ -40,6 +40,7 @@ skills/
     post-process-video.md           #   Extend duration, upscale resolution
     prompt-enhance.md               #   Prompt optimization for V6 video generation
     seedance-prompt-optimize.md     #   Prompt optimization for Seedance 2.0
+    seedance-vibe-creating.md       #   Vibe Creating — distill emotional / atmospheric ideas into Seedance 2.0 prompts
     task-management.md              #   Poll and wait for generation tasks
     asset-management.md             #   List, download, upload, delete assets
     saved-folders.md                #   Organize assets into named folders

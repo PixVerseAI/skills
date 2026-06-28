@@ -4,6 +4,13 @@ All notable changes to PixVerse Skills will be documented in this file.
 
 Format follows [Keep a Changelog](https://keepachangelog.com/).
 
+## [1.13.0] - 2026-06-28
+
+A new `seedance-vibe-creating` skill — the experiential counterpart to `seedance-prompt-optimize`. Where the optimizer engineers precise multi-modal / multi-shot control, Vibe Creating decides whether a Seedance 2.0 idea suits creative distillation and purifies emotional, atmospheric, memory, or mixed-expression inputs into experience-first prompts, while preserving user-specified dialogue, voiceover, music, sound effects, and other hard constraints.
+
+### Added
+- **`pixverse:seedance-vibe-creating` capability** — Vibe Creating (VC) for Seedance 2.0 (`seedance-2.0-standard` / `seedance-2.0-fast` / `seedance-2.0-mini`). Routes inputs on a scene-fit (S) × expression (E) matrix into one of six actions (Pass through / Light purify / Rewrite / Ask first / Keep original / Optional VC version); runs a four-layer information-density check (visual anchor / action / local tone / video theme) before rewriting; and selects among six rewrite modes (narrative, emotional, memory, stream-of-consciousness, multi-shot experience, hybrid purification). Downweights low-value camera/technical parameters while preserving camera *intent*, keeps user-specified sound verbatim and maps it to Seedance's `()` `<>` `{}` `[]` audio markup, and emits a four-part output (Judgment / Action / Result / Notes). Registered in the master `SKILL.md` capabilities table and the `README.md` skill tree.
+
 ## [1.12.0] - 2026-06-28
 
 Major rewrite of the `seedance-prompt-optimize` skill into a fuller multi-modal directing model — task classification, complexity-based output routing, subject tags, an audio channel, ASCII audio/text markup, and conditional constraint packs.
