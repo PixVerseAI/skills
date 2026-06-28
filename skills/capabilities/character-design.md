@@ -291,7 +291,7 @@ pixverse create reference \
 
 For comma-separated names (`use alice,bob --for video "..."`), resolve each name to its `image_id` and pass them all in `--images` order.
 
-> **Seedance 2.0 extra reference inputs.** On `seedance-2.0-standard` / `seedance-2.0-fast`, `create reference` also accepts `--videos <input...>` (motion/scene reference, max 3, total ≤ 15s) and `--audios <input...>` (audio reference, max 3, each 2–15s, total ≤ 15s; requires at least one image or video reference). Each input is a file path, HTTPS URL, asset ID, or media path. These flags are rejected on non-seedance-2.0 models.
+> **Seedance 2.0 extra reference inputs.** On `seedance-2.0` models (`seedance-2.0-standard` / `seedance-2.0-fast` / `seedance-2.0-mini`), `create reference` also accepts `--videos <input...>` (motion/scene reference, max 3, total ≤ 15s) and `--audios <input...>` (audio reference, max 3, each 2–15s, total ≤ 15s; requires at least one image or video reference). Each input is a file path, HTTPS URL, asset ID, or media path. These flags are rejected on non-seedance-2.0 models.
 
 ### Two-step alternative: I2I → I2V
 
@@ -379,7 +379,7 @@ Lessons from real runs — keep prompts past these filters:
 - **Brand names trip the T2I filter.** Words like `"Pixar"`, `"Disney"`, `"Pepsi"`, `"Coca-Cola"` return `500063 sensitive information`. Use neutral phrasing: `"3D toon style animation"` instead of `"Pixar style"`, `"glass cola bottle"` instead of `"Pepsi bottle"`.
 - **Brand names also trip the video filter (status 7 / 8).** Even when the generated still already shows the branded label, mentioning the brand in the motion prompt blocks the run.
 - **Drinking verbs trigger video moderation.** `"sip"`, `"drink"`, `"chug"` → status 7. Use `"present"`, `"rotate"`, `"show"`, `"hold up"` instead.
-- **Real human faces + Seedance 2.0** → unreliable lip-sync and frequent rejections. Recommend stylized 3D / toon characters when the downstream goal is talking-head video on Seedance.
+- **Real human faces are accepted on Seedance 2.0.** Most real-face inputs now pass moderation and are no longer blocked — use them freely. (For lip-sync quality, note there is no in-CLI lip-sync step; see the voiceover note below.)
 - **Voiceover is layered externally.** There is no in-CLI lip-sync/speech step (the old `create speech` was removed in v1.2.0). Generate the voice track with `pixverse create voice` (see `pixverse:create-voice`) and mux it onto the finished video with `ffmpeg` — this preserves the video's original aspect ratio and duration (TikTok-style 9:16 is kept intact).
 
 ---

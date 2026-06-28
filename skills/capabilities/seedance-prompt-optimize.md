@@ -5,9 +5,9 @@ description: Optimize user prompts for Seedance 2.0 (`seedance-2.0-standard`, `s
 
 # Seedance 2.0 Prompt Optimizer
 
-Optimize a user's video generation prompt for **Seedance 2.0** (`seedance-2.0-standard` / `seedance-2.0-fast`). Seedance 2.0 natively supports multi-modal references (image / video) and end-to-end video editing — its prompt engineering surface is significantly richer than V6's. This skill rewrites loose, adjective-heavy prompts into engineered, three-section prompts grounded in the eight core elements and Seedance's multi-modal reference syntax.
+Optimize a user's video generation prompt for **Seedance 2.0** (`seedance-2.0-standard` / `seedance-2.0-fast` / `seedance-2.0-mini`). Seedance 2.0 natively supports multi-modal references (image / video / audio) and end-to-end video editing — its prompt engineering surface is significantly richer than V6's. This skill rewrites loose, adjective-heavy prompts into engineered, three-section prompts grounded in the eight core elements and Seedance's multi-modal reference syntax.
 
-> **PixVerse pipeline note:** PixVerse's current Seedance 2.0 integration does **not** accept audio as an input reference. Do not direct users to attach audio assets, and do not write audio cues into the prompt body. Reference assets are limited to **images** and **videos**.
+> **PixVerse pipeline note:** Seedance 2.0 accepts **audio** as an input reference via `pixverse create reference --audios` (max 3 clips, each 2–15s, total ≤ 15s; requires at least one image or video reference). Bind audio assets to positional `@audioN` labels the same way as images and videos — see Step 2. Reference assets may be **images**, **videos**, or **audio**.
 
 For non-Seedance video models, use `pixverse:prompt-enhance` instead.
 
@@ -281,7 +281,7 @@ five-sense features clear, no clipping, no extra limbs.
 
 ## What This Skill Does NOT Do
 
-- Select model variant (`seedance-2.0-standard` vs `seedance-2.0-fast`), quality, aspect ratio, or duration — see `pixverse:create-video`.
+- Select model variant (`seedance-2.0-standard` / `seedance-2.0-fast` / `seedance-2.0-mini`), quality, aspect ratio, or duration — see `pixverse:create-video`.
 - Suggest multi-step workflows or pipelines.
 - Auto-trigger during normal Seedance video generation.
 - Add creative elements the user did not mention or confirm.

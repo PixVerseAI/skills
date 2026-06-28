@@ -4,6 +4,17 @@ All notable changes to PixVerse Skills will be documented in this file.
 
 Format follows [Keep a Changelog](https://keepachangelog.com/).
 
+## [1.11.2] - 2026-06-28
+
+Sync the skill docs to PixVerse CLI **v1.2.5** (add `seedance-2.0-mini`), and correct stale Seedance 2.0 guidance now that audio references and real human faces are accepted.
+
+### Added
+- **Seedance 2.0 Mini (`seedance-2.0-mini`)** video model — same capabilities as `seedance-2.0-fast` (`480p` / `720p`; duration `4`–`15s`; aspect ratios `16:9` `4:3` `1:1` `3:4` `9:16` `21:9`; supports the Seedance-only `--videos` / `--audios` reference inputs and up to 9 reference images), available everywhere `seedance-2.0-fast` is (`create video`, `create reference`, `create transition`). Updated the master video-model table in `SKILL.md`, the model lists and reference tables in `create-video` and `transition`, the Seedance reference-inputs note in `character-design`, and the variant enumerations in `seedance-prompt-optimize`.
+
+### Fixed
+- **Seedance 2.0 audio input is supported.** `seedance-prompt-optimize` previously claimed PixVerse's Seedance integration does **not** accept audio references — this contradicted the skill's own Step 2 mapping. Audio is now documented as a first-class reference modality (`create reference --audios`, max 3 clips, each 2–15s, total ≤ 15s; requires ≥1 image/video reference): the pipeline note and the multi-modal-reference description now read image / video / audio and point to the `@audioN` binding flow.
+- **Real human faces are accepted on Seedance 2.0.** Removed the `character-design` moderation tip that warned real human faces cause frequent Seedance rejections; most face inputs now pass moderation and are no longer blocked.
+
 ## [1.11.1] - 2026-06-23
 
 Sync the skill docs to PixVerse CLI **v1.2.3** — add 4K (`2160p`) quality for the `seedance-2.0-standard` model.
