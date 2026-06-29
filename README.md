@@ -38,6 +38,7 @@ skills/
     motion-control.md               #   Character animation with motion reference video
     transition.md                   #   Keyframe transition animations
     post-process-video.md           #   Extend duration, upscale resolution
+    prompting-guide.md              #   Model-agnostic prompt advice (advice only — never auto-edits)
     prompt-enhance.md               #   Prompt optimization for V6 video generation
     seedance-prompt-optimize.md     #   Prompt optimization for Seedance 2.0
     seedance-vibe-creating.md       #   Vibe Creating — distill emotional / atmospheric ideas into Seedance 2.0 prompts

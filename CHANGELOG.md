@@ -4,6 +4,13 @@ All notable changes to PixVerse Skills will be documented in this file.
 
 Format follows [Keep a Changelog](https://keepachangelog.com/).
 
+## [1.14.0] - 2026-06-29
+
+A new `prompting-guide` skill — a model-agnostic, advice-only layer that reviews a generation prompt, shows the user a stronger alternative side by side with their original, and explains why, but **never edits the prompt without explicit consent**. Where `prompt-enhance` and `seedance-prompt-optimize` produce a model-specific rewrite, `prompting-guide` is the universal front door: it diagnoses, suggests, and waits.
+
+### Added
+- **`pixverse:prompting-guide` capability** — model-agnostic prompt advisory built on seven cross-model principles for how transformer video models read a prompt: shorter-beats-longer (front-loaded ~50–80-word, 3-sentence structure), "cinematic" / generic-quality words sample too broad a distribution (name a director / lighting / lens spec instead), camera moves are sequential vectors so stacking them causes jitter, there are no negative prompts (convert to positive constraints), "fast" degrades complex motion (describe the physics of speed instead), and re-describing an uploaded reference image causes subject drift (image-to-video prompts should carry motion + camera only). Enforces a Cardinal Rule — the prompt sent to generation is the user's verbatim original unless the user *explicitly* accepts a suggestion — backed by a consent table and a red-flags list against silent rewriting. Emits a single Current / Suggested / Why advisory card and hands off to `prompt-enhance` (V6) / `seedance-prompt-optimize` / `seedance-vibe-creating` for model-specific rewrites. Registered in the master `SKILL.md` capabilities table and the `README.md` skill tree.
+
 ## [1.13.0] - 2026-06-28
 
 A new `seedance-vibe-creating` skill — the experiential counterpart to `seedance-prompt-optimize`. Where the optimizer engineers precise multi-modal / multi-shot control, Vibe Creating decides whether a Seedance 2.0 idea suits creative distillation and purifies emotional, atmospheric, memory, or mixed-expression inputs into experience-first prompts, while preserving user-specified dialogue, voiceover, music, sound effects, and other hard constraints.
