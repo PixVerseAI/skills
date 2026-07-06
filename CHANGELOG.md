@@ -4,6 +4,14 @@ All notable changes to PixVerse Skills will be documented in this file.
 
 Format follows [Keep a Changelog](https://keepachangelog.com/).
 
+## [1.15.0] - 2026-07-06
+
+Sync the skill docs to PixVerse CLI **v1.2.7** — add the new Gemini Omni and Nano Banana 2 Lite models.
+
+### Added
+- **Gemini Omni Flash (`gemini-omni-flash`)** video model — available in `create video` and `create reference`; `720p`, duration `3`–`10s` (default `5`), aspect ratios `16:9`/`9:16`, max 5 reference images in `create reference`.
+- **Nano Banana 2 Lite (`gemini-3.1-flash-lite`)** image model — `1080p` resolution, full aspect-ratio range including `auto`/`21:9`, up to 14 reference images for I2I.
+
 ## [1.14.0] - 2026-06-29
 
 A new `prompting-guide` skill — a model-agnostic, advice-only layer that reviews a generation prompt, shows the user a stronger alternative side by side with their original, and explains why, but **never edits the prompt without explicit consent**. Where `prompt-enhance` and `seedance-prompt-optimize` produce a model-specific rewrite, `prompting-guide` is the universal front door: it diagnoses, suggests, and waits.

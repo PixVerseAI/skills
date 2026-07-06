@@ -1,7 +1,7 @@
 ---
 name: pixverse-ai-image-and-video-generator
 description: PixVerse CLI — generate AI videos, images, and audio from the command line. Supports PixVerse V6, Veo, Sora, Grok, Seedance, Kling, Happy Horse video models; Nano Banana (Gemini), Seedream, Qwen, Kling, GPT Image image models; MiniMax / ElevenLabs voice (TTS) and MiniMax / ElevenLabs / Google Lyria music models; and PixVerse's rich effect template library. Start here.
-version: 1.14.0
+version: 1.15.0
 homepage: https://pixverse.ai
 source: https://github.com/PixVerseAI/skills
 ---
@@ -149,6 +149,7 @@ Use this to pick a model before diving into a sub-skill.
 | Kling O3 Standard | `kling-o3-standard` | `720p` | `3`–`15`s |
 | Kling 3.0 Pro | `kling-3.0-pro` | `720p` | `3`–`15`s |
 | Kling 3.0 Standard | `kling-3.0-standard` | `720p` | `3`–`15`s |
+| Google Gemini Omni | `gemini-omni-flash` | `720p` | `3`–`10`s |
 
 ### Image Models (`pixverse create image --model <value>`)
 
@@ -162,6 +163,7 @@ Use this to pick a model before diving into a sub-skill.
 | Gemini 2.5 Flash (Nanobanana) | `gemini-2.5-flash` | `1080p` |
 | Gemini 3.0 (Nano Banana Pro) | `gemini-3.0` | `2160p` |
 | Gemini 3.1 Flash (Nano Banana 2) | `gemini-3.1-flash` | `2160p` |
+| Gemini 3.1 Flash Lite (Nano Banana 2 Lite) | `gemini-3.1-flash-lite` | `1080p` |
 | Kling Image O3 | `kling-image-o3` | `2160p` |
 | Kling Image V3 | `kling-image-v3` | `1440p` |
 
