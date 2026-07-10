@@ -141,6 +141,7 @@ pixverse template info 12345 --json
 | `--seed <number>` | Random seed | any integer |
 | `--count <number>` | Number of generations | `1`–`4` |
 | `--off-peak` | Off-peak pricing | flag |
+| `--idempotency-key <key>` | Stable safe-retry key; repeated submissions return the original task without re-charging | optional |
 | `--no-wait` | Return immediately without polling | flag |
 | `--timeout <sec>` | Polling timeout | `300` (default) |
 | `--json` | JSON output | flag |

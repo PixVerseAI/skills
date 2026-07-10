@@ -123,8 +123,8 @@ Score a finished video (mux externally):
 
 ```bash
 pixverse create music --prompt "calm ambient score" --instrumental --output ./score.mp3 --json
-pixverse asset download <video_id> --output ./clip.mp4 --json
-ffmpeg -i ./clip.mp4 -i ./score.mp3 -c:v copy -c:a aac -shortest ./final.mp4
+VIDEO_FILE=$(pixverse asset download <video_id> --dest . --json | jq -r '.file')
+ffmpeg -i "$VIDEO_FILE" -i ./score.mp3 -c:v copy -c:a aac -shortest ./final.mp4
 ```
 
 ---

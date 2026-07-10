@@ -148,8 +148,8 @@ Add a voiceover to a finished video (mux externally):
 
 ```bash
 pixverse create voice --text "Narration line" --voice-id 12345 --output ./vo.mp3 --json
-pixverse asset download <video_id> --output ./clip.mp4 --json
-ffmpeg -i ./clip.mp4 -i ./vo.mp3 -c:v copy -c:a aac -shortest ./final.mp4
+VIDEO_FILE=$(pixverse asset download <video_id> --dest . --json | jq -r '.file')
+ffmpeg -i "$VIDEO_FILE" -i ./vo.mp3 -c:v copy -c:a aac -shortest ./final.mp4
 ```
 
 ---

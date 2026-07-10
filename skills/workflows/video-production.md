@@ -33,8 +33,8 @@ pixverse asset download $FINAL --json
 - **Add a voiceover** (after upscale): generate the audio standalone, then mux it on — speech is no longer a video command:
   ```bash
   pixverse create voice --text "Welcome to the forest" --output ./vo.mp3 --json
-  pixverse asset download $FINAL --output ./clip.mp4 --json
-  ffmpeg -i ./clip.mp4 -i ./vo.mp3 -c:v copy -c:a aac -shortest ./final.mp4
+  VIDEO_FILE=$(pixverse asset download $FINAL --dest . --json | jq -r '.file')
+  ffmpeg -i "$VIDEO_FILE" -i ./vo.mp3 -c:v copy -c:a aac -shortest ./final.mp4
   ```
 - **Add a music track**: `pixverse create music --prompt "calm ambient forest score" --output ./score.mp3 --json`, then mux the same way
 - Skip extend if original duration is sufficient

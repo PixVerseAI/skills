@@ -45,11 +45,13 @@ Use transitions when you need to:
 | `--images <paths...>` | Image paths or URLs (2+ required) | -- |
 | `--prompt <text>` | Optional prompt to guide transition | -- |
 | `-m, --model <model>` | Video model | `v6` (default, first/last frame only), `pixverse-c1` (first/last frame only), `v5.6`, `v5` (3+ frame only), `seedance-2.0-standard`, `seedance-2.0-fast`, `seedance-2.0-mini`, `veo-3.1-standard`, `veo-3.1-fast`, `veo-3.1-lite`, `kling-o3-pro`, `kling-o3-standard`, `kling-3.0-pro`, `kling-3.0-standard` |
-| `-q, --quality <q>` | Video quality | `360p`, `540p`, `720p` (default), `1080p` |
-| `-d, --duration <sec>` | Duration | `5` (default), `8`, `10` |
+| `-q, --quality <q>` | Video quality | model-specific; up to `2160p` (see table below) |
+| `-d, --duration <sec>` | Duration | model-specific; `1`–`15` overall (default `5`) |
 | `--count <n>` | Generations | `1`-`4` |
 | `--seed <n>` | Random seed | -- |
+| `--audio` / `--no-audio` | Enable or disable audio generation | model-dependent boolean toggle |
 | `--off-peak` | Off-peak pricing | flag |
+| `--idempotency-key <key>` | Stable safe-retry key; repeated submissions return the original task without re-charging | optional |
 | `--no-wait` / `--timeout <sec>` / `--json` | Standard flags | -- |
 
 ### Transition-capable models
@@ -60,14 +62,14 @@ Only specific models support Transition mode. Using other models will result in 
 |:---|:---|:---|:---|:---|:---|
 | PixVerse V6 | `v6` (default) | `360p` `540p` `720p` `1080p` | `1`–`15` (any integer) | `16:9` `4:3` `1:1` `3:4` `9:16` `3:2` `2:3` `21:9` | **First/last frame only** — no multi-frame |
 | PixVerse C1 | `pixverse-c1` | `360p` `540p` `720p` `1080p` | `1`–`15` (any integer) | `16:9` `4:3` `1:1` `3:4` `9:16` `3:2` `2:3` | **First/last frame only** — no multi-frame; no `21:9` |
-| PixVerse v5.6 | `v5.6` | `360p` `540p` `720p` `1080p` | `1`–`10` (any integer) | `16:9` `4:3` `1:1` `3:4` `9:16` `3:2` `2:3` | First/last frame only (multi-frame: use `v5`) |
-| PixVerse v5 | `v5` | `360p` `540p` `720p` `1080p` | `1`–`10` (any integer) | `16:9` `4:3` `1:1` `3:4` `9:16` `3:2` `2:3` | **Multi-frame only** (3+ images); not valid for 2-frame transition |
+| PixVerse v5.6 | `v5.6` | `360p` `480p` `540p` `720p` `1080p` | `1`–`10` (any integer) | `16:9` `4:3` `1:1` `3:4` `9:16` `3:2` `2:3` | First/last frame only (multi-frame: use `v5`) |
+| PixVerse v5 | `v5` | `360p` `480p` `540p` `720p` `1080p` | `1`–`10` (any integer) | `16:9` `4:3` `1:1` `3:4` `9:16` `3:2` `2:3` | **Multi-frame only** (3+ images); not valid for 2-frame transition |
 | Seedance 2.0 Standard | `seedance-2.0-standard` | `480p` `720p` `1080p` `2160p` | `4`–`15` (any integer) | `16:9` `4:3` `1:1` `3:4` `9:16` `21:9` | External model; no off-peak |
 | Seedance 2.0 Fast | `seedance-2.0-fast` | `480p` `720p` | `4`–`15` (any integer) | `16:9` `4:3` `1:1` `3:4` `9:16` `21:9` | External model; no off-peak |
 | Seedance 2.0 Mini | `seedance-2.0-mini` | `480p` `720p` | `4`–`15` (any integer) | `16:9` `4:3` `1:1` `3:4` `9:16` `21:9` | External model; no off-peak |
-| Veo 3.1 Standard | `veo-3.1-standard` | `720p` `1080p` | `4` `6` `8` | `16:9` `9:16` | — |
-| Veo 3.1 Fast | `veo-3.1-fast` | `720p` `1080p` | `4` `6` `8` | `16:9` `9:16` | — |
-| Veo 3.1 Lite | `veo-3.1-lite` | `720p` `1080p` | `4` `5` `6` | `16:9` `9:16` | First/last frame only |
+| Veo 3.1 Standard | `veo-3.1-standard` | `720p` `1080p` `2160p` | `4` `6` `8` | `16:9` `9:16` | First/last frame only |
+| Veo 3.1 Fast | `veo-3.1-fast` | `720p` `1080p` `2160p` | `4` `6` `8` | `16:9` `9:16` | First/last frame only |
+| Veo 3.1 Lite | `veo-3.1-lite` | `720p` `1080p` | `4` `6` `8` | `16:9` `9:16` | First/last frame only |
 | Kling O3 Pro | `kling-o3-pro` | `720p` | `3`–`15` (any integer) | `16:9` `9:16` `1:1` | External model; no off-peak |
 | Kling O3 Standard | `kling-o3-standard` | `720p` | `3`–`15` (any integer) | `16:9` `9:16` `1:1` | External model; no off-peak |
 | Kling 3.0 Pro | `kling-3.0-pro` | `720p` | `3`–`15` (any integer) | `16:9` `9:16` `1:1` | External model; no off-peak |
@@ -75,7 +77,7 @@ Only specific models support Transition mode. Using other models will result in 
 
 > **V6 / C1 constraint:** V6 and `pixverse-c1` only support **first/last frame** transitions (2 images). For multi-frame transitions (3+ images), only `v5` is supported.
 >
-> **Veo 3.1 constraint:** `1080p` only supports `8s` duration; `720p` supports `4` / `6` / `8`.
+> **Veo 3.1 constraint:** Standard/Fast support `720p` / `1080p` / `2160p`; Lite supports `720p` / `1080p`. All three accept durations `4` / `6` / `8` and use first/last-frame transitions.
 
 ### 3+ image constraint: automatic model fallback
 
@@ -158,6 +160,6 @@ pixverse create transition --images ./a.jpg ./b.jpg --no-wait --json
 ## Related Skills
 
 - `pixverse:create-video` -- create videos from text or images
-- `pixverse:post-process-video` -- extend, upscale, add speech/sound to videos
+- `pixverse:post-process-video` -- extend or upscale videos
 - `pixverse:task-management` -- check status and wait for tasks
 - `pixverse:asset-management` -- browse, download, and delete assets

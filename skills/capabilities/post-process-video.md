@@ -41,13 +41,14 @@ Extend a video's duration.
 
 | Flag | Description | Values |
 |:---|:---|:---|
-| `--video <id-or-path>` | Video ID or local file (required) | -- |
+| `--video <input>` | Video file path, HTTPS URL, video ID, or media path (required) | -- |
 | `--prompt <text>` | Prompt for extension | optional |
 | `-m, --model <model>` | Video model | `v6` (default), `grok-imagine` |
-| `-q, --quality <q>` | Video quality | `360p`, `540p`, `720p` (default), `1080p` |
-| `-d, --duration <sec>` | Duration | `4`, `5`, `8`, `10` (NOTE: extend supports 4s, unlike standard creation) |
+| `-q, --quality <q>` | Video quality | V6: `360p` `540p` `720p` `1080p`; Grok Imagine: `480p` `720p` |
+| `-d, --duration <sec>` | Duration | `1`–`15` (any integer; default `4`) |
 | `--count <n>` | Generations | `1`-`4` |
 | `--seed <n>` | Random seed | any integer |
+| `--audio` / `--no-audio` | Enable or disable audio generation | V6 only; ignored with a warning for Grok Imagine |
 | `--off-peak` | Off-peak pricing | flag |
 | `--idempotency-key <key>` | Safe-retry key — backend dedupes by key, so repeated submissions return the original task without re-charging | optional |
 | `--no-wait` / `--timeout <sec>` / `--json` | Standard flags | -- |
@@ -58,8 +59,9 @@ Upscale a video to higher resolution.
 
 | Flag | Description | Values |
 |:---|:---|:---|
-| `--video <id-or-path>` | Video ID or local file (required) | -- |
+| `--video <input>` | Video file path, HTTPS URL, video ID, or media path (required) | -- |
 | `-q, --quality <q>` | Target quality | `1080p`, `1440p`, `2160p` (dedicated upscale set) |
+| `--idempotency-key <key>` | Stable safe-retry key; repeated submissions return the original task without re-charging | optional |
 | `--no-wait` / `--timeout <sec>` / `--json` | Standard flags | -- |
 
 ## JSON Output
@@ -108,10 +110,10 @@ Add a generated voiceover, then mux it on yourself (speech is no longer a video 
 ```bash
 # 1. Generate the voiceover as a standalone audio asset (see pixverse:create-voice)
 pixverse create voice --text "Welcome to the future" --output ./voiceover.mp3 --json
-# 2. Download the finished video
-pixverse asset download 123456 --output ./clip.mp4 --json
+# 2. Download the finished video and capture the generated local filename
+VIDEO_FILE=$(pixverse asset download 123456 --dest . --json | jq -r '.file')
 # 3. Mux audio onto video with ffmpeg
-ffmpeg -i ./clip.mp4 -i ./voiceover.mp3 -c:v copy -c:a aac -shortest ./final.mp4
+ffmpeg -i "$VIDEO_FILE" -i ./voiceover.mp3 -c:v copy -c:a aac -shortest ./final.mp4
 ```
 
 ## Error Handling

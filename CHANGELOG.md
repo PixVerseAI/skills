@@ -4,6 +4,21 @@ All notable changes to PixVerse Skills will be documented in this file.
 
 Format follows [Keep a Changelog](https://keepachangelog.com/).
 
+## [1.16.0] - 2026-07-10
+
+Sync the skill docs to PixVerse CLI **v1.2.8** and reconcile the command/model tables with the CLI's generated capability manifest and validation rules.
+
+### Added
+- **Seedream 5.0 Pro (`seedream-5.0-pro`)** image model — `1080p` / `1440p`, the standard Seedream aspect-ratio set, and up to 10 reference images for I2I.
+- `create modify --images <inputs...>` — up to 5 reference images, addressable from the prompt as `@image1`, `@image2`, and so on.
+- Audio toggles for `create extend`, `create reference`, and `create transition`, plus the missing per-command safe-retry (`--idempotency-key`) entries.
+
+### Fixed
+- Correct Veo 3.1 Standard/Fast maximum quality to `2160p`, and Veo 3.1 Lite durations to `4` / `6` / `8`.
+- Correct GPT Image 2 guidance: `--detail-level` is optional and defaults to `low`; `--count` remains `1`–`4`; 9 is the I2I reference-image limit; aspect ratios follow the CLI's model-level list.
+- Correct Extend's model-specific quality/duration/audio behavior, remove the stale claim that `v5.6` supports Extend, and document the direct `config defaults` shorthand.
+- Replace invalid `asset download --output` examples with `--dest` and consume the returned local file path when muxing audio.
+
 ## [1.15.0] - 2026-07-06
 
 Sync the skill docs to PixVerse CLI **v1.2.7** — add the new Gemini Omni and Nano Banana 2 Lite models.

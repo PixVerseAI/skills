@@ -39,6 +39,7 @@ Use motion control when you need to:
 | `-q, --quality <q>` | Video quality | `360p`, `480p`, `540p`, `720p` (default), `1080p` |
 | `--count <number>` | Number of generations | `1` (default), `2`, `3`, `4` |
 | `--off-peak` | Use off-peak pricing | flag |
+| `--idempotency-key <key>` | Stable safe-retry key; repeated submissions return the original task without re-charging | optional |
 | `--no-wait` | Return immediately without polling | flag |
 | `--timeout <sec>` | Polling timeout | `300` (default) |
 | `--json` | JSON output | flag |

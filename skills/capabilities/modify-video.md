@@ -41,14 +41,16 @@ Want to change what appears IN a video?
 
 | Flag | Description | Values / Default |
 |:---|:---|:---|
-| `--video <id-or-path>` | Video ID or local file path (required) | -- |
-| `--prompt <text>` | Prompt describing the modification (required) | -- |
+| `--video <input>` | Video file path, HTTPS URL, video ID, or media path (required) | -- |
+| `--prompt <text>` | Prompt describing the modification; bind optional reference images as `@image1`, `@image2`, ... | required |
+| `--images <inputs...>` | Optional reference images: file paths, HTTPS URLs, image IDs, or media paths | max 5; prompt labels follow flag order |
 | `--keyframe-time <ms>` | Keyframe time in milliseconds | `0` (default, first frame) |
 | `-m, --model <model>` | Video model | `v5.5` (only supported model) |
 | `-q, --quality <quality>` | Video quality | `360p`, `480p`, `540p`, `720p` (default), `1080p` |
 | `--count <number>` | Number of generations | `1` (default), `2`, `3`, `4` |
 | `--seed <number>` | Random seed | any integer |
 | `--off-peak` | Use off-peak pricing | flag |
+| `--idempotency-key <key>` | Stable safe-retry key; repeated submissions return the original task without re-charging | optional |
 | `--no-wait` | Return immediately without polling | flag |
 | `--timeout <sec>` | Polling timeout | `300` (default) |
 | `--json` | JSON output | flag |
@@ -61,25 +63,27 @@ Modify currently supports **v5.5 only**. Other models will fail with a validatio
 
 ## How It Works
 
-1. **Resolve video** — If `--video` is a numeric ID, the CLI fetches the video detail (`video_path`, `duration`, `first_frame`). If it's a local file, the CLI uploads it to PixVerse cloud storage.
+1. **Resolve video** — The CLI resolves a local file, HTTPS URL, video ID, or media path. For a numeric ID it fetches the video detail (`video_path`, `duration`, `first_frame`); local/remote files are uploaded to PixVerse cloud storage.
 2. **Extract keyframe** — The CLI calls `POST /video/frame/at_time` to extract the frame at `--keyframe-time`. This frame becomes the visual anchor for the modification.
-3. **Submit modify** — The prompt, keyframe, and video metadata are sent to `POST /video/modify`.
-4. **Poll** — Unless `--no-wait` is set, the CLI polls until the new video is ready.
+3. **Resolve references** — Optional `--images` inputs are resolved in order and bound to prompt labels `@image1`, `@image2`, and so on.
+4. **Submit modify** — The prompt, keyframe, reference images, and video metadata are sent to the modify endpoint.
+5. **Poll** — Unless `--no-wait` is set, the CLI polls until the new video is ready.
 
 ---
 
 ## Steps
 
-1. Identify the source video — a video ID from a previous generation, or a local file path.
+1. Identify the source video — a file path, HTTPS URL, video ID, or media path.
 2. Decide which moment to modify. Set `--keyframe-time` in milliseconds (default `0` = first frame).
-3. Write a prompt describing the desired modification.
-4. Run the command:
+3. Optionally provide up to 5 visual references with `--images`, then mention them in the prompt as `@image1`, `@image2`, etc.
+4. Write a prompt describing the desired modification.
+5. Run the command:
    ```bash
    pixverse create modify --video <id-or-path> --prompt "..." --json
    ```
-5. Parse `video_id` from the JSON output.
-6. If `--no-wait` was used, poll with `pixverse task wait <video_id> --json`.
-7. Download the result with `pixverse asset download <video_id> --json`.
+6. Parse `video_id` from the JSON output.
+7. If `--no-wait` was used, poll with `pixverse task wait <video_id> --json`.
+8. Download the result with `pixverse asset download <video_id> --json`.
 
 ---
 
@@ -152,6 +156,16 @@ pixverse create modify \
 pixverse create modify \
   --video ./my-video.mp4 \
   --prompt "Transform the scene into a cyberpunk style" \
+  --json
+```
+
+### Modify using reference images
+
+```bash
+pixverse create modify \
+  --video 123456 \
+  --images ./red-jacket.jpg ./city-at-night.jpg \
+  --prompt "Replace the character's outfit with @image1 and use @image2 as the background" \
   --json
 ```
 

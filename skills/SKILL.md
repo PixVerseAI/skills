@@ -1,7 +1,7 @@
 ---
 name: pixverse-ai-image-and-video-generator
 description: PixVerse CLI — generate AI videos, images, and audio from the command line. Supports PixVerse V6, Veo, Sora, Grok, Seedance, Kling, Happy Horse video models; Nano Banana (Gemini), Seedream, Qwen, Kling, GPT Image image models; MiniMax / ElevenLabs voice (TTS) and MiniMax / ElevenLabs / Google Lyria music models; and PixVerse's rich effect template library. Start here.
-version: 1.15.0
+version: 1.16.0
 homepage: https://pixverse.ai
 source: https://github.com/PixVerseAI/skills
 ---
@@ -136,9 +136,9 @@ Use this to pick a model before diving into a sub-skill.
 | PixVerse v5.6 | `v5.6` | `1080p` | `1`–`10`s |
 | Sora 2 | `sora-2` | `720p` | `4` `8` `12`s |
 | Sora 2 Pro | `sora-2-pro` | `1080p` | `4` `8` `12`s |
-| Veo 3.1 Standard | `veo-3.1-standard` | `1080p` | `4` `6` `8`s |
-| Veo 3.1 Fast | `veo-3.1-fast` | `1080p` | `4` `6` `8`s |
-| Veo 3.1 Lite | `veo-3.1-lite` | `1080p` | `4`–`6`s |
+| Veo 3.1 Standard | `veo-3.1-standard` | `2160p` | `4` `6` `8`s |
+| Veo 3.1 Fast | `veo-3.1-fast` | `2160p` | `4` `6` `8`s |
+| Veo 3.1 Lite | `veo-3.1-lite` | `1080p` | `4` `6` `8`s |
 | Grok Imagine | `grok-imagine` | `720p` | `1`–`15`s |
 | Grok Imagine 1.5 *(image-to-video only)* | `grok-imagine-1.5` | `720p` | `1`–`15`s |
 | Happy Horse 1.0 | `happyhorse-1.0` | `1080p` | `3`–`15`s |
@@ -164,6 +164,7 @@ Use this to pick a model before diving into a sub-skill.
 | Gemini 3.0 (Nano Banana Pro) | `gemini-3.0` | `2160p` |
 | Gemini 3.1 Flash (Nano Banana 2) | `gemini-3.1-flash` | `2160p` |
 | Gemini 3.1 Flash Lite (Nano Banana 2 Lite) | `gemini-3.1-flash-lite` | `1080p` |
+| Seedream 5.0 Pro | `seedream-5.0-pro` | `1440p` |
 | Kling Image O3 | `kling-image-o3` | `2160p` |
 | Kling Image V3 | `kling-image-v3` | `1440p` |
 
@@ -271,6 +272,7 @@ Located in `skills/references/`. These are read-only knowledge bases that capabi
 | `config set` | Set a config value |
 | `config reset` | Reset config to defaults |
 | `config path` | Show config file path |
+| `config defaults` | Show all creation defaults (shorthand for `config defaults show`) |
 | `config defaults show` | Show creation defaults (all modes or a specific mode) |
 | `config defaults set` | Set a per-mode creation default value |
 | `config defaults reset` | Reset creation defaults to built-in values |
@@ -290,9 +292,9 @@ Located in `skills/references/`. These are read-only knowledge bases that capabi
 
 Every command supports `--json`. All examples in skills use `--json` for machine-readable output.
 
-**Common creation conventions** (apply across `create …` commands):
+**Common creation conventions**:
 - **`-` for stdin** — text inputs (`--prompt`, `--text`, `--lyrics`) accept a literal string, a local file path, or `-` to read from stdin. Pipe long or multi-line prompts: `cat prompt.txt | pixverse create video --prompt - --json`.
-- **`--idempotency-key <key>`** — supply a stable key for safe retries; the backend dedupes by key, so a repeated submission returns the original task without re-charging credits.
+- **`--idempotency-key <key>`** — supported by video/image generation and editing commands (`video`, `image`, `transition`, `extend`, `modify`, `upscale`, `reference`, `motion-control`, `template`). Supply a stable key for safe retries; the backend dedupes by key, so a repeated submission returns the original task without re-charging credits. Voice/music use `--client-request-id` instead, which is logged but does not dedupe.
 
 **Interactive mode**: Run any creation command without arguments (and without `--json`) to enter the interactive wizard.
 
