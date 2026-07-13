@@ -126,11 +126,11 @@ skills/
 
 ### Music Models
 
-| Model | CLI value | Provider | Lyrics | Image ref |
-|:---|:---|:---|:---|:---|
-| MiniMax Music 2.6 | `music-2.6` (default) | MiniMax | Yes | No |
-| ElevenLabs Music | `music-v1` | ElevenLabs | Yes | No |
-| Google Lyria 3 Pro | `lyria-3-pro-preview` | Google | No (use prompt) | Up to 10 |
+| Model | CLI value | Provider | Explicit lyrics | Auto lyrics | Instrumental | Image ref |
+|:---|:---|:---|:---|:---|:---|:---|
+| MiniMax Music 2.6 | `music-2.6` (default) | MiniMax | Yes | Yes | Yes | No |
+| ElevenLabs Music | `music-v1` | ElevenLabs | Yes | Yes | Yes | No |
+| Google Lyria 3 Pro | `lyria-3-pro-preview` | Google | No | Yes | Yes | Up to 10 |
 
 ## For AI Agent Developers
 

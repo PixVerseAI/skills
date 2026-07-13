@@ -4,6 +4,15 @@ All notable changes to PixVerse Skills will be documented in this file.
 
 Format follows [Keep a Changelog](https://keepachangelog.com/).
 
+## [1.16.1] - 2026-07-13
+
+Sync the music guidance to PixVerse CLI **v1.2.9**.
+
+### Fixed
+- Document that every music model, including Google Lyria 3 Pro (`lyria-3-pro-preview`), supports `--auto-lyrics`; Lyria still rejects the separate `--lyrics` flag.
+- Document Web-aligned music flag precedence: `--instrumental` forces `auto_lyrics=false` and omits lyrics; otherwise `--auto-lyrics` omits explicitly supplied lyrics.
+- Split the music model tables into explicit-lyrics, auto-lyrics, and instrumental support so Lyria's capabilities are unambiguous.
+
 ## [1.16.0] - 2026-07-10
 
 Sync the skill docs to PixVerse CLI **v1.2.8** and reconcile the command/model tables with the CLI's generated capability manifest and validation rules.

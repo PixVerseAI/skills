@@ -1,7 +1,7 @@
 ---
 name: pixverse-ai-image-and-video-generator
 description: PixVerse CLI — generate AI videos, images, and audio from the command line. Supports PixVerse V6, Veo, Sora, Grok, Seedance, Kling, Happy Horse video models; Nano Banana (Gemini), Seedream, Qwen, Kling, GPT Image image models; MiniMax / ElevenLabs voice (TTS) and MiniMax / ElevenLabs / Google Lyria music models; and PixVerse's rich effect template library. Start here.
-version: 1.16.0
+version: 1.16.1
 homepage: https://pixverse.ai
 source: https://github.com/PixVerseAI/skills
 ---
@@ -180,11 +180,11 @@ Use this to pick a model before diving into a sub-skill.
 
 ### Music Models (`pixverse create music --model <value>`)
 
-| Model | `--model` value | Provider | Lyrics | Image ref |
-|:---|:---|:---|:---|:---|
-| MiniMax Music 2.6 *(default)* | `music-2.6` | MiniMax | Yes | No |
-| ElevenLabs Music | `music-v1` | ElevenLabs | Yes | No |
-| Google Lyria 3 Pro | `lyria-3-pro-preview` | Google | No (use prompt) | Up to 10 |
+| Model | `--model` value | Provider | Explicit lyrics | Auto lyrics | Instrumental | Image ref |
+|:---|:---|:---|:---|:---|:---|:---|
+| MiniMax Music 2.6 *(default)* | `music-2.6` | MiniMax | Yes | Yes | Yes | No |
+| ElevenLabs Music | `music-v1` | ElevenLabs | Yes | Yes | Yes | No |
+| Google Lyria 3 Pro | `lyria-3-pro-preview` | Google | No | Yes | Yes | Up to 10 |
 
 For full parameter constraints (aspect ratios, quality per model, mode support, voice/music flags), read the capabilities files listed above.
 
