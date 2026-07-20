@@ -178,7 +178,7 @@ pixverse task wait $VID --json
 # Step 2: Upscale
 FINAL=$(pixverse create upscale \
   --video $VID \
-  --quality 1080p --json | jq -r '.video_id')
+  --quality 2160p --json | jq -r '.video_id')
 pixverse task wait $FINAL --json
 
 # Step 3: Download
@@ -197,6 +197,7 @@ pixverse asset download $FINAL --json
 | 4 | Insufficient credits | Check balance with `pixverse account info --json`, then top up |
 | 5 | Generation failed | Check character image quality, try a different reference video |
 | 6 | Validation error | Character image must be a clear half-body or full-body shot; model must be `v5.6` |
+| 7 | Concurrent generation limit | Wait for a slot, then retry with the same `--idempotency-key` |
 
 ---
 

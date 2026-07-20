@@ -3,7 +3,7 @@
 # This script demonstrates a complete cinematic video pipeline:
 #   1. Generate a base image (T2I)
 #   2. Animate the image into a 12-second video using Sora 2 (I2V)
-#   3. Upscale to 1080p
+#   3. Upscale to 2160p
 #   4. Download the final video
 #
 # Prerequisites:
@@ -26,7 +26,7 @@ $VideoId = $VidOutput.video_id
 pixverse task wait $VideoId
 
 Write-Host "3. Upscaling to high fidelity..." -ForegroundColor Yellow
-$UpscaleOutput = pixverse create upscale --video $VideoId --quality 1080p --json | Out-String | ConvertFrom-Json
+$UpscaleOutput = pixverse create upscale --video $VideoId --quality 2160p --json | Out-String | ConvertFrom-Json
 $FinalId = $UpscaleOutput.video_id
 pixverse task wait $FinalId
 

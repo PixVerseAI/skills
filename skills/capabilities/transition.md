@@ -156,6 +156,7 @@ pixverse create transition --images ./a.jpg ./b.jpg --no-wait --json
 | 4 | Credit/subscription limit reached |
 | 5 | Generation failed or content policy violation |
 | 6 | Validation error (e.g., fewer than 2 images provided) |
+| 7 | Concurrent generation limit; wait for a slot and retry with the same `--idempotency-key` |
 
 ## Related Skills
 

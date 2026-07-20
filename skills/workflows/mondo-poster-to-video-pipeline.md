@@ -53,10 +53,10 @@ VID_RESULT=$(pixverse create video \
 VIDEO_ID=$(echo "$VID_RESULT" | jq -r '.video_id')
 pixverse task wait $VIDEO_ID --json
 
-# Step 4: Upscale to 1080p
+# Step 4: Upscale to 2160p
 UPSCALE_RESULT=$(pixverse create upscale \
   --video $VIDEO_ID \
-  --quality 1080p \
+  --quality 2160p \
   --json)
 
 FINAL_VIDEO_ID=$(echo "$UPSCALE_RESULT" | jq -r '.video_id')

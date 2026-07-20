@@ -149,6 +149,7 @@ ffmpeg -i "$VIDEO_FILE" -i ./score.mp3 -c:v copy -c:a aac -shortest ./final.mp4
 | 4 | Credit/subscription limit reached |
 | 5 | Generation failed or content policy violation |
 | 6 | Validation error (unknown model, prompt/lyrics over limit, `--image` on a non-Lyria model, etc.) |
+| 7 | Concurrent generation limit; wait for a slot, then retry |
 
 ---
 

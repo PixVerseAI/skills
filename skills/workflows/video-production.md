@@ -20,8 +20,8 @@ VID=$(echo "$RESULT" | jq -r '.video_id')
 EXTENDED=$(pixverse create extend --video $VID --prompt "Continue walking deeper into the forest" --duration 5 --json | jq -r '.video_id')
 pixverse task wait $EXTENDED --json
 
-# Step 3: Upscale to 1080p
-FINAL=$(pixverse create upscale --video $EXTENDED --quality 1080p --json | jq -r '.video_id')
+# Step 3: Upscale to 2160p
+FINAL=$(pixverse create upscale --video $EXTENDED --quality 2160p --json | jq -r '.video_id')
 pixverse task wait $FINAL --json
 
 # Step 4: Download

@@ -268,6 +268,7 @@ pixverse asset download $ID --json
 | 4 | Insufficient credits | Check `pixverse account info --json` |
 | 5 | Generation failed | Check image quality, try different template |
 | 6 | Validation error | Wrong number of images for `effect_type`, or image/video conflict |
+| 7 | Concurrent generation limit | Wait for a slot, then retry with the same `--idempotency-key` |
 
 ---
 

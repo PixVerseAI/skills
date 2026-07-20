@@ -266,6 +266,7 @@ Each model has its own supported parameter combinations. **Always check this tab
 | 4 | Insufficient credits | Check balance with `pixverse account info --json`, then top up |
 | 5 | Generation failed | Check prompt for policy violations, try different parameters |
 | 6 | Validation error | Review flag values against the tables above |
+| 7 | Concurrent generation limit | Wait for a slot, then retry with the same `--idempotency-key` |
 
 Example error handling in a script:
 
@@ -279,6 +280,10 @@ elif [ $exit_code -eq 4 ]; then
   echo "Out of credits" >&2
   pixverse account info --json | jq '.credits'
   exit 1
+elif [ $exit_code -eq 7 ]; then
+  echo "Generation slots are busy; wait and safely retry" >&2
+  pixverse account slots --json
+  exit 7
 elif [ $exit_code -ne 0 ]; then
   echo "Failed with exit code $exit_code" >&2
   exit $exit_code

@@ -249,6 +249,7 @@ pixverse asset download $IMAGE_ID --json
 | 4 | Insufficient credits | Check `pixverse account info --json` |
 | 5 | Generation failed | Check prompt for policy violations, try different parameters |
 | 6 | Validation error | Verify model/quality/aspect-ratio combination (see Model Selection Guide) |
+| 7 | Concurrent generation limit | Wait for a slot, then retry with the same `--idempotency-key` |
 
 ---
 

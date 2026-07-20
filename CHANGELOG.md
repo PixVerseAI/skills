@@ -4,6 +4,18 @@ All notable changes to PixVerse Skills will be documented in this file.
 
 Format follows [Keep a Changelog](https://keepachangelog.com/).
 
+## [1.17.0] - 2026-07-14
+
+Sync the skill docs to PixVerse CLI **v1.2.10**.
+
+### Added
+- Document parallel `task status` queries with space-separated positional IDs while retaining the comma-separated `--ids` syntax, including de-duplication, per-ID result maps, and deterministic mixed-error precedence.
+- Add exit code `7` (`CONCURRENCY_LIMIT`) to the master contract and generation capabilities, with agent guidance to wait for a slot and safely retry instead of treating it as insufficient credits.
+
+### Changed
+- Update `create upscale` guidance to its fixed `2160p` target/default and all four supported video inputs: local file, HTTPS URL, video ID, and media path.
+- Update every upscale workflow and PowerShell example from the now-invalid `1080p` target to `2160p`.
+
 ## [1.16.1] - 2026-07-13
 
 Sync the music guidance to PixVerse CLI **v1.2.9**.

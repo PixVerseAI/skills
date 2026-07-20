@@ -12,7 +12,7 @@ Enhance existing PixVerse videos: extend duration or upscale resolution.
 ## Prerequisites
 
 - PixVerse CLI installed and authenticated (`pixverse auth login`)
-- An existing video (by ID or local file path)
+- An existing video supplied as a local file, HTTPS URL, PixVerse video ID, or media path
 
 ## When to Use
 
@@ -26,7 +26,7 @@ Have an existing video?
 
 ## Steps
 
-1. Identify the source video (ID from a previous generation, or a local file path).
+1. Identify the source video (local file, HTTPS URL, PixVerse video ID, or media path).
 2. Choose the post-processing operation (extend or upscale).
 3. Run the appropriate `pixverse create` subcommand with `--json`.
 4. Parse the JSON output to get the `video_id`.
@@ -55,12 +55,12 @@ Extend a video's duration.
 
 ### create upscale
 
-Upscale a video to higher resolution.
+Upscale a video to the fixed `2160p` target. `--quality` may be omitted because `2160p` is the default and only accepted value.
 
 | Flag | Description | Values |
 |:---|:---|:---|
 | `--video <input>` | Video file path, HTTPS URL, video ID, or media path (required) | -- |
-| `-q, --quality <q>` | Target quality | `1080p`, `1440p`, `2160p` (dedicated upscale set) |
+| `-q, --quality <q>` | Target quality | `2160p` (default; only accepted value) |
 | `--idempotency-key <key>` | Stable safe-retry key; repeated submissions return the original task without re-charging | optional |
 | `--no-wait` / `--timeout <sec>` / `--json` | Standard flags | -- |
 
@@ -88,10 +88,15 @@ Extend a video:
 pixverse create extend --video 123456 --prompt "continue the scene" --duration 5 --json
 ```
 
-Upscale to 1080p:
+Upscale to 2160p using the default:
 
 ```bash
-pixverse create upscale --video 123456 --quality 1080p --json
+pixverse create upscale --video 123456 --json
+
+# The same command also accepts other video input forms:
+pixverse create upscale --video ./source.mp4 --json
+pixverse create upscale --video https://example.com/source.mp4 --json
+pixverse create upscale --video upload/source.mp4 --json
 ```
 
 Combined pipeline -- extend, then upscale:
@@ -100,7 +105,7 @@ Combined pipeline -- extend, then upscale:
 VID=<original_video_id>
 EXTENDED=$(pixverse create extend --video $VID --prompt "continue the scene" --json | jq -r '.video_id')
 pixverse task wait $EXTENDED --json
-FINAL=$(pixverse create upscale --video $EXTENDED --quality 1080p --json | jq -r '.video_id')
+FINAL=$(pixverse create upscale --video $EXTENDED --quality 2160p --json | jq -r '.video_id')
 pixverse task wait $FINAL --json
 pixverse asset download $FINAL --json
 ```
@@ -126,6 +131,7 @@ ffmpeg -i "$VIDEO_FILE" -i ./voiceover.mp3 -c:v copy -c:a aac -shortest ./final.
 | 4 | Credit/subscription limit reached |
 | 5 | Generation failed or content policy violation |
 | 6 | Validation error (invalid flags/arguments) |
+| 7 | Concurrent generation limit; wait for a slot and safely retry |
 
 ## Related Skills
 

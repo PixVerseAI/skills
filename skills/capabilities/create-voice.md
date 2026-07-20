@@ -164,6 +164,7 @@ ffmpeg -i "$VIDEO_FILE" -i ./vo.mp3 -c:v copy -c:a aac -shortest ./final.mp4
 | 4 | Credit/subscription limit reached |
 | 5 | Generation failed or content policy violation |
 | 6 | Validation error (unknown model, text over limit, cross-provider flag, etc.) |
+| 7 | Concurrent generation limit; wait for a slot, then retry |
 
 ---
 

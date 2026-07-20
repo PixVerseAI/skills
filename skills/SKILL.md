@@ -1,7 +1,7 @@
 ---
 name: pixverse-ai-image-and-video-generator
 description: PixVerse CLI — generate AI videos, images, and audio from the command line. Supports PixVerse V6, Veo, Sora, Grok, Seedance, Kling, Happy Horse video models; Nano Banana (Gemini), Seedream, Qwen, Kling, GPT Image image models; MiniMax / ElevenLabs voice (TTS) and MiniMax / ElevenLabs / Google Lyria music models; and PixVerse's rich effect template library. Start here.
-version: 1.16.1
+version: 1.17.0
 homepage: https://pixverse.ai
 source: https://github.com/PixVerseAI/skills
 ---
@@ -234,7 +234,7 @@ Located in `skills/references/`. These are read-only knowledge bases that capabi
 | `create music` | Generate music audio from a prompt |
 | `create modify` | Modify video content with a prompt at a keyframe |
 | `create extend` | Extend video duration |
-| `create upscale` | Upscale video resolution |
+| `create upscale` | Upscale a local file, HTTPS URL, video ID, or media path to `2160p` |
 | `create reference` | Generate video with character references |
 | `create motion-control` | Generate video with character image + motion reference video |
 | `create template` | Create video or image from an effect template |
@@ -245,7 +245,7 @@ Located in `skills/references/`. These are read-only knowledge bases that capabi
 | `voice models` | List voice/TTS providers, models, and languages |
 | `voice presets` | List preset voices |
 | `music models` | List music providers and models |
-| `task status` | Check task status |
+| `task status` | Check one task or query multiple space-separated IDs / `--ids` in parallel |
 | `task wait` | Wait for task completion |
 | `asset list` | List generated assets (with `--source` and `--off-peak` filters) |
 | `asset info` | Get asset details |
@@ -332,6 +332,7 @@ In interactive (non-JSON) text mode, `cost_credits` surfaces as `Cost: N credits
 | 4 | CREDIT_INSUFFICIENT | Not enough credits | Check `pixverse account info --json`, wait for daily reset or upgrade |
 | 5 | GENERATION_FAILED | Generation failed/rejected | Check prompt, try different parameters |
 | 6 | VALIDATION_ERROR | Invalid parameters | Check flag values against enums in each skill |
+| 7 | CONCURRENCY_LIMIT | Temporary concurrent-generation limit | Wait for a slot; reuse the safe-retry key when the command supports one |
 
 ### Workspace error auto-recovery
 
@@ -356,6 +357,11 @@ elif [ $EXIT_CODE -eq 4 ]; then
 elif [ $EXIT_CODE -eq 5 ]; then
   echo "Generation failed — check prompt or parameters"
   cat /tmp/pv_err
+elif [ $EXIT_CODE -eq 7 ]; then
+  echo "All generation slots are busy; waiting before a safe retry" >&2
+  pixverse account slots --json >&2
+  sleep 15
+  exit 7
 else
   echo "Error (code $EXIT_CODE)"
   cat /tmp/pv_err

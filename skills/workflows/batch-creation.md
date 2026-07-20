@@ -38,6 +38,14 @@ for SEED in 42 123 999 2024; do
 done
 ```
 
+**Strategy 4: Check several submitted IDs in one parallel query**
+```bash
+pixverse task status 111 112 113 114 --type video --json
+# Equivalent legacy form: pixverse task status --ids 111,112,113,114 --type video --json
+```
+
+If a creation exits with code `7`, all concurrent-generation slots are temporarily busy. Check `pixverse account slots --json`, wait with bounded backoff, and retry using the same `--idempotency-key`; do not treat it as an insufficient-credit error or change the request merely to force a retry.
+
 ### Batch Exit Codes
 
 When using `--count > 1` with default wait mode, the CLI polls all generated items and reports:

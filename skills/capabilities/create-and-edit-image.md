@@ -240,6 +240,7 @@ pixverse task wait "$IMAGE_ID" --type image --json
 | 4 | Insufficient credits | Check balance with `pixverse account info --json`, then top up |
 | 5 | Generation failed | Check prompt for policy violations, try different parameters |
 | 6 | Validation error | Review flag values against the tables above |
+| 7 | Concurrent generation limit | Wait for a slot, then retry with the same `--idempotency-key` |
 
 Example error handling in a script:
 

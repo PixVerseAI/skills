@@ -51,10 +51,10 @@ VID=$(pixverse create motion-control \
   --quality 720p --json | jq -r '.video_id')
 pixverse task wait $VID --json
 
-# Step 2: Upscale to 1080p
+# Step 2: Upscale to 2160p
 FINAL=$(pixverse create upscale \
   --video $VID \
-  --quality 1080p --json | jq -r '.video_id')
+  --quality 2160p --json | jq -r '.video_id')
 pixverse task wait $FINAL --json
 
 # Step 3: Download

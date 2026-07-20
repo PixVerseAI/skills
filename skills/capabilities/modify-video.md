@@ -179,10 +179,10 @@ MODIFIED=$(pixverse create modify \
   --json | jq -r '.video_id')
 
 # Upscale the result
-pixverse create upscale --video $MODIFIED --quality 1080p --json
+UPSCALED=$(pixverse create upscale --video $MODIFIED --quality 2160p --json | jq -r '.video_id')
 
 # Download
-pixverse asset download $MODIFIED --json
+pixverse asset download $UPSCALED --json
 ```
 
 ### Batch modify with multiple variations
@@ -210,6 +210,7 @@ done
 | 4 | Insufficient credits | Check balance with `pixverse account info --json`, then top up |
 | 5 | Generation failed | Check prompt for policy violations, try different parameters |
 | 6 | Validation error | Review flag values — modify only supports model `v5.5` |
+| 7 | Concurrent generation limit | Wait for a slot, then retry with the same `--idempotency-key` |
 
 ---
 

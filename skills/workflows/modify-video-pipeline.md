@@ -49,7 +49,7 @@ pixverse task wait $MODIFIED --json
 # Step 2: Upscale
 FINAL=$(pixverse create upscale \
   --video $MODIFIED \
-  --quality 1080p --json | jq -r '.video_id')
+  --quality 2160p --json | jq -r '.video_id')
 
 # Step 3: Download
 pixverse asset download $FINAL --json

@@ -10,13 +10,14 @@ Check the status of generation tasks and wait for them to complete.
 ## Prerequisites
 
 - PixVerse CLI installed and authenticated (`pixverse auth login`)
-- A task ID (video or image) from a previous `pixverse create` command
+- One or more task IDs (video, image, or audio) from previous `pixverse create` commands
 
 ## When to Use
 
 ```
 Check on a generation?
-├── Just check status? → pixverse task status <id> --json
+├── Check one status? → pixverse task status <id> --json
+├── Check several in parallel? → pixverse task status <id1> <id2> ... --json
 └── Wait until done? → pixverse task wait <id> --json --timeout 300
 ```
 
@@ -28,21 +29,29 @@ Use task management when:
 
 ## Steps
 
-1. Note the `video_id` or `image_id` from the creation command output.
-2. Use `pixverse task status <id> --json` to check current state.
+1. Note the `video_id`, `image_id`, or `audio_id` from the creation command output.
+2. Use `pixverse task status <id> --json` for one task, or pass multiple IDs to query them in parallel.
 3. If not yet complete, use `pixverse task wait <id> --json` to block until done.
 4. Parse the JSON output to get the final result (URL, metadata).
 
 ## Commands Reference
 
-### task status <id>
+### task status <ids...>
 
-Check the current status of a generation task without waiting.
+Check current generation status without waiting. One positional ID preserves the original single-object JSON shape. Two or more positional IDs use the batch result map. The existing comma-separated `--ids` form also always uses the batch shape.
 
 | Flag | Description | Values |
 |:---|:---|:---|
 | `--type <video\|image\|audio>` | Asset type | `video` (default), `image`, `audio` |
+| `--ids <id1,id2,...>` | Alternative comma-separated batch syntax | Do not combine with positional IDs |
 | `--json` | Output as JSON | flag |
+
+Batch behavior:
+
+- Queries all unique IDs in parallel.
+- De-duplicates repeated IDs.
+- Captures per-ID failures in the result map instead of aborting the other queries.
+- Do not rely on exit code alone: inspect every keyed result for an `error` field.
 
 JSON output (video):
 
@@ -73,6 +82,15 @@ JSON output (image):
   "model": "qwen-image",
   "created_at": "...",
   "image_url": "https://..."
+}
+```
+
+JSON output (batch):
+
+```json
+{
+  "123456": { "id": 123456, "type": "video", "status": "processing", "status_code": 10 },
+  "123457": { "error": "Task not found", "code": 400001, "trace_id": "..." }
 }
 ```
 
@@ -141,6 +159,15 @@ Check image status:
 pixverse task status 789012 --type image --json
 ```
 
+Check several tasks in parallel:
+
+```bash
+pixverse task status 123456 123457 123458 --type video --json
+
+# Existing comma-separated form remains supported:
+pixverse task status --ids 123456,123457,123458 --type video --json
+```
+
 Wait for video completion:
 
 ```bash
@@ -175,7 +202,12 @@ pixverse task wait $VID2 --json
 | 0 | Success -- task completed |
 | 2 | Timeout -- task did not complete within the specified time. Increase `--timeout` or accept partial result |
 | 3 | Authentication error (token invalid/expired) |
+| 4 | Credit/subscription limit reached |
 | 5 | Generation failed or content policy violation |
+| 6 | Validation error (invalid ID/type or mixing positional IDs with `--ids`) |
+| 7 | Concurrent generation limit; wait for a slot and retry |
+
+For a batch containing different typed errors, the process exit code is deterministic and uses this priority: authentication (`3`) > insufficient credits (`4`) > concurrency limit (`7`) > timeout (`2`) > generation failure (`5`). Results for every ID are still emitted before exit.
 
 Exit code 2 (TIMEOUT) is the most common error for task management. If a task consistently times out, consider:
 
