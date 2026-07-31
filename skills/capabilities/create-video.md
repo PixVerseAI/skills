@@ -24,10 +24,10 @@ Want to create a video?
 |:---|:---|:---|
 | `--prompt <text>` | Prompt text (required) | -- |
 | `--image <input>` | Image input (enables I2V): local file path, HTTPS URL, image ID, or media path | local files auto-upload; pass an existing asset's image ID or media path to skip upload |
-| `-m, --model <model>` | Video model | `v6` (default), `pixverse-c1`, `v5.6`, `sora-2`, `sora-2-pro`, `veo-3.1-standard`, `veo-3.1-fast`, `veo-3.1-lite`, `grok-imagine`, `grok-imagine-1.5` (I2V only — requires `--image`), `seedance-2.0-standard`, `seedance-2.0-fast`, `seedance-2.0-mini`, `gemini-omni-flash`, `kling-o3-pro`, `kling-o3-standard`, `kling-3.0-pro`, `kling-3.0-standard`, `happyhorse-1.0` |
+| `-m, --model <model>` | Video model | `v6` (default), `pixverse-c1`, `v5.6`, `sora-2`, `sora-2-pro`, `veo-3.1-standard`, `veo-3.1-fast`, `veo-3.1-lite`, `grok-imagine`, `grok-imagine-1.5` (I2V only — requires `--image`), `seedance-2.0-standard`, `seedance-2.0-fast`, `seedance-2.0-mini`, `minimax-h3`, `gemini-omni-flash`, `kling-o3-pro`, `kling-o3-standard`, `kling-3.0-pro`, `kling-3.0-standard`, `happyhorse-1.0` |
 | `-d, --duration <sec>` | Duration in seconds | `1`–`15` (any integer, default `5`; varies by model — see Model Reference) |
 | `-q, --quality <q>` | Video quality | model-specific; `360p`–`2160p` overall (see Model Reference) |
-| `--aspect-ratio <ratio>` | Aspect ratio | `16:9`, `4:3`, `1:1`, `3:4`, `9:16`, `3:2`, `2:3`, `21:9` |
+| `--aspect-ratio <ratio>` | Aspect ratio | model-specific; H3 additionally uses `auto` for image-backed requests (see Model Reference) |
 | `--seed <number>` | Random seed | any integer |
 | `--count <number>` | Number of generations | `1` (default), `2`, `3`, `4` |
 | `--audio` / `--no-audio` | Enable or disable audio generation | boolean toggle (default: on for supported models) |
@@ -44,13 +44,13 @@ Want to create a video?
 
 | Flag | Description | Values / Default |
 |:---|:---|:---|
-| `--images <inputs...>` | Image inputs: file paths, HTTPS URLs, image IDs, or media paths (1–7 required; up to 9 on `seedance-2.0`, max 5 on `gemini-omni-flash`) | -- |
-| `--videos <inputs...>` | **`seedance-2.0` only** — video reference inputs (max 3, total ≤ 15s): file paths, HTTPS URLs, video IDs, or media paths | -- |
-| `--audios <inputs...>` | **`seedance-2.0` only** — audio reference inputs (max 3, each 2–15s, total ≤ 15s; requires ≥1 image or video reference) | -- |
+| `--images <inputs...>` | Image inputs: file paths, HTTPS URLs, image IDs, or media paths (1–7 required; up to 9 on `seedance-2.0` and `minimax-h3`, max 5 on `gemini-omni-flash`) | -- |
+| `--videos <inputs...>` | Video references for `seedance-2.0` / `minimax-h3` (max 3). Seedance total duration ≤ 15s; H3 applies count-only model validation | file path, HTTPS URL, video ID, or media path |
+| `--audios <inputs...>` | Audio references for `seedance-2.0` / `minimax-h3` (max 3; requires ≥1 image/video). Seedance: each 2–15s, total ≤ 15s, local file ≤ 15MB; H3 applies count-only model validation | file path, HTTPS URL, audio ID, or media path |
 | `--prompt <text>` | Prompt text (required) | -- |
-| `-m, --model <model>` | Video model | `v6` (default), `pixverse-c1`, `v5.6`, `seedance-2.0-standard`, `seedance-2.0-fast`, `seedance-2.0-mini`, `gemini-omni-flash`, `kling-o3-pro`, `kling-o3-standard`, `grok-imagine` |
+| `-m, --model <model>` | Video model | `v6` (default), `pixverse-c1`, `v5.6`, `seedance-2.0-standard`, `seedance-2.0-fast`, `seedance-2.0-mini`, `minimax-h3`, `gemini-omni-flash`, `kling-o3-pro`, `kling-o3-standard`, `grok-imagine` |
 | `-q, --quality <q>` | Video quality | model-specific; up to `2160p` (see Model Reference) |
-| `--aspect-ratio <ratio>` | Aspect ratio | model-specific; includes `21:9` for V6 and Seedance 2.0 |
+| `--aspect-ratio <ratio>` | Aspect ratio | model-specific; H3 defaults to `auto` in reference mode |
 | `-d, --duration <sec>` | Duration in seconds | model-specific; `1`–`15` overall (default `5`) |
 | `--audio` / `--no-audio` | Enable or disable audio generation | model-dependent boolean toggle |
 | `--count <number>` | Number of generations | `1` (default), `2`, `3`, `4` |
@@ -61,7 +61,7 @@ Want to create a video?
 | `--timeout <sec>` | Polling timeout | `300` (default) |
 | `--json` | JSON output | flag |
 
-> **Note:** Reference (fusion) supports `v6` (default), `pixverse-c1`, `v5.6`, `seedance-2.0-standard`, `seedance-2.0-fast`, `seedance-2.0-mini`, `gemini-omni-flash`, `kling-o3-pro`, `kling-o3-standard`, and `grok-imagine`. (V6 reference support was added in CLI v1.1.9; `gemini-omni-flash` reference support was added in CLI v1.2.7.)
+> **Note:** Reference (fusion) supports `v6` (default), `pixverse-c1`, `v5.6`, `seedance-2.0-standard`, `seedance-2.0-fast`, `seedance-2.0-mini`, `minimax-h3`, `gemini-omni-flash`, `kling-o3-pro`, `kling-o3-standard`, and `grok-imagine`.
 
 ---
 
@@ -137,7 +137,7 @@ When `--count > 1`, the submitted output includes a list of IDs:
 
 ## Steps for Fusion (Character Reference)
 
-1. Prepare 1–7 character reference images (up to 9 on `seedance-2.0`).
+1. Prepare 1–7 character reference images (up to 9 on `seedance-2.0` and `minimax-h3`).
 2. Write a prompt describing the desired scene with those characters.
 3. Run the command:
    ```bash
@@ -178,6 +178,25 @@ pixverse create video --prompt "Animate this scene with gentle wind" --image ./p
 
 ```bash
 pixverse create video --prompt "Bring this painting to life" --image "https://example.com/photo.jpg" --json
+```
+
+### MiniMax H3 text-to-video
+
+```bash
+pixverse create video --model minimax-h3 --prompt "A sweeping aerial shot across a crystalline desert" --quality 1440p --duration 10 --aspect-ratio 21:9 --json
+```
+
+For H3 image-to-video, pass `--image`; the CLI uses aspect ratio `auto` regardless of an explicit `--aspect-ratio` value.
+
+### MiniMax H3 mixed references
+
+```bash
+pixverse create reference --model minimax-h3 \
+  --images ./character.png \
+  --videos ./motion.mp4 \
+  --audios ./dialogue.mp3 \
+  --prompt "@image1 follows @video1 while speaking with the delivery in @audio1" \
+  --quality 1440p --duration 10 --json
 ```
 
 ### Fusion (character reference)
@@ -227,6 +246,7 @@ Each model has its own supported parameter combinations. **Always check this tab
 | Seedance 2.0 Standard | `seedance-2.0-standard` | Video, Reference, Transition | `480p` `720p` `1080p` `2160p` | `4`–`15` (any integer) | `16:9` `4:3` `1:1` `3:4` `9:16` `21:9` |
 | Seedance 2.0 Fast | `seedance-2.0-fast` | Video, Reference, Transition | `480p` `720p` | `4`–`15` (any integer) | `16:9` `4:3` `1:1` `3:4` `9:16` `21:9` |
 | Seedance 2.0 Mini | `seedance-2.0-mini` | Video, Reference, Transition | `480p` `720p` | `4`–`15` (any integer) | `16:9` `4:3` `1:1` `3:4` `9:16` `21:9` |
+| MiniMax H3 | `minimax-h3` | Video, Reference, Transition (exactly 2 frames) | `1440p` | `5`–`15` (any integer) | `auto` `21:9` `16:9` `4:3` `1:1` `3:4` `9:16` |
 | Kling O3 Pro | `kling-o3-pro` | Video, Reference, Transition | `720p` | `3`–`15` (any integer) | `16:9` `9:16` `1:1` |
 | Kling O3 Standard | `kling-o3-standard` | Video, Reference, Transition | `720p` | `3`–`15` (any integer) | `16:9` `9:16` `1:1` |
 | Kling 3.0 Pro | `kling-3.0-pro` | Video, Transition | `720p` | `3`–`15` (any integer) | `16:9` `9:16` `1:1` |
@@ -250,6 +270,7 @@ Each model has its own supported parameter combinations. **Always check this tab
 - **Seedance 2.0 Standard**: External model; supports `480p` / `720p` / `1080p` / `2160p` (4K); duration starts at `4s` (minimum); supports `21:9`; available in Video, Reference, and Transition modes. No off-peak pricing.
 - **Seedance 2.0 Fast**: External model; `480p` / `720p` only; duration starts at `4s` (minimum); supports `21:9`; available in Video, Reference, and Transition modes. No off-peak pricing.
 - **Seedance 2.0 Mini**: External model; same capabilities as Seedance 2.0 Fast — `480p` / `720p` only; duration starts at `4s` (minimum); supports `21:9`; available in Video, Reference, and Transition modes. No off-peak pricing.
+- **MiniMax H3** (`minimax-h3`): External model with fixed `1440p` and duration `5`–`15s`. T2V defaults to `16:9` and rejects `auto`; I2V always sends `auto` even if another ratio is supplied. Reference defaults to `auto` and accepts up to 9 images / 3 videos / 3 audios; audio needs a visual reference. H3 reference validation is count-only at the model layer, unlike Seedance's clip-duration and local-audio-size checks. Prompts are required in Video, Reference, and exactly-two-frame Transition. Generated audio, multi-shot, and off-peak are unsupported.
 - **Kling O3 (Pro & Standard)**: External models; `720p` only; duration starts at `3s` (minimum); limited aspect ratios (`16:9` `9:16` `1:1`). Available in Video, Reference, and Transition modes. No off-peak pricing.
 - **Kling 3.0 (Pro & Standard)**: External models; `720p` only; duration starts at `3s` (minimum); same aspect ratios as Kling O3. Available in Video and Transition modes only (no Reference). No off-peak pricing.
 - **Google Gemini Omni** (`gemini-omni-flash`): External model; `720p` only; duration `3`–`10s` (default `5`); aspect ratios `16:9` `9:16` only. Available in Video and Reference modes (no Transition or Extend). Reference caps at 5 images (lower than the 7-image default). No off-peak pricing. Added in CLI v1.2.7.

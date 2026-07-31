@@ -280,7 +280,7 @@ pixverse create image \
 
 ### `use <name> --for video "<scene prompt>"`
 
-Single character or multi-character — `pixverse create reference` accepts **1–7 images** (up to **9 on `seedance-2.0`** models):
+Single character or multi-character — `pixverse create reference` accepts **1–7 images** (up to **9 on `seedance-2.0` and `minimax-h3`**):
 
 ```bash
 pixverse create reference \
@@ -291,7 +291,7 @@ pixverse create reference \
 
 For comma-separated names (`use alice,bob --for video "..."`), resolve each name to its `image_id` and pass them all in `--images` order.
 
-> **Seedance 2.0 extra reference inputs.** On `seedance-2.0` models (`seedance-2.0-standard` / `seedance-2.0-fast` / `seedance-2.0-mini`), `create reference` also accepts `--videos <input...>` (motion/scene reference, max 3, total ≤ 15s) and `--audios <input...>` (audio reference, max 3, each 2–15s, total ≤ 15s; requires at least one image or video reference). Each input is a file path, HTTPS URL, asset ID, or media path. These flags are rejected on non-seedance-2.0 models.
+> **Mixed reference inputs.** On `seedance-2.0` models and `minimax-h3`, `create reference` also accepts `--videos <input...>` and `--audios <input...>` (max 3 each; audio requires at least one image or video reference). Each input may be a file path, HTTPS URL, asset ID, or media path. Seedance additionally enforces total video duration ≤ 15s and audio clips of 2–15s each / ≤ 15s total / ≤ 15MB for known local files. MiniMax H3 applies model-specific count validation only and otherwise uses shared upload/backend validation.
 
 ### Two-step alternative: I2I → I2V
 

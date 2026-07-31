@@ -111,9 +111,9 @@ When the user replies with enough detail, proceed to Step 1.
 1. **CLI flag mapping.** Determine how the assets reach Seedance 2.0 via the PixVerse CLI and bind each to a positional label:
    - Single image (I2V) → `--image <input>` (local file, HTTPS URL, image ID, or media path). Bind to `@image1`.
    - Multi-image fusion (R2V) → `pixverse create reference --images <p1> <p2> ...`. Bind in flag order: 1st → `@image1`, 2nd → `@image2`, … (Seedance 2.0 supports up to 9 images.)
-   - Source video (V2V / video edit) → `pixverse create reference --videos <v1> ...` (seedance-2.0 only). Bind to `@video1`, `@video2`, … in introduction order. Up to 3 input videos, total ≤ 15s.
+   - Source video (V2V / video edit) → for this Seedance workflow, use `pixverse create reference --videos <v1> ...` with a `seedance-2.0-*` model. Bind to `@video1`, `@video2`, … in introduction order. Up to 3 input videos, total ≤ 15s.
    - Generated assets the user references by `video_id` (e.g. `123456`) → bind up front (`@video1 is video_id 123456 — [description]`) before using them.
-   - Audio references → `pixverse create reference --audios <a1> ...` (seedance-2.0 only). Up to 3 audio inputs, each 2–15s, total ≤ 15s; requires at least one image or video reference. Bind to `@audio1`, `@audio2`, … in order.
+   - Audio references → for this Seedance workflow, use `pixverse create reference --audios <a1> ...` with a `seedance-2.0-*` model. Up to 3 audio inputs, each 2–15s, total ≤ 15s; requires at least one image or video reference. Bind to `@audio1`, `@audio2`, … in order.
 2. **Long-text / JSON auto-mapping.** If the user pasted a payload with a `"content"` array (or similar) containing attached image / video / audio items, scan it: number items in appearance order (each modality in its own sequence), and in the `text` portion replace any inline raw path / URL / `asset-xxx` / `video_id` with the corresponding `@imageN` / `@videoN` / `@audioN` label.
 3. **Long-image / grid check.** If an uploaded asset is a long image or N-up grid, ask the user to split it into separate single-frame images first.
 4. **Multi-view detection.** If the user uploads a character three-view / multi-view sheet, **proactively suggest** splitting it into a **headshot** (head only, neutral expression) + a **full-body shot** — multi-view sheets trigger twin artifacts and ID drift.

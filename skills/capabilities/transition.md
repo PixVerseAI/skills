@@ -43,8 +43,8 @@ Use transitions when you need to:
 | Flag | Description | Values |
 |:---|:---|:---|
 | `--images <paths...>` | Image paths or URLs (2+ required) | -- |
-| `--prompt <text>` | Optional prompt to guide transition | -- |
-| `-m, --model <model>` | Video model | `v6` (default, first/last frame only), `pixverse-c1` (first/last frame only), `v5.6`, `v5` (3+ frame only), `seedance-2.0-standard`, `seedance-2.0-fast`, `seedance-2.0-mini`, `veo-3.1-standard`, `veo-3.1-fast`, `veo-3.1-lite`, `kling-o3-pro`, `kling-o3-standard`, `kling-3.0-pro`, `kling-3.0-standard` |
+| `--prompt <text>` | Prompt to guide transition | optional generally; required for `minimax-h3` |
+| `-m, --model <model>` | Video model | `v6` (default, first/last frame only), `pixverse-c1` (first/last frame only), `v5.6`, `v5` (3+ frame only), `seedance-2.0-standard`, `seedance-2.0-fast`, `seedance-2.0-mini`, `minimax-h3` (exactly 2 frames), `veo-3.1-standard`, `veo-3.1-fast`, `veo-3.1-lite`, `kling-o3-pro`, `kling-o3-standard`, `kling-3.0-pro`, `kling-3.0-standard` |
 | `-q, --quality <q>` | Video quality | model-specific; up to `2160p` (see table below) |
 | `-d, --duration <sec>` | Duration | model-specific; `1`–`15` overall (default `5`) |
 | `--count <n>` | Generations | `1`-`4` |
@@ -67,6 +67,7 @@ Only specific models support Transition mode. Using other models will result in 
 | Seedance 2.0 Standard | `seedance-2.0-standard` | `480p` `720p` `1080p` `2160p` | `4`–`15` (any integer) | `16:9` `4:3` `1:1` `3:4` `9:16` `21:9` | External model; no off-peak |
 | Seedance 2.0 Fast | `seedance-2.0-fast` | `480p` `720p` | `4`–`15` (any integer) | `16:9` `4:3` `1:1` `3:4` `9:16` `21:9` | External model; no off-peak |
 | Seedance 2.0 Mini | `seedance-2.0-mini` | `480p` `720p` | `4`–`15` (any integer) | `16:9` `4:3` `1:1` `3:4` `9:16` `21:9` | External model; no off-peak |
+| MiniMax H3 | `minimax-h3` | `1440p` | `5`–`15` (any integer) | image-derived (no CLI flag) | Exactly 2 frames; prompt required; no generated audio/off-peak |
 | Veo 3.1 Standard | `veo-3.1-standard` | `720p` `1080p` `2160p` | `4` `6` `8` | `16:9` `9:16` | First/last frame only |
 | Veo 3.1 Fast | `veo-3.1-fast` | `720p` `1080p` `2160p` | `4` `6` `8` | `16:9` `9:16` | First/last frame only |
 | Veo 3.1 Lite | `veo-3.1-lite` | `720p` `1080p` | `4` `6` `8` | `16:9` `9:16` | First/last frame only |
@@ -78,6 +79,8 @@ Only specific models support Transition mode. Using other models will result in 
 > **V6 / C1 constraint:** V6 and `pixverse-c1` only support **first/last frame** transitions (2 images). For multi-frame transitions (3+ images), only `v5` is supported.
 >
 > **Veo 3.1 constraint:** Standard/Fast support `720p` / `1080p` / `2160p`; Lite supports `720p` / `1080p`. All three accept durations `4` / `6` / `8` and use first/last-frame transitions.
+>
+> **MiniMax H3 constraint:** H3 requires exactly two images and a non-empty prompt. It uses fixed `1440p`, accepts integer durations `5`–`15`, and does not support generated audio or off-peak mode.
 
 ### 3+ image constraint: automatic model fallback
 
@@ -138,6 +141,12 @@ Using a specific model (3+ frame transition requires `v5`):
 
 ```bash
 pixverse create transition --images ./f1.jpg ./f2.jpg ./f3.jpg --model v5 --json
+```
+
+MiniMax H3 two-frame transition:
+
+```bash
+pixverse create transition --model minimax-h3 --images ./start.jpg ./end.jpg --prompt "A smooth orbiting camera move connects the scenes" --quality 1440p --duration 10 --json
 ```
 
 Submit without waiting:

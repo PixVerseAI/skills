@@ -4,6 +4,18 @@ All notable changes to PixVerse Skills will be documented in this file.
 
 Format follows [Keep a Changelog](https://keepachangelog.com/).
 
+## [1.18.0] - 2026-07-31
+
+Sync the skill docs to PixVerse CLI **v1.2.11**.
+
+### Added
+- **MiniMax H3 (`minimax-h3`)** video model — available in text/image-to-video, reference, and exactly-two-frame transition modes; fixed `1440p`, duration `5`–`15s`, and H3-specific aspect-ratio behavior.
+- Document MiniMax H3 mixed references: up to 9 images, 3 videos, and 3 audios, with audio requiring at least one visual reference.
+
+### Changed
+- Distinguish MiniMax H3 mixed-reference validation from Seedance 2.0: H3 enforces reference counts but defers reference-media format, file-size, dimensions/aspect-ratio, and clip-duration constraints to shared upload/backend rules.
+- Clarify that H3 does not generate audio, does not support multi-shot or off-peak mode, and requires prompts in every supported creation mode.
+
 ## [1.17.0] - 2026-07-14
 
 Sync the skill docs to PixVerse CLI **v1.2.10**.
