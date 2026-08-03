@@ -67,7 +67,7 @@ Only specific models support Transition mode. Using other models will result in 
 | Seedance 2.0 Standard | `seedance-2.0-standard` | `480p` `720p` `1080p` `2160p` | `4`–`15` (any integer) | `16:9` `4:3` `1:1` `3:4` `9:16` `21:9` | External model; no off-peak |
 | Seedance 2.0 Fast | `seedance-2.0-fast` | `480p` `720p` | `4`–`15` (any integer) | `16:9` `4:3` `1:1` `3:4` `9:16` `21:9` | External model; no off-peak |
 | Seedance 2.0 Mini | `seedance-2.0-mini` | `480p` `720p` | `4`–`15` (any integer) | `16:9` `4:3` `1:1` `3:4` `9:16` `21:9` | External model; no off-peak |
-| MiniMax H3 | `minimax-h3` | `1440p` | `5`–`15` (any integer) | image-derived (no CLI flag) | Exactly 2 frames; prompt required; no generated audio/off-peak |
+| MiniMax H3 | `minimax-h3` | `768p` `1440p` (default) | `5`–`15` (any integer) | image-derived (no CLI flag) | Exactly 2 frames; prompt required; no generated audio/off-peak |
 | Veo 3.1 Standard | `veo-3.1-standard` | `720p` `1080p` `2160p` | `4` `6` `8` | `16:9` `9:16` | First/last frame only |
 | Veo 3.1 Fast | `veo-3.1-fast` | `720p` `1080p` `2160p` | `4` `6` `8` | `16:9` `9:16` | First/last frame only |
 | Veo 3.1 Lite | `veo-3.1-lite` | `720p` `1080p` | `4` `6` `8` | `16:9` `9:16` | First/last frame only |
@@ -80,7 +80,7 @@ Only specific models support Transition mode. Using other models will result in 
 >
 > **Veo 3.1 constraint:** Standard/Fast support `720p` / `1080p` / `2160p`; Lite supports `720p` / `1080p`. All three accept durations `4` / `6` / `8` and use first/last-frame transitions.
 >
-> **MiniMax H3 constraint:** H3 requires exactly two images and a non-empty prompt. It uses fixed `1440p`, accepts integer durations `5`–`15`, and does not support generated audio or off-peak mode.
+> **MiniMax H3 constraint:** H3 requires exactly two images and a non-empty prompt. It supports `768p` / `1440p` (default `1440p`), accepts integer durations `5`–`15`, and does not support generated audio or off-peak mode.
 
 ### 3+ image constraint: automatic model fallback
 

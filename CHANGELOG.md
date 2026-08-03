@@ -4,6 +4,16 @@ All notable changes to PixVerse Skills will be documented in this file.
 
 Format follows [Keep a Changelog](https://keepachangelog.com/).
 
+## [1.19.0] - 2026-08-03
+
+Sync the skill docs to PixVerse CLI **v1.2.12**.
+
+### Added
+- Add `768p` as a supported MiniMax H3 (`minimax-h3`) video quality alongside `1440p`; the default remains `1440p`.
+
+### Fixed
+- Clarify MiniMax H3 aspect-ratio handling by mode: image-to-video still forces `auto`; reference requests with images default to `auto` but preserve an explicit fixed `--aspect-ratio`; reference requests without images default to `16:9` and reject `auto`.
+
 ## [1.18.0] - 2026-07-31
 
 Sync the skill docs to PixVerse CLI **v1.2.11**.
