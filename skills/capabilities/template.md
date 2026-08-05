@@ -138,7 +138,7 @@ pixverse template info 12345 --json
 | `-d, --duration <sec>` | Duration | from template default, or override |
 | `--aspect-ratio <ratio>` | Aspect ratio | optional override |
 | `--prompt <text>` | Prompt override | optional — uses template default if omitted |
-| `--seed <number>` | Random seed | any integer |
+| `--seed <number>` | Random seed | any integer; image templates generate one automatically when omitted |
 | `--count <number>` | Number of generations | `1`–`4` |
 | `--off-peak` | Off-peak pricing | flag |
 | `--idempotency-key <key>` | Stable safe-retry key; repeated submissions return the original task without re-charging | optional |
@@ -147,6 +147,8 @@ pixverse template info 12345 --json
 | `--json` | JSON output | flag |
 
 > **Note:** `--image` and `--video` are mutually exclusive.
+
+For image templates, CLI v1.2.13 and later supplies a random seed when `--seed` is omitted. This prevents the backend `invalid param` failure while preserving explicit seeds for reproducible output. Video-template seed behavior is unchanged.
 
 ---
 

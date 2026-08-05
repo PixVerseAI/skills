@@ -4,6 +4,22 @@ All notable changes to PixVerse Skills will be documented in this file.
 
 Format follows [Keep a Changelog](https://keepachangelog.com/).
 
+## [1.20.0] - 2026-08-05
+
+Sync the skill docs to PixVerse CLI **v1.3.0**, including the image-template fix released in CLI v1.2.13.
+
+### Added
+- Add the `pixverse:miniapps` capability for discovering live MiniApps, reading the normalized `params_schema`, constructing required JSON arguments, creating projects, and managing their outputs.
+- Document the top-level `miniapps list`, `miniapps info <id>`, and `miniapps create --id <app_id> --params <json>` commands, including literal, file, and stdin parameter inputs.
+- Document `--type miniapps` across `task status`, `task wait`, and MiniApp-aware asset list, info, download, and delete operations using `project_id`.
+
+### Changed
+- Extend the master command index, README, task guidance, and asset guidance with the MiniApp project lifecycle and machine-readable output contracts.
+- Clarify that MiniApp upload parameters take PixVerse media paths returned by `asset upload`, and that project asset operations require explicit `--type miniapps`.
+
+### Fixed
+- Document that `create template` now supplies a random seed for image templates when `--seed` is omitted, preventing backend `invalid param` failures.
+
 ## [1.19.0] - 2026-08-03
 
 Sync the skill docs to PixVerse CLI **v1.2.12**.

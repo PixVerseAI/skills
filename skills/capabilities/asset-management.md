@@ -1,11 +1,11 @@
 ---
 name: pixverse:asset-management
-description: Browse, inspect, download, upload, and delete generated videos and images
+description: Browse, inspect, download, upload, and delete generated media assets and MiniApp projects
 ---
 
 # Asset Management
 
-Browse, inspect, download, upload, and delete generated videos and images from your PixVerse account.
+Browse, inspect, download, upload, and delete generated video, image, and audio assets or MiniApp projects from your PixVerse account.
 
 ## Prerequisites
 
@@ -18,6 +18,7 @@ Browse, inspect, download, upload, and delete generated videos and images from y
 Manage assets?
 ├── Browse history?      → pixverse asset list --type video --json
 ├── Browse uploads?      → pixverse asset list --source upload --json
+├── Browse MiniApps?     → pixverse asset list --type miniapps --json
 ├── Filter off-peak?     → pixverse asset list --off-peak --json
 ├── Get details?         → pixverse asset info <id> --json
 ├── Download?            → pixverse asset download <id> --json
@@ -33,6 +34,8 @@ Manage assets?
 4. Use `pixverse asset upload <input> --json` to upload a local file or HTTPS URL.
 5. Use `pixverse asset delete <id> --json` to remove an asset.
 
+For MiniApp projects, use the `project_id` returned by `miniapps create` and pass `--type miniapps` explicitly to every asset operation.
+
 ## Commands Reference
 
 ### asset list
@@ -41,7 +44,7 @@ Browse generation history with pagination.
 
 | Flag | Description | Values |
 |:---|:---|:---|
-| `--type <video\|image\|audio>` | Asset type | `video` (default), `image`, `audio` |
+| `--type <video\|image\|audio\|miniapps>` | Asset type | `video` (default), `image`, `audio`, `miniapps` |
 | `--source <create\|upload>` | Asset source | `create` (default), `upload` |
 | `--off-peak` | Filter off-peak generations only | flag (only valid with `--type video --source create`) |
 | `--limit <n>` | Items per page | `1`–`100`, default `20` |
@@ -60,16 +63,20 @@ JSON output:
 }
 ```
 
+For `--type miniapps`, the list contains MiniApp projects with normalized `id` values. Projects are created-only: `--source upload` and `--off-peak` are invalid.
+
 ### asset info <id>
 
 Get full details of a specific asset.
 
 | Flag | Description | Values |
 |:---|:---|:---|
-| `--type <video\|image\|audio>` | Asset type (auto-detected if omitted) | `video`, `image`, `audio` |
+| `--type <video\|image\|audio\|miniapps>` | Asset type (auto-detected if omitted) | `video`, `image`, `audio`; `miniapps` must be explicit |
 | `--json` | Output as JSON | flag |
 
 JSON output: full VideoDetail or ImageDetail object from the API.
+
+For `--type miniapps`, JSON preserves the backend project detail and adds stable fields including `id`, `project_id`, `app_id`, `status`, `status_code`, `url`, `first_frame`, `assets`, and `created_at`.
 
 ### asset download <id>
 
@@ -77,7 +84,7 @@ Download an asset to the local filesystem.
 
 | Flag | Description | Values |
 |:---|:---|:---|
-| `--type <video\|image\|audio>` | Asset type (auto-detected if omitted) | `video`, `image`, `audio` |
+| `--type <video\|image\|audio\|miniapps>` | Asset type (auto-detected if omitted) | `video`, `image`, `audio`; `miniapps` must be explicit |
 | `--dest <path>` | Destination directory | default: current directory |
 | `--json` | Output as JSON | flag |
 
@@ -88,6 +95,18 @@ JSON output:
   "id": 123456,
   "type": "video",
   "file": "/path/to/downloaded/file.mp4"
+}
+```
+
+MiniApp project download resolves and downloads the primary generated child asset: the first video, otherwise the first image. JSON identifies both the project and downloaded child asset:
+
+```json
+{
+  "id": 987654,
+  "type": "miniapps",
+  "asset_id": 123456,
+  "asset_type": "image",
+  "file": "/path/to/downloaded/file.png"
 }
 ```
 
@@ -121,7 +140,7 @@ Delete an asset from your account.
 
 | Flag | Description | Values |
 |:---|:---|:---|
-| `--type <video\|image\|audio>` | Asset type (auto-detected if omitted) | `video`, `image`, `audio` |
+| `--type <video\|image\|audio\|miniapps>` | Asset type (auto-detected if omitted) | `video`, `image`, `audio`; `miniapps` must be explicit |
 | `--json` | Output as JSON | flag |
 
 JSON output:
@@ -130,6 +149,18 @@ JSON output:
 {
   "id": 123456,
   "type": "video",
+  "deleted": true
+}
+```
+
+MiniApp projects are created-only and delete by `project_id`:
+
+```json
+{
+  "id": 987654,
+  "asset_id": 987654,
+  "type": "miniapps",
+  "source": "create",
   "deleted": true
 }
 ```
@@ -166,6 +197,12 @@ List with custom page size:
 pixverse asset list --type video --limit 50 --json
 ```
 
+List MiniApp projects:
+
+```bash
+pixverse asset list --type miniapps --json
+```
+
 Get video details:
 
 ```bash
@@ -196,6 +233,13 @@ Download an image:
 pixverse asset download 789012 --type image --json
 ```
 
+Inspect and download a MiniApp project:
+
+```bash
+pixverse asset info 987654 --type miniapps --json
+pixverse asset download 987654 --type miniapps --dest ./output --json
+```
+
 Upload a local file:
 
 ```bash
@@ -212,6 +256,12 @@ Delete an asset:
 
 ```bash
 pixverse asset delete 123456 --json
+```
+
+Delete a MiniApp project:
+
+```bash
+pixverse asset delete 987654 --type miniapps --json
 ```
 
 Pipeline -- create, wait, download:
@@ -237,3 +287,4 @@ pixverse asset download $VID --dest ./renders --json
 - `pixverse:create-video` -- create videos from text or images
 - `pixverse:create-and-edit-image` -- create and edit images
 - `pixverse:task-management` -- check status and wait for tasks
+- `pixverse:miniapps` -- discover MiniApps and create projects

@@ -1,6 +1,6 @@
 # PixVerse Skills
 
-Agent skill library for [PixVerse CLI](https://www.npmjs.com/package/pixverse) — helps AI agents (Claude Code, Cursor, Codex, etc.) generate videos, images, and audio (speech & music) through structured, composable workflows.
+Agent skill library for [PixVerse CLI](https://www.npmjs.com/package/pixverse) — helps AI agents (Claude Code, Cursor, Codex, etc.) generate videos, images, audio (speech & music), and MiniApp projects through structured, composable workflows.
 
 ## What is this?
 
@@ -46,6 +46,7 @@ skills/
     asset-management.md             #   List, download, upload, delete assets
     saved-folders.md                #   Organize assets into named folders
     template.md                     #   Browse and create from effect templates
+    miniapps.md                     #   Discover and run PixVerse MiniApps
     workspace.md                    #   Team workspace management
     mondo-poster-design.md          #   Mondo-style poster, book cover, album art design
     character-design.md             #   Persistent characters — three-view sheet + cloud asset id reuse
@@ -70,6 +71,29 @@ skills/
 
 - **Capabilities** document a single command or command group — flags, models, parameter constraints, JSON output format, error codes.
 - **Workflows** compose multiple capabilities into end-to-end pipelines with step-by-step instructions.
+
+## MiniApps
+
+PixVerse CLI v1.3.0 adds a top-level `miniapps` group for preset generators. Discover the live catalog and schema before submitting a project:
+
+```bash
+pixverse miniapps list --json
+pixverse miniapps info magic_extend --json
+pixverse miniapps create \
+  --id magic_extend \
+  --params '{"image":"<media-path>","ratio":"16:9"}' \
+  --no-wait \
+  --json
+```
+
+Creation returns a `project_id`. Use it with `task` and `asset`, always passing `--type miniapps`:
+
+```bash
+pixverse task wait <project_id> --type miniapps --json
+pixverse asset download <project_id> --type miniapps --json
+```
+
+See `skills/capabilities/miniapps.md` for normalized `params_schema` fields, media-path handling, output contracts, and the full project lifecycle.
 
 ## Supported Models
 

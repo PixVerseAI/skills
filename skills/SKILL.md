@@ -1,7 +1,7 @@
 ---
 name: pixverse-ai-image-and-video-generator
-description: PixVerse CLI — generate AI videos, images, and audio from the command line. Supports PixVerse V6, MiniMax H3, Veo, Sora, Grok, Seedance, Kling, Happy Horse video models; Nano Banana (Gemini), Seedream, Qwen, Kling, GPT Image image models; MiniMax / ElevenLabs voice (TTS) and MiniMax / ElevenLabs / Google Lyria music models; and PixVerse's rich effect template library. Start here.
-version: 1.19.0
+description: PixVerse CLI — generate AI videos, images, audio, and MiniApp projects from the command line. Supports PixVerse V6, MiniMax H3, Veo, Sora, Grok, Seedance, Kling, Happy Horse video models; Nano Banana (Gemini), Seedream, Qwen, Kling, GPT Image image models; MiniMax / ElevenLabs voice (TTS) and MiniMax / ElevenLabs / Google Lyria music models; PixVerse MiniApps; and PixVerse's rich effect template library. Start here.
+version: 1.20.0
 homepage: https://pixverse.ai
 source: https://github.com/PixVerseAI/skills
 ---
@@ -112,6 +112,7 @@ Details:
 | Organize assets into named folders | `pixverse:saved-folders` |
 | Set up auth or check account | `pixverse:auth-and-account` |
 | Browse and create from effect templates | `pixverse:template` |
+| Discover and run PixVerse MiniApps | `pixverse:miniapps` |
 | Manage workspaces (list, switch, status) | `pixverse:workspace` |
 | Generate Mondo-style posters and covers | `pixverse:mondo-poster-design` |
 | Design and reuse persistent characters across a story | `pixverse:character-design` |
@@ -243,16 +244,19 @@ Located in `skills/references/`. These are read-only knowledge bases that capabi
 | `template list` | Browse templates (with optional category filter) |
 | `template search` | Search templates by keyword |
 | `template info` | Get template details |
+| `miniapps list` | List available PixVerse MiniApps |
+| `miniapps info` | Get MiniApp details and a normalized parameter schema |
+| `miniapps create` | Create a MiniApp project from an app ID and JSON parameters |
 | `voice models` | List voice/TTS providers, models, and languages |
 | `voice presets` | List preset voices |
 | `music models` | List music providers and models |
-| `task status` | Check one task or query multiple space-separated IDs / `--ids` in parallel |
-| `task wait` | Wait for task completion |
-| `asset list` | List generated assets (with `--source` and `--off-peak` filters) |
-| `asset info` | Get asset details |
-| `asset download` | Download a generated asset |
+| `task status` | Check one task or MiniApp project, or query multiple IDs / `--ids` in parallel |
+| `task wait` | Wait for task or MiniApp project completion |
+| `asset list` | List generated assets or MiniApp projects (with applicable filters) |
+| `asset info` | Get asset or MiniApp project details |
+| `asset download` | Download a generated asset or a MiniApp project's primary asset |
 | `asset upload` | Upload a local file or HTTPS URL to asset library |
-| `asset delete` | Delete an asset |
+| `asset delete` | Delete an asset or MiniApp project |
 | `saved list` | List saved folders |
 | `saved items` | List items in a saved folder |
 | `saved new` | Create a new saved folder |

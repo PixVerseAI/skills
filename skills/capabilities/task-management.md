@@ -1,16 +1,16 @@
 ---
 name: pixverse:task-management
-description: Check generation task status and wait for completion
+description: Check generation task or MiniApp project status and wait for completion
 ---
 
 # Task Management
 
-Check the status of generation tasks and wait for them to complete.
+Check the status of generation tasks or MiniApp projects and wait for them to complete.
 
 ## Prerequisites
 
 - PixVerse CLI installed and authenticated (`pixverse auth login`)
-- One or more task IDs (video, image, or audio) from previous `pixverse create` commands
+- One or more task IDs (`video_id`, `image_id`, or `audio_id`) from `pixverse create`, or a `project_id` from `pixverse miniapps create`
 
 ## When to Use
 
@@ -18,7 +18,8 @@ Check the status of generation tasks and wait for them to complete.
 Check on a generation?
 ├── Check one status? → pixverse task status <id> --json
 ├── Check several in parallel? → pixverse task status <id1> <id2> ... --json
-└── Wait until done? → pixverse task wait <id> --json --timeout 300
+├── Check a MiniApp project? → pixverse task status <project_id> --type miniapps --json
+└── Wait until done? → pixverse task wait <id> [--type miniapps] --json --timeout 300
 ```
 
 Use task management when:
@@ -29,9 +30,9 @@ Use task management when:
 
 ## Steps
 
-1. Note the `video_id`, `image_id`, or `audio_id` from the creation command output.
-2. Use `pixverse task status <id> --json` for one task, or pass multiple IDs to query them in parallel.
-3. If not yet complete, use `pixverse task wait <id> --json` to block until done.
+1. Note the `video_id`, `image_id`, `audio_id`, or MiniApp `project_id` from the creation output.
+2. Use `pixverse task status <id> --json` for one task, or pass multiple IDs to query them in parallel. Add `--type miniapps` for project IDs.
+3. If not yet complete, use `pixverse task wait <id> --json` to block until done. Add `--type miniapps` for a project.
 4. Parse the JSON output to get the final result (URL, metadata).
 
 ## Commands Reference
@@ -42,7 +43,7 @@ Check current generation status without waiting. One positional ID preserves the
 
 | Flag | Description | Values |
 |:---|:---|:---|
-| `--type <video\|image\|audio>` | Asset type | `video` (default), `image`, `audio` |
+| `--type <video\|image\|audio\|miniapps>` | Task type | `video` (default), `image`, `audio`, `miniapps` |
 | `--ids <id1,id2,...>` | Alternative comma-separated batch syntax | Do not combine with positional IDs |
 | `--json` | Output as JSON | flag |
 
@@ -85,6 +86,21 @@ JSON output (image):
 }
 ```
 
+JSON output (MiniApp project):
+
+```json
+{
+  "id": 987654,
+  "type": "miniapps",
+  "status": "processing",
+  "status_code": 10,
+  "app_id": "magic_extend",
+  "created_at": "...",
+  "url": null,
+  "assets": []
+}
+```
+
 JSON output (batch):
 
 ```json
@@ -100,7 +116,7 @@ Block until a generation task completes or times out.
 
 | Flag | Description | Values |
 |:---|:---|:---|
-| `--type <video\|image\|audio>` | Asset type | `video` (default), `image`, `audio` |
+| `--type <video\|image\|audio\|miniapps>` | Task type | `video` (default), `image`, `audio`, `miniapps` |
 | `--timeout <seconds>` | Max wait time | default `300` |
 | `--json` | Output as JSON | flag |
 
@@ -130,6 +146,22 @@ JSON output (image completed):
   "image_url": "https://...",
   "prompt": "...",
   "model": "qwen-image",
+  "created_at": "..."
+}
+```
+
+JSON output (MiniApp project completed):
+
+```json
+{
+  "id": 987654,
+  "type": "miniapps",
+  "status": "completed",
+  "app_id": "magic_extend",
+  "url": "https://...",
+  "assets": [
+    { "type": "image", "id": 123456, "url": "https://..." }
+  ],
   "created_at": "..."
 }
 ```
@@ -166,6 +198,19 @@ pixverse task status 123456 123457 123458 --type video --json
 
 # Existing comma-separated form remains supported:
 pixverse task status --ids 123456,123457,123458 --type video --json
+```
+
+Check or wait for a MiniApp project:
+
+```bash
+pixverse task status 987654 --type miniapps --json
+pixverse task wait 987654 --type miniapps --timeout 600 --json
+```
+
+Batch project status queries are also supported when every ID is a MiniApp `project_id`:
+
+```bash
+pixverse task status 987654 987655 --type miniapps --json
 ```
 
 Wait for video completion:
@@ -220,3 +265,4 @@ Exit code 2 (TIMEOUT) is the most common error for task management. If a task co
 - `pixverse:create-video` -- create videos from text or images
 - `pixverse:create-and-edit-image` -- create and edit images
 - `pixverse:asset-management` -- browse, download, and delete assets
+- `pixverse:miniapps` -- discover MiniApps and create projects
