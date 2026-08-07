@@ -43,10 +43,10 @@ Use transitions when you need to:
 | Flag | Description | Values |
 |:---|:---|:---|
 | `--images <paths...>` | Image paths or URLs (2+ required) | -- |
-| `--prompt <text>` | Prompt to guide transition | optional generally; required for `minimax-h3` |
-| `-m, --model <model>` | Video model | `v6` (default, first/last frame only), `pixverse-c1` (first/last frame only), `v5.6`, `v5` (3+ frame only), `seedance-2.0-standard`, `seedance-2.0-fast`, `seedance-2.0-mini`, `minimax-h3` (exactly 2 frames), `veo-3.1-standard`, `veo-3.1-fast`, `veo-3.1-lite`, `kling-o3-pro`, `kling-o3-standard`, `kling-3.0-pro`, `kling-3.0-standard` |
+| `--prompt <text>` | Prompt to guide transition | optional generally; required for `seedance-2.5` and `minimax-h3` |
+| `-m, --model <model>` | Video model | `v6` (default, first/last frame only), `pixverse-c1` (first/last frame only), `v5.6`, `v5` (3+ frame only), `seedance-2.5` (exactly 2 frames), `seedance-2.0-standard`, `seedance-2.0-fast`, `seedance-2.0-mini`, `minimax-h3` (exactly 2 frames), `veo-3.1-standard`, `veo-3.1-fast`, `veo-3.1-lite`, `kling-o3-pro`, `kling-o3-standard`, `kling-3.0-pro`, `kling-3.0-standard` |
 | `-q, --quality <q>` | Video quality | model-specific; up to `2160p` (see table below) |
-| `-d, --duration <sec>` | Duration | model-specific; `1`–`15` overall (default `5`) |
+| `-d, --duration <sec>` | Duration | model-specific; `1`–`30` overall (default `5`) |
 | `--count <n>` | Generations | `1`-`4` |
 | `--seed <n>` | Random seed | -- |
 | `--audio` / `--no-audio` | Enable or disable audio generation | model-dependent boolean toggle |
@@ -64,6 +64,7 @@ Only specific models support Transition mode. Using other models will result in 
 | PixVerse C1 | `pixverse-c1` | `360p` `540p` `720p` `1080p` | `1`–`15` (any integer) | `16:9` `4:3` `1:1` `3:4` `9:16` `3:2` `2:3` | **First/last frame only** — no multi-frame; no `21:9` |
 | PixVerse v5.6 | `v5.6` | `360p` `480p` `540p` `720p` `1080p` | `1`–`10` (any integer) | `16:9` `4:3` `1:1` `3:4` `9:16` `3:2` `2:3` | First/last frame only (multi-frame: use `v5`) |
 | PixVerse v5 | `v5` | `360p` `480p` `540p` `720p` `1080p` | `1`–`10` (any integer) | `16:9` `4:3` `1:1` `3:4` `9:16` `3:2` `2:3` | **Multi-frame only** (3+ images); not valid for 2-frame transition |
+| Seedance 2.5 | `seedance-2.5` | `480p` `720p` (default) | `4`–`30` (any integer) | not selectable (no CLI flag) | Exactly 2 frames; prompt required; no generated audio/off-peak |
 | Seedance 2.0 Standard | `seedance-2.0-standard` | `480p` `720p` `1080p` `2160p` | `4`–`15` (any integer) | `16:9` `4:3` `1:1` `3:4` `9:16` `21:9` | External model; no off-peak |
 | Seedance 2.0 Fast | `seedance-2.0-fast` | `480p` `720p` | `4`–`15` (any integer) | `16:9` `4:3` `1:1` `3:4` `9:16` `21:9` | External model; no off-peak |
 | Seedance 2.0 Mini | `seedance-2.0-mini` | `480p` `720p` | `4`–`15` (any integer) | `16:9` `4:3` `1:1` `3:4` `9:16` `21:9` | External model; no off-peak |
@@ -81,6 +82,8 @@ Only specific models support Transition mode. Using other models will result in 
 > **Veo 3.1 constraint:** Standard/Fast support `720p` / `1080p` / `2160p`; Lite supports `720p` / `1080p`. All three accept durations `4` / `6` / `8` and use first/last-frame transitions.
 >
 > **MiniMax H3 constraint:** H3 requires exactly two images and a non-empty prompt. It supports `768p` / `1440p` (default `1440p`), accepts integer durations `5`–`15`, and does not support generated audio or off-peak mode.
+>
+> **Seedance 2.5 constraint:** Seedance 2.5 requires exactly two images and a non-empty prompt. It supports `480p` / `720p` (default `720p`), accepts integer durations `4`–`30`, and does not expose an aspect-ratio flag or support generated audio/off-peak mode in Transition.
 
 ### 3+ image constraint: automatic model fallback
 
@@ -147,6 +150,12 @@ MiniMax H3 two-frame transition:
 
 ```bash
 pixverse create transition --model minimax-h3 --images ./start.jpg ./end.jpg --prompt "A smooth orbiting camera move connects the scenes" --quality 1440p --duration 10 --json
+```
+
+Seedance 2.5 two-frame transition:
+
+```bash
+pixverse create transition --model seedance-2.5 --images ./start.jpg ./end.jpg --prompt "A seamless transformation" --quality 720p --duration 20 --json
 ```
 
 Submit without waiting:

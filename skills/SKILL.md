@@ -1,7 +1,7 @@
 ---
 name: pixverse-ai-image-and-video-generator
 description: PixVerse CLI — generate AI videos, images, audio, and MiniApp projects from the command line. Supports PixVerse V6, MiniMax H3, Veo, Sora, Grok, Seedance, Kling, Happy Horse video models; Nano Banana (Gemini), Seedream, Qwen, Kling, GPT Image image models; MiniMax / ElevenLabs voice (TTS) and MiniMax / ElevenLabs / Google Lyria music models; PixVerse MiniApps; and PixVerse's rich effect template library. Start here.
-version: 1.20.0
+version: 1.21.0
 homepage: https://pixverse.ai
 source: https://github.com/PixVerseAI/skills
 ---
@@ -98,8 +98,8 @@ Details:
 | Create a video from text or image | `pixverse:create-video` |
 | Review a prompt and get suggestions to improve it (advice only, any model — never auto-edits the prompt) | `pixverse:prompting-guide` |
 | Enhance a video prompt for better results (V6 / generic) | `pixverse:prompt-enhance` |
-| Optimize a prompt for Seedance 2.0 (auto-triggers when prompt has clear optimization headroom; skipped when prompt is already clean) | `pixverse:seedance-prompt-optimize` |
-| Distill an emotional / atmospheric / loosely-expressed idea into an experience-first Seedance 2.0 prompt (Vibe Creating) | `pixverse:seedance-vibe-creating` |
+| Optimize a prompt for Seedance 2.0 / 2.5 (auto-triggers when prompt has clear optimization headroom; skipped when prompt is already clean) | `pixverse:seedance-prompt-optimize` |
+| Distill an emotional / atmospheric / loosely-expressed idea into an experience-first Seedance prompt (Vibe Creating) | `pixverse:seedance-vibe-creating` |
 | Edit video content with AI (replace subjects, swap outfits, change backgrounds) | `pixverse:modify-video` |
 | Animate a character with motion from a reference video | `pixverse:motion-control` |
 | Create or edit an image | `pixverse:create-and-edit-image` |
@@ -143,6 +143,7 @@ Use this to pick a model before diving into a sub-skill.
 | Grok Imagine | `grok-imagine` | `720p` | `1`–`15`s |
 | Grok Imagine 1.5 *(image-to-video only)* | `grok-imagine-1.5` | `720p` | `1`–`15`s |
 | Happy Horse 1.0 | `happyhorse-1.0` | `1080p` | `3`–`15`s |
+| Seedance 2.5 | `seedance-2.5` | `720p` | `4`–`30`s |
 | Seedance 2.0 Standard | `seedance-2.0-standard` | `2160p` | `4`–`15`s |
 | Seedance 2.0 Fast | `seedance-2.0-fast` | `720p` | `4`–`15`s |
 | Seedance 2.0 Mini | `seedance-2.0-mini` | `720p` | `4`–`15`s |

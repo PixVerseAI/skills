@@ -4,6 +4,21 @@ All notable changes to PixVerse Skills will be documented in this file.
 
 Format follows [Keep a Changelog](https://keepachangelog.com/).
 
+## [1.21.0] - 2026-08-07
+
+Sync the skill docs to PixVerse CLI **v1.3.1**.
+
+### Added
+- Add Seedance 2.5 (`seedance-2.5`) to video, reference, and exactly-two-frame transition guidance, with `480p` / `720p`, integer durations from `4` through `30` seconds, and its six fixed aspect ratios.
+- Document Seedance 2.5 mixed-reference limits: up to 30 images, 10 videos, and 10 audios, capped at 50 total inputs, with separate 30-second aggregate limits for video and audio.
+
+### Changed
+- Make the Seedance prompt optimizer, Vibe Creating, character-design, and prompting-guide routing recognize both Seedance 2.0 and Seedance 2.5 while preserving model-specific CLI limits.
+- Clarify that Seedance 2.5 defaults to `720p`, 5 seconds, and `16:9`, and does not support generated audio, multi-shot, or off-peak generation.
+
+### Fixed
+- Document that Seedance 2.5 transitions require exactly two images and a non-empty prompt, and do not accept a user-selected aspect ratio.
+
 ## [1.20.0] - 2026-08-05
 
 Sync the skill docs to PixVerse CLI **v1.3.0**, including the image-template fix released in CLI v1.2.13.

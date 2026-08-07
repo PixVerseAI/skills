@@ -155,8 +155,8 @@ You are about to break the Cardinal Rule if you catch yourself thinking:
 This skill is the **model-agnostic, advice-only front door**. It diagnoses and suggests; it does not own model-specific rewrite syntax, and it never auto-applies.
 
 - `pixverse:prompt-enhance` — actually rewrite a prompt for PixVerse **V6** (opt-in).
-- `pixverse:seedance-prompt-optimize` — engineer a prompt for **Seedance 2.0** (multi-modal `@imageN` / shot syntax).
-- `pixverse:seedance-vibe-creating` — distill an emotional / atmospheric idea into a Seedance 2.0 prompt.
+- `pixverse:seedance-prompt-optimize` — engineer a prompt for **Seedance 2.0 / 2.5** (multi-modal `@imageN` / shot syntax).
+- `pixverse:seedance-vibe-creating` — distill an emotional / atmospheric idea into a Seedance-family prompt.
 - `pixverse:create-video` — model and parameter selection.
 
 For model-specific token syntax (e.g. Seedance's `@imageN` binding), hand off to the matching skill above rather than inventing it here.

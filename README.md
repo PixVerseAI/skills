@@ -40,8 +40,8 @@ skills/
     post-process-video.md           #   Extend duration, upscale resolution
     prompting-guide.md              #   Model-agnostic prompt advice (advice only — never auto-edits)
     prompt-enhance.md               #   Prompt optimization for V6 video generation
-    seedance-prompt-optimize.md     #   Prompt optimization for Seedance 2.0
-    seedance-vibe-creating.md       #   Vibe Creating — distill emotional / atmospheric ideas into Seedance 2.0 prompts
+    seedance-prompt-optimize.md     #   Prompt optimization for Seedance 2.0 / 2.5
+    seedance-vibe-creating.md       #   Vibe Creating — distill emotional / atmospheric ideas into Seedance prompts
     task-management.md              #   Poll and wait for generation tasks
     asset-management.md             #   List, download, upload, delete assets
     saved-folders.md                #   Organize assets into named folders
@@ -112,6 +112,7 @@ See `skills/capabilities/miniapps.md` for normalized `params_schema` fields, med
 | Grok Imagine | `grok-imagine` | Video, Extend, Reference | `480p` `720p` | `1`-`15` | `16:9` `4:3` `1:1` `9:16` `3:4` `3:2` `2:3` |
 | Grok Imagine 1.5 | `grok-imagine-1.5` | Video (image-to-video only) | `480p` `720p` | `1`-`15` | derived from input image |
 | Happy Horse 1.0 | `happyhorse-1.0` | Video | `720p` `1080p` | `3`-`15` | `16:9` `9:16` `1:1` `4:3` `3:4` |
+| Seedance 2.5 | `seedance-2.5` | Video, Reference, Transition (exactly 2 frames) | `480p` `720p` | `4`-`30` | `21:9` `16:9` `4:3` `1:1` `3:4` `9:16` |
 | Seedance 2.0 Standard | `seedance-2.0-standard` | Video, Reference, Transition | `480p` `720p` `1080p` `2160p` | `4`-`15` | `16:9` `4:3` `1:1` `3:4` `9:16` `21:9` |
 | Seedance 2.0 Fast | `seedance-2.0-fast` | Video, Reference, Transition | `480p` `720p` | `4`-`15` | `16:9` `4:3` `1:1` `3:4` `9:16` `21:9` |
 | Seedance 2.0 Mini | `seedance-2.0-mini` | Video, Reference, Transition | `480p` `720p` | `4`-`15` | `16:9` `4:3` `1:1` `3:4` `9:16` `21:9` |
@@ -123,6 +124,8 @@ See `skills/capabilities/miniapps.md` for normalized `params_schema` fields, med
 | Google Gemini Omni | `gemini-omni-flash` | Video, Reference | `720p` | `3`-`10` | `16:9` `9:16` |
 
 > MiniMax H3 defaults to `1440p`. Text-to-video defaults to `16:9` and rejects `auto`; image-to-video forces `auto`. Reference requests with images default to `auto` but preserve an explicit fixed ratio; reference requests without images default to `16:9` and reject `auto`.
+
+> Seedance 2.5 defaults to `720p`, 5 seconds, and `16:9`. It accepts up to 50 mixed references (30 images, 10 videos, and 10 audios), with separate 30-second aggregate limits for video and audio. Transition requires exactly two images and a prompt and has no selectable aspect ratio. Generated audio, multi-shot, and off-peak generation are unsupported.
 
 ### Image Models
 

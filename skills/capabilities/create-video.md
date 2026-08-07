@@ -24,8 +24,8 @@ Want to create a video?
 |:---|:---|:---|
 | `--prompt <text>` | Prompt text (required) | -- |
 | `--image <input>` | Image input (enables I2V): local file path, HTTPS URL, image ID, or media path | local files auto-upload; pass an existing asset's image ID or media path to skip upload |
-| `-m, --model <model>` | Video model | `v6` (default), `pixverse-c1`, `v5.6`, `sora-2`, `sora-2-pro`, `veo-3.1-standard`, `veo-3.1-fast`, `veo-3.1-lite`, `grok-imagine`, `grok-imagine-1.5` (I2V only — requires `--image`), `seedance-2.0-standard`, `seedance-2.0-fast`, `seedance-2.0-mini`, `minimax-h3`, `gemini-omni-flash`, `kling-o3-pro`, `kling-o3-standard`, `kling-3.0-pro`, `kling-3.0-standard`, `happyhorse-1.0` |
-| `-d, --duration <sec>` | Duration in seconds | `1`–`15` (any integer, default `5`; varies by model — see Model Reference) |
+| `-m, --model <model>` | Video model | `v6` (default), `pixverse-c1`, `v5.6`, `sora-2`, `sora-2-pro`, `veo-3.1-standard`, `veo-3.1-fast`, `veo-3.1-lite`, `grok-imagine`, `grok-imagine-1.5` (I2V only — requires `--image`), `seedance-2.5`, `seedance-2.0-standard`, `seedance-2.0-fast`, `seedance-2.0-mini`, `minimax-h3`, `gemini-omni-flash`, `kling-o3-pro`, `kling-o3-standard`, `kling-3.0-pro`, `kling-3.0-standard`, `happyhorse-1.0` |
+| `-d, --duration <sec>` | Duration in seconds | model-specific; `1`–`30` overall (default `5`; see Model Reference) |
 | `-q, --quality <q>` | Video quality | model-specific; `360p`–`2160p` overall (see Model Reference) |
 | `--aspect-ratio <ratio>` | Aspect ratio | model-specific; H3 image-to-video forces `auto` (see Model Reference) |
 | `--seed <number>` | Random seed | any integer |
@@ -44,14 +44,14 @@ Want to create a video?
 
 | Flag | Description | Values / Default |
 |:---|:---|:---|
-| `--images <inputs...>` | Image inputs: file paths, HTTPS URLs, image IDs, or media paths (1–7 when supplied; up to 9 on `seedance-2.0` and `minimax-h3`, max 5 on `gemini-omni-flash`). At least one image or video reference is required overall | -- |
-| `--videos <inputs...>` | Video references for `seedance-2.0` / `minimax-h3` (max 3). Seedance total duration ≤ 15s; H3 applies count-only model validation | file path, HTTPS URL, video ID, or media path |
-| `--audios <inputs...>` | Audio references for `seedance-2.0` / `minimax-h3` (max 3; requires ≥1 image/video). Seedance: each 2–15s, total ≤ 15s, local file ≤ 15MB; H3 applies count-only model validation | file path, HTTPS URL, audio ID, or media path |
+| `--images <inputs...>` | Image inputs: file paths, HTTPS URLs, image IDs, or media paths. Maximum: 30 on `seedance-2.5`, 9 on Seedance 2.0 / `minimax-h3`, 5 on `gemini-omni-flash`, otherwise 7. At least one image or video reference is required overall | -- |
+| `--videos <inputs...>` | Video references for Seedance / `minimax-h3`. Seedance 2.5: max 10 and ≤30s total; others: max 3, with Seedance 2.0 limited to ≤15s total | file path, HTTPS URL, video ID, or media path |
+| `--audios <inputs...>` | Audio references for Seedance / `minimax-h3`; requires ≥1 image/video. Seedance 2.5: max 10 and ≤30s total. Seedance 2.0: max 3, each 2–15s, ≤15s total, and known local files ≤15MB. H3 uses count-only model validation | file path, HTTPS URL, audio ID, or media path |
 | `--prompt <text>` | Prompt text (required) | -- |
-| `-m, --model <model>` | Video model | `v6` (default), `pixverse-c1`, `v5.6`, `seedance-2.0-standard`, `seedance-2.0-fast`, `seedance-2.0-mini`, `minimax-h3`, `gemini-omni-flash`, `kling-o3-pro`, `kling-o3-standard`, `grok-imagine` |
+| `-m, --model <model>` | Video model | `v6` (default), `pixverse-c1`, `v5.6`, `seedance-2.5`, `seedance-2.0-standard`, `seedance-2.0-fast`, `seedance-2.0-mini`, `minimax-h3`, `gemini-omni-flash`, `kling-o3-pro`, `kling-o3-standard`, `grok-imagine` |
 | `-q, --quality <q>` | Video quality | model-specific; up to `2160p` (see Model Reference) |
 | `--aspect-ratio <ratio>` | Aspect ratio | model-specific; H3 with images defaults to `auto` but preserves an explicit fixed ratio; without images it defaults to `16:9` and rejects `auto` |
-| `-d, --duration <sec>` | Duration in seconds | model-specific; `1`–`15` overall (default `5`) |
+| `-d, --duration <sec>` | Duration in seconds | model-specific; `1`–`30` overall (default `5`) |
 | `--audio` / `--no-audio` | Enable or disable audio generation | model-dependent boolean toggle |
 | `--count <number>` | Number of generations | `1` (default), `2`, `3`, `4` |
 | `--seed <number>` | Random seed | any integer |
@@ -61,7 +61,9 @@ Want to create a video?
 | `--timeout <sec>` | Polling timeout | `300` (default) |
 | `--json` | JSON output | flag |
 
-> **Note:** Reference (fusion) supports `v6` (default), `pixverse-c1`, `v5.6`, `seedance-2.0-standard`, `seedance-2.0-fast`, `seedance-2.0-mini`, `minimax-h3`, `gemini-omni-flash`, `kling-o3-pro`, `kling-o3-standard`, and `grok-imagine`.
+> **Note:** Reference (fusion) supports `v6` (default), `pixverse-c1`, `v5.6`, `seedance-2.5`, `seedance-2.0-standard`, `seedance-2.0-fast`, `seedance-2.0-mini`, `minimax-h3`, `gemini-omni-flash`, `kling-o3-pro`, `kling-o3-standard`, and `grok-imagine`.
+>
+> Seedance 2.5 reference requests accept at most 50 inputs in total, even when the individual 30-image / 10-video / 10-audio caps would otherwise allow more.
 
 ---
 
@@ -137,7 +139,7 @@ When `--count > 1`, the submitted output includes a list of IDs:
 
 ## Steps for Fusion (Character Reference)
 
-1. Prepare at least one visual reference. Most models require 1–7 images; `seedance-2.0` and `minimax-h3` allow up to 9 images and may instead use video references (max 3).
+1. Prepare at least one visual reference. Most models allow 1–7 images; Seedance 2.0 and `minimax-h3` allow up to 9, while Seedance 2.5 allows up to 30 images plus 10 videos and 10 audios (50 inputs total).
 2. Write a prompt describing the desired scene with those characters.
 3. Run the command:
    ```bash
@@ -179,6 +181,29 @@ pixverse create video --prompt "Animate this scene with gentle wind" --image ./p
 ```bash
 pixverse create video --prompt "Bring this painting to life" --image "https://example.com/photo.jpg" --json
 ```
+
+### Seedance 2.5 text-to-video
+
+```bash
+pixverse create video --model seedance-2.5 \
+  --prompt "A slow aerial orbit around an alpine lake" \
+  --quality 720p --duration 12 --aspect-ratio 21:9 --json
+```
+
+Seedance 2.5 defaults to `720p`, 5 seconds, and `16:9`. Text-to-video and image-to-video accept its fixed aspect ratios. It does not support generated audio, multi-shot, or off-peak generation.
+
+### Seedance 2.5 mixed references
+
+```bash
+pixverse create reference --model seedance-2.5 \
+  --images ./character.png \
+  --videos ./motion.mp4 \
+  --audios ./dialogue.mp3 \
+  --prompt "@image1 follows @video1 and speaks with @audio1" \
+  --quality 720p --duration 20 --aspect-ratio 16:9 --json
+```
+
+Reference mode allows up to 30 images, 10 videos, and 10 audios, with 50 inputs total. Known video durations may total at most 30 seconds, known audio durations may total at most 30 seconds, and audio cannot be the only reference type.
 
 ### MiniMax H3 text-to-video
 
@@ -245,6 +270,7 @@ Each model has its own supported parameter combinations. **Always check this tab
 | Grok Imagine | `grok-imagine` | Video, Extend, Reference | `480p` `720p` | `1`–`15` (any integer) | `16:9` `4:3` `1:1` `9:16` `3:4` `3:2` `2:3` |
 | Grok Imagine 1.5 | `grok-imagine-1.5` | Video (I2V only) | `480p` `720p` | `1`–`15` (any integer) | derived from input image |
 | Happy Horse 1.0 | `happyhorse-1.0` | Video | `720p` `1080p` | `3`–`15` (any integer) | `16:9` `9:16` `1:1` `4:3` `3:4` |
+| Seedance 2.5 | `seedance-2.5` | Video, Reference, Transition (exactly 2 frames) | `480p` `720p` | `4`–`30` (any integer) | `21:9` `16:9` `4:3` `1:1` `3:4` `9:16` (Video / Reference; transition has no selectable ratio) |
 | Seedance 2.0 Standard | `seedance-2.0-standard` | Video, Reference, Transition | `480p` `720p` `1080p` `2160p` | `4`–`15` (any integer) | `16:9` `4:3` `1:1` `3:4` `9:16` `21:9` |
 | Seedance 2.0 Fast | `seedance-2.0-fast` | Video, Reference, Transition | `480p` `720p` | `4`–`15` (any integer) | `16:9` `4:3` `1:1` `3:4` `9:16` `21:9` |
 | Seedance 2.0 Mini | `seedance-2.0-mini` | Video, Reference, Transition | `480p` `720p` | `4`–`15` (any integer) | `16:9` `4:3` `1:1` `3:4` `9:16` `21:9` |
@@ -269,6 +295,7 @@ Each model has its own supported parameter combinations. **Always check this tab
 - **Grok Imagine**: Supports `480p` and `720p`; duration is any integer from `1` to `15`; widest aspect ratio selection among third-party models but no `21:9`. Also supports **Extend** and **Reference** (fusion) modes (added in CLI v1.1.6).
 - **Grok Imagine 1.5** (`grok-imagine-1.5`): **Image-to-video only** — `--image` is required (no text-only generation); aspect ratio is derived from the input image. Supports `480p` / `720p`; duration any integer `1`–`15`. Added in CLI v1.2.0.
 - **Happy Horse 1.0** (`happyhorse-1.0`): External model; `720p` / `1080p`; duration starts at `3s` (minimum); aspect ratios `16:9` `9:16` `1:1` `4:3` `3:4`. Video (T2V/I2V) only — no Extend, Transition, or Reference modes.
+- **Seedance 2.5** (`seedance-2.5`): External model; `480p` / `720p` (default `720p`); integer durations `4`–`30s` (default `5s`); fixed aspect ratios `21:9` `16:9` `4:3` `1:1` `3:4` `9:16` (default `16:9`) in Video and Reference modes. Reference accepts up to 30 images / 10 videos / 10 audios, 50 inputs total, with separate 30-second aggregate video and audio limits; audio requires a visual reference. Exactly-two-frame Transition is supported with a required prompt and no selectable aspect ratio. Generated audio, multi-shot, and off-peak are unsupported. Prompts are required in every supported mode.
 - **Seedance 2.0 Standard**: External model; supports `480p` / `720p` / `1080p` / `2160p` (4K); duration starts at `4s` (minimum); supports `21:9`; available in Video, Reference, and Transition modes. No off-peak pricing.
 - **Seedance 2.0 Fast**: External model; `480p` / `720p` only; duration starts at `4s` (minimum); supports `21:9`; available in Video, Reference, and Transition modes. No off-peak pricing.
 - **Seedance 2.0 Mini**: External model; same capabilities as Seedance 2.0 Fast — `480p` / `720p` only; duration starts at `4s` (minimum); supports `21:9`; available in Video, Reference, and Transition modes. No off-peak pricing.

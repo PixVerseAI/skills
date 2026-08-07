@@ -1,9 +1,9 @@
 ---
 name: pixverse:seedance-vibe-creating
-description: Decide whether a user's idea suits Vibe Creating (VC) — distilling a single-shot prompt, multi-shot description, emotional imagery, or mixed expression into an experience-first prompt for Seedance 2.0 (`seedance-2.0-standard` / `seedance-2.0-fast` / `seedance-2.0-mini`) — while preserving any user-specified dialogue, voiceover, music, sound effects, and other hard constraints. Use when the user targets a Seedance model with an emotional / atmospheric / loosely-expressed creative idea and wants it shaped for generation. Not for word-level dialogue-synced long-form drama, industrial shot lists, functional demos, or UI tutorials — and not for precise multi-asset / multi-shot engineering control, which belongs to `pixverse:seedance-prompt-optimize`.
+description: Decide whether a user's idea suits Vibe Creating (VC) — distilling a single-shot prompt, multi-shot description, emotional imagery, or mixed expression into an experience-first prompt for Seedance 2.0 or Seedance 2.5 — while preserving any user-specified dialogue, voiceover, music, sound effects, and other hard constraints. Use when the user targets a Seedance model with an emotional / atmospheric / loosely-expressed creative idea and wants it shaped for generation. Not for word-level dialogue-synced long-form drama, industrial shot lists, functional demos, or UI tutorials — and not for precise multi-asset / multi-shot engineering control, which belongs to `pixverse:seedance-prompt-optimize`.
 ---
 
-# Seedance 2.0 Vibe Creating
+# Seedance Vibe Creating (2.0 / 2.5)
 
 ## Overview
 
@@ -11,13 +11,13 @@ description: Decide whether a user's idea suits Vibe Creating (VC) — distillin
 
 VC is **not** about engineering a precise instruction — it is about purifying intent into an evocative, generation-friendly prompt. For the opposite job (engineering exact subject / asset bindings, shot order, and camera control for Seedance's parser), use `pixverse:seedance-prompt-optimize` instead.
 
-> **PixVerse pipeline note:** This skill rewrites the `--prompt` text for a Seedance 2.0 model (`seedance-2.0-standard` / `seedance-2.0-fast` / `seedance-2.0-mini`) created through `pixverse create video` / `pixverse create reference`. It does not choose model variant, quality, duration, or other CLI flags — see `pixverse:create-video`. For non-Seedance video models, use `pixverse:prompt-enhance`.
+> **PixVerse pipeline note:** This skill rewrites the `--prompt` text for `seedance-2.5`, `seedance-2.0-standard`, `seedance-2.0-fast`, or `seedance-2.0-mini` through `pixverse create video` / `pixverse create reference`. It does not choose model variant, quality, duration, or other CLI flags — see `pixverse:create-video`. For non-Seedance video models, use `pixverse:prompt-enhance`.
 
 ## When to Use
 
 Use VC when **both** hold:
 
-1. **Target model is Seedance** — the user specified `--model seedance-2.0-standard` / `seedance-2.0-fast` / `seedance-2.0-mini`, or any identifier containing `seedance`.
+1. **Target model is Seedance** — the user specified `--model seedance-2.5` / `seedance-2.0-standard` / `seedance-2.0-fast` / `seedance-2.0-mini`, or another supported identifier containing `seedance`.
 2. **The intent is experiential, not engineering** — the input is an emotion, an atmosphere, a memory, a stream of associations, a single evocative shot, or a multi-shot description that all serves one unified feeling, and the user wants that feeling amplified for generation.
 
 **Do NOT use VC for:**
@@ -217,7 +217,7 @@ The goal is to help the user **express more accurately**, not to rewrite their i
 
 ## What This Skill Does NOT Do
 
-- Select model variant (`seedance-2.0-standard` / `seedance-2.0-fast` / `seedance-2.0-mini`), quality, aspect ratio, or duration — see `pixverse:create-video`.
+- Select model variant (`seedance-2.5` / `seedance-2.0-standard` / `seedance-2.0-fast` / `seedance-2.0-mini`), quality, aspect ratio, or duration — see `pixverse:create-video`.
 - Engineer precise asset binding, shot order, or single-camera-move control for Seedance's parser — see `pixverse:seedance-prompt-optimize`.
 - Rewrite, replace, or delete user-specified dialogue, voiceover, music, or sound effects.
 - Add creative elements (characters, plot, scene details, emotional shifts) the user did not write or confirm.
@@ -226,6 +226,6 @@ The goal is to help the user **express more accurately**, not to rewrite their i
 
 ## Related Skills
 
-- `pixverse:seedance-prompt-optimize` — engineer precise multi-modal / multi-shot control for Seedance 2.0 (the complement to this skill).
+- `pixverse:seedance-prompt-optimize` — engineer precise multi-modal / multi-shot control for Seedance 2.0 / 2.5 (the complement to this skill).
 - `pixverse:prompt-enhance` — prompt optimization for PixVerse V6 and other non-Seedance models.
 - `pixverse:create-video` — pick the model variant, quality, duration, and run the generation.

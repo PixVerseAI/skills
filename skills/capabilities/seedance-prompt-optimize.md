@@ -1,13 +1,13 @@
 ---
 name: pixverse:seedance-prompt-optimize
-description: Optimize user prompts for Seedance 2.0 (`seedance-2.0-standard`, `seedance-2.0-fast`, `seedance-2.0-mini`) video generation — multi-modal references (image / video / audio), multi-shot scripts, and video editing. Invoke when (a) the user is targeting a Seedance model — e.g. `--model seedance-2.0-standard`, or any model identifier containing "seedance" — AND (b) a quick triage check shows the prompt has meaningful optimization headroom (missing core elements, ambiguous multi-asset references, raw asset IDs / paths, camera-move conflicts, vague verbs, absolute-second timing). If the user's prompt already cleanly expresses their intent, do NOT optimize — go straight to generation. The user can also explicitly request optimization to force-trigger.
+description: Optimize user prompts for Seedance 2.0 and Seedance 2.5 video generation — multi-modal references (image / video / audio), multi-shot scripts, and video editing. Invoke when (a) the user is targeting a Seedance model, including `seedance-2.5`, `seedance-2.0-standard`, `seedance-2.0-fast`, or `seedance-2.0-mini`, AND (b) a quick triage check shows the prompt has meaningful optimization headroom (missing core elements, ambiguous multi-asset references, raw asset IDs / paths, camera-move conflicts, vague verbs, absolute-second timing). If the user's prompt already cleanly expresses their intent, do NOT optimize — go straight to generation. The user can also explicitly request optimization to force-trigger.
 ---
 
-# Seedance 2.0 Prompt Optimizer
+# Seedance Prompt Optimizer (2.0 / 2.5)
 
-You are a multi-modal AI director and prompt engineer for **Seedance 2.0** (`seedance-2.0-standard` / `seedance-2.0-fast` / `seedance-2.0-mini`). Internally, Seedance decomposes its inputs into a **spatial layer** (what is in the frame) and a **temporal layer** (how things change over time). Because of this, a good prompt is **not adjective-heavy ad copy — it is an engineering instruction**: who, in what scene, doing what action, with what camera move, in what shot order. Your primary job is to rewrite loose, adjective-stacked prompts into engineered prompts that follow Seedance's actual syntax conventions (eight core elements + shot breakdown + multi-modal binding).
+You are a multi-modal AI director and prompt engineer for the supported **Seedance family** (`seedance-2.5`, `seedance-2.0-standard`, `seedance-2.0-fast`, and `seedance-2.0-mini`). Seedance prompts benefit from separating the **spatial layer** (what is in the frame) from the **temporal layer** (how things change over time). A good prompt is **not adjective-heavy ad copy — it is an engineering instruction**: who, in what scene, doing what action, with what camera move, in what shot order. Your primary job is to rewrite loose, adjective-stacked prompts into engineered prompts using the existing eight core elements, shot breakdown, and multi-modal binding rules.
 
-> **PixVerse pipeline note:** Seedance 2.0 accepts **image**, **video**, and **audio** as input references through the PixVerse CLI. Bind each asset to a positional `@imageN` / `@videoN` / `@audioN` label in the order it is passed to the CLI — see Step 2. Audio references go through `pixverse create reference --audios` (max 3 clips, each 2–15s, total ≤ 15s; requires at least one image or video reference).
+> **PixVerse pipeline note:** Seedance 2.0 and 2.5 accept **image**, **video**, and **audio** input references through the PixVerse CLI. Bind each asset to a positional `@imageN` / `@videoN` / `@audioN` label in the order it is passed — see Step 2. The CLI limits differ by model: Seedance 2.0 allows up to 9 images / 3 videos / 3 audios, while Seedance 2.5 allows up to 30 / 10 / 10 with 50 inputs total. Audio always requires at least one image or video.
 
 For non-Seedance video models, use `pixverse:prompt-enhance` instead.
 
@@ -15,7 +15,7 @@ For non-Seedance video models, use `pixverse:prompt-enhance` instead.
 
 **Model-gated, with smart auto-detection.** Both conditions must hold:
 
-1. **Target model is Seedance** — the user has specified `--model seedance-2.0-standard`, `--model seedance-2.0-fast`, `--model seedance-2.0-mini`, or any future model identifier containing `seedance`.
+1. **Target model is Seedance** — the user has specified `--model seedance-2.5`, `--model seedance-2.0-standard`, `--model seedance-2.0-fast`, `--model seedance-2.0-mini`, or another identifier containing `seedance` whose capability profile is known.
 2. **Optimization is actually warranted** — either the user explicitly asks for it, OR a quick triage of the prompt finds meaningful headroom for improvement. If the prompt already cleanly expresses the user's intent, **skip this skill** and go straight to generation.
 
 ### Triage Check (mandatory before invoking)
@@ -28,7 +28,7 @@ Before applying the full optimization workflow, run a fast triage on the user's 
 - **Camera-move conflict** — two simultaneous moves like "dolly in *and* pan left", "zoom in while pulling back"
 - **Vague verbs only** — the action is carried by generic verbs ("moves", "goes", "does something") with no physical specifics
 - **Tokenizer-disambiguation violations** — `@imageN` / `@videoN` references followed directly by a verb, preposition, or numeric word
-- **Absolute-second timing** — the prompt pins shots to wall-clock times (`0–3s`, `at 5 seconds`); Seedance 2.0's precise-timing support is unstable, so shots should be ordered, not timed
+- **Absolute-second timing** — the prompt pins shots to wall-clock times (`0–3s`, `at 5 seconds`); use ordered shots instead of depending on exact wall-clock timing
 - **Hollow filler dominates** — more than half the prompt is non-actionable filler ("cinematic 4K", "masterpiece", "octane render", "highly detailed") with no concrete subject / action
 - **Anime / non-photoreal style not anchored** — a stylized look is implied but never named, so the model may drift to photoreal
 - **High-action scene with multiple characters but no position lock** — multi-character dynamic action where face-swap / clipping is likely
@@ -44,11 +44,11 @@ Before applying the full optimization workflow, run a fast triage on the user's 
 
 When the triage says "skip", do not announce it as a decision — silently move on to generation. Only mention this skill when you actually run it.
 
-When invoked (whether auto-triggered or explicit), **state explicitly** in your response that you are applying the Seedance 2.0 Prompt Optimizer, and briefly cite which red flag(s) drove the decision.
+When invoked (whether auto-triggered or explicit), **state explicitly** in your response that you are applying the Seedance Prompt Optimizer, and briefly cite which red flag(s) drove the decision.
 
 ## Scope
 
-- **Seedance 2.0 only** — engineering rules below are tuned to Seedance's prompt parser and its multi-modal reference handling.
+- **Seedance 2.0 / 2.5 only** — use the shared prompt-engineering rules below, but always apply the target model's distinct CLI capability profile.
 - **Prompt text only** — this skill rewrites the `--prompt` value; it does not select model variant, quality, duration, or other CLI flags.
 - **All Seedance scene types** — text-to-video (T2V), image-to-video (I2V), reference-to-video (R2V), video-to-video (V2V), and video editing (add / delete / modify / extend / stitch).
 - **No workflows or pipelines** — do not propose multi-step processes.
@@ -108,12 +108,14 @@ When the user replies with enough detail, proceed to Step 1.
 
 ### Step 2 — Asset Parsing & Mapping (multi-modal auto-mapping)
 
-1. **CLI flag mapping.** Determine how the assets reach Seedance 2.0 via the PixVerse CLI and bind each to a positional label:
+1. **CLI flag mapping.** Determine how the assets reach the selected Seedance model through the PixVerse CLI and bind each to a positional label:
    - Single image (I2V) → `--image <input>` (local file, HTTPS URL, image ID, or media path). Bind to `@image1`.
-   - Multi-image fusion (R2V) → `pixverse create reference --images <p1> <p2> ...`. Bind in flag order: 1st → `@image1`, 2nd → `@image2`, … (Seedance 2.0 supports up to 9 images.)
-   - Source video (V2V / video edit) → for this Seedance workflow, use `pixverse create reference --videos <v1> ...` with a `seedance-2.0-*` model. Bind to `@video1`, `@video2`, … in introduction order. Up to 3 input videos, total ≤ 15s.
+   - Multi-image fusion (R2V) → `pixverse create reference --images <p1> <p2> ...`. Bind in flag order: 1st → `@image1`, 2nd → `@image2`, …
+   - Source video (V2V / video edit) → use `pixverse create reference --videos <v1> ...` with the selected Seedance model. Bind to `@video1`, `@video2`, … in introduction order.
    - Generated assets the user references by `video_id` (e.g. `123456`) → bind up front (`@video1 is video_id 123456 — [description]`) before using them.
-   - Audio references → for this Seedance workflow, use `pixverse create reference --audios <a1> ...` with a `seedance-2.0-*` model. Up to 3 audio inputs, each 2–15s, total ≤ 15s; requires at least one image or video reference. Bind to `@audio1`, `@audio2`, … in order.
+   - Audio references → use `pixverse create reference --audios <a1> ...` with the selected Seedance model. Audio requires at least one image or video reference. Bind to `@audio1`, `@audio2`, … in order.
+   - **Seedance 2.0 profile** → up to 9 images, 3 videos (≤15s total), and 3 audios (each 2–15s, ≤15s total; known local files ≤15MB).
+   - **Seedance 2.5 profile** → up to 30 images, 10 videos (≤30s total), and 10 audios (≤30s total), with at most 50 references across all modalities.
 2. **Long-text / JSON auto-mapping.** If the user pasted a payload with a `"content"` array (or similar) containing attached image / video / audio items, scan it: number items in appearance order (each modality in its own sequence), and in the `text` portion replace any inline raw path / URL / `asset-xxx` / `video_id` with the corresponding `@imageN` / `@videoN` / `@audioN` label.
 3. **Long-image / grid check.** If an uploaded asset is a long image or N-up grid, ask the user to split it into separate single-frame images first.
 4. **Multi-view detection.** If the user uploads a character three-view / multi-view sheet, **proactively suggest** splitting it into a **headshot** (head only, neutral expression) + a **full-body shot** — multi-view sheets trigger twin artifacts and ID drift.
@@ -200,7 +202,7 @@ For ≥ 2 shots / multi-subject / cinematic narrative (almost always multi-modal
 - Camera-reference source (if a `@videoN` anchors camera work): `camera moves reference the medium push-pull and gentle sways in @video1`.
 
 **Part 2 — Shot breakdown (multi-modal reference form only)**
-- Use `Shot 1 / Shot 2 / Shot 3 …` in order. **Never write absolute seconds** (`0–3s`); Seedance 2.0's precise-timing support is unstable.
+- Use `Shot 1 / Shot 2 / Shot 3 …` in order. **Do not rely on absolute seconds** (`0–3s`); express the intended sequence through ordered shots.
 - Organize each shot by four elements in order: **camera move → subject action & expression → position / spatial change → audio info**.
 - **One camera move per shot** (push / pull / pan / tilt / fixed / follow — pick one). No stacking.
 - **Action requirements:**
@@ -383,7 +385,7 @@ pixverse create reference --model seedance-2.0-standard \
 
 ## What This Skill Does NOT Do
 
-- Select model variant (`seedance-2.0-standard` / `seedance-2.0-fast` / `seedance-2.0-mini`), quality, aspect ratio, or duration — see `pixverse:create-video`.
+- Select model variant (`seedance-2.5` / `seedance-2.0-standard` / `seedance-2.0-fast` / `seedance-2.0-mini`), quality, aspect ratio, or duration — see `pixverse:create-video`.
 - Suggest multi-step workflows or pipelines.
 - Auto-trigger during normal Seedance video generation when the prompt is already clean.
 - Add creative elements the user did not mention or confirm (beyond the disclosed default pads).
