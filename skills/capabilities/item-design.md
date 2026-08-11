@@ -309,7 +309,7 @@ pixverse create video --image $STILL_ID --model <video_model> \
 
 This keeps the model focused on motion within a coherent scene, rather than trying to fuse an item-only reference with an action prompt.
 
-`pixverse create reference` is technically available too (it accepts 1–7 reference images), but it is tuned for character fusion and tends to produce inconsistent results when fed an item-only reference. Use the two-step flow unless you have a specific reason not to.
+`pixverse create reference` is technically available too (the default V6 now accepts up to 10 reference images), but it is tuned for reference-media generation and tends to produce inconsistent results when fed an item-only reference. Use the two-step flow unless you have a specific reason not to.
 
 ---
 

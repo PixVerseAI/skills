@@ -4,6 +4,19 @@ All notable changes to PixVerse Skills will be documented in this file.
 
 Format follows [Keep a Changelog](https://keepachangelog.com/).
 
+## [1.22.0] - 2026-08-11
+
+Sync the skill docs to PixVerse CLI **v1.3.2**.
+
+### Added
+- Expand `create reference` video editing guidance with a model-specific media matrix: V6 supports up to 10 images / 2 videos, Gemini Omni up to 5 images / 1 video, Kling O3 up to 7 images or 4 images plus 1 video, and Grok Imagine either 1–7 images or exactly 1 video.
+- Document known-media validation for reference videos, including model-specific format, duration, total-duration, file-size, and dimension limits.
+- Add `--duration auto` guidance for V6 and Seedance 2.5 video references, and `--aspect-ratio auto` guidance for Seedance 2.5 text-to-video and reference generation.
+
+### Changed
+- Document duration/aspect-ratio derivation: V6 video references lock duration to `auto`; Seedance 2.5 video references default to `auto` but allow fixed `4`–`30s`; Gemini Omni and Grok derive duration from known source metadata; Grok video references force `auto` framing.
+- Update Kling O3 quality guidance to `720p` / `1080p` across video, reference, and transition tables.
+
 ## [1.21.0] - 2026-08-07
 
 Sync the skill docs to PixVerse CLI **v1.3.1**.

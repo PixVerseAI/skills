@@ -72,8 +72,8 @@ Only specific models support Transition mode. Using other models will result in 
 | Veo 3.1 Standard | `veo-3.1-standard` | `720p` `1080p` `2160p` | `4` `6` `8` | `16:9` `9:16` | First/last frame only |
 | Veo 3.1 Fast | `veo-3.1-fast` | `720p` `1080p` `2160p` | `4` `6` `8` | `16:9` `9:16` | First/last frame only |
 | Veo 3.1 Lite | `veo-3.1-lite` | `720p` `1080p` | `4` `6` `8` | `16:9` `9:16` | First/last frame only |
-| Kling O3 Pro | `kling-o3-pro` | `720p` | `3`–`15` (any integer) | `16:9` `9:16` `1:1` | External model; no off-peak |
-| Kling O3 Standard | `kling-o3-standard` | `720p` | `3`–`15` (any integer) | `16:9` `9:16` `1:1` | External model; no off-peak |
+| Kling O3 Pro | `kling-o3-pro` | `720p` `1080p` | `3`–`15` (any integer) | `16:9` `9:16` `1:1` | External model; no off-peak |
+| Kling O3 Standard | `kling-o3-standard` | `720p` `1080p` | `3`–`15` (any integer) | `16:9` `9:16` `1:1` | External model; no off-peak |
 | Kling 3.0 Pro | `kling-3.0-pro` | `720p` | `3`–`15` (any integer) | `16:9` `9:16` `1:1` | External model; no off-peak |
 | Kling 3.0 Standard | `kling-3.0-standard` | `720p` | `3`–`15` (any integer) | `16:9` `9:16` `1:1` | External model; no off-peak |
 

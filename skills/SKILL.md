@@ -1,7 +1,7 @@
 ---
 name: pixverse-ai-image-and-video-generator
 description: PixVerse CLI — generate AI videos, images, audio, and MiniApp projects from the command line. Supports PixVerse V6, MiniMax H3, Veo, Sora, Grok, Seedance, Kling, Happy Horse video models; Nano Banana (Gemini), Seedream, Qwen, Kling, GPT Image image models; MiniMax / ElevenLabs voice (TTS) and MiniMax / ElevenLabs / Google Lyria music models; PixVerse MiniApps; and PixVerse's rich effect template library. Start here.
-version: 1.21.0
+version: 1.22.0
 homepage: https://pixverse.ai
 source: https://github.com/PixVerseAI/skills
 ---
@@ -148,8 +148,8 @@ Use this to pick a model before diving into a sub-skill.
 | Seedance 2.0 Fast | `seedance-2.0-fast` | `720p` | `4`–`15`s |
 | Seedance 2.0 Mini | `seedance-2.0-mini` | `720p` | `4`–`15`s |
 | MiniMax H3 | `minimax-h3` | `1440p` | `5`–`15`s |
-| Kling O3 Pro | `kling-o3-pro` | `720p` | `3`–`15`s |
-| Kling O3 Standard | `kling-o3-standard` | `720p` | `3`–`15`s |
+| Kling O3 Pro | `kling-o3-pro` | `1080p` | `3`–`15`s |
+| Kling O3 Standard | `kling-o3-standard` | `1080p` | `3`–`15`s |
 | Kling 3.0 Pro | `kling-3.0-pro` | `720p` | `3`–`15`s |
 | Kling 3.0 Standard | `kling-3.0-standard` | `720p` | `3`–`15`s |
 | Google Gemini Omni | `gemini-omni-flash` | `720p` | `3`–`10`s |
@@ -238,7 +238,7 @@ Located in `skills/references/`. These are read-only knowledge bases that capabi
 | `create modify` | Modify video content with a prompt at a keyframe |
 | `create extend` | Extend video duration |
 | `create upscale` | Upscale a local file, HTTPS URL, video ID, or media path to `2160p` |
-| `create reference` | Generate video with character references |
+| `create reference` | Generate or edit video with model-specific image/video/audio references |
 | `create motion-control` | Generate video with character image + motion reference video |
 | `create template` | Create video or image from an effect template |
 | `template categories` | List template categories |

@@ -101,7 +101,7 @@ See `skills/capabilities/miniapps.md` for normalized `params_schema` fields, med
 
 | Model | CLI value | Modes | Quality | Duration | Aspect Ratio |
 |:---|:---|:---|:---|:---|:---|
-| PixVerse V6 | `v6` (default) | Video, Transition (first/last frame), Extend, Reference | `360p` `540p` `720p` `1080p` | `1`-`15` (any integer) | `16:9` `4:3` `1:1` `3:4` `9:16` `3:2` `2:3` `21:9` |
+| PixVerse V6 | `v6` (default) | Video, Transition (first/last frame), Extend, Reference | `360p` `540p` `720p` `1080p` | `1`-`15` (any integer; Reference video uses `auto`) | `auto` `16:9` `4:3` `1:1` `3:4` `9:16` `3:2` `2:3` `21:9` (Reference supports `auto`) |
 | PixVerse C1 | `pixverse-c1` | Video, Transition (first/last frame), Reference | `360p` `540p` `720p` `1080p` | `1`-`15` (any integer) | `16:9` `4:3` `1:1` `3:4` `9:16` `3:2` `2:3` |
 | PixVerse v5.6 | `v5.6` | Video, Transition, Reference, Motion Control | `360p` `480p` `540p` `720p` `1080p` | `1`-`10` (any integer) | `16:9` `4:3` `1:1` `3:4` `9:16` `3:2` `2:3` |
 | Sora 2 | `sora-2` | Video | `720p` | `4` `8` `12` | `16:9` `9:16` |
@@ -109,23 +109,25 @@ See `skills/capabilities/miniapps.md` for normalized `params_schema` fields, med
 | Veo 3.1 Standard | `veo-3.1-standard` | Video, Transition | `720p` `1080p` `2160p` | `4` `6` `8` | `16:9` `9:16` |
 | Veo 3.1 Fast | `veo-3.1-fast` | Video, Transition | `720p` `1080p` `2160p` | `4` `6` `8` | `16:9` `9:16` |
 | Veo 3.1 Lite | `veo-3.1-lite` | Video, Transition | `720p` `1080p` | `4` `6` `8` | `16:9` `9:16` |
-| Grok Imagine | `grok-imagine` | Video, Extend, Reference | `480p` `720p` | `1`-`15` | `16:9` `4:3` `1:1` `9:16` `3:4` `3:2` `2:3` |
+| Grok Imagine | `grok-imagine` | Video, Extend, Reference | `480p` `720p` | `1`-`15` | `auto` `16:9` `4:3` `1:1` `9:16` `3:4` `3:2` `2:3` (Reference video forces `auto`) |
 | Grok Imagine 1.5 | `grok-imagine-1.5` | Video (image-to-video only) | `480p` `720p` | `1`-`15` | derived from input image |
 | Happy Horse 1.0 | `happyhorse-1.0` | Video | `720p` `1080p` | `3`-`15` | `16:9` `9:16` `1:1` `4:3` `3:4` |
-| Seedance 2.5 | `seedance-2.5` | Video, Reference, Transition (exactly 2 frames) | `480p` `720p` | `4`-`30` | `21:9` `16:9` `4:3` `1:1` `3:4` `9:16` |
+| Seedance 2.5 | `seedance-2.5` | Video, Reference, Transition (exactly 2 frames) | `480p` `720p` | `4`-`30` (Reference video also `auto`) | `auto` `21:9` `16:9` `4:3` `1:1` `3:4` `9:16` (mode-dependent) |
 | Seedance 2.0 Standard | `seedance-2.0-standard` | Video, Reference, Transition | `480p` `720p` `1080p` `2160p` | `4`-`15` | `16:9` `4:3` `1:1` `3:4` `9:16` `21:9` |
 | Seedance 2.0 Fast | `seedance-2.0-fast` | Video, Reference, Transition | `480p` `720p` | `4`-`15` | `16:9` `4:3` `1:1` `3:4` `9:16` `21:9` |
 | Seedance 2.0 Mini | `seedance-2.0-mini` | Video, Reference, Transition | `480p` `720p` | `4`-`15` | `16:9` `4:3` `1:1` `3:4` `9:16` `21:9` |
 | MiniMax H3 | `minimax-h3` | Video, Reference, Transition (exactly 2 frames) | `768p` `1440p` | `5`-`15` | `auto` `21:9` `16:9` `4:3` `1:1` `3:4` `9:16` (mode-dependent) |
-| Kling O3 Pro | `kling-o3-pro` | Video, Reference, Transition | `720p` | `3`-`15` | `16:9` `9:16` `1:1` |
-| Kling O3 Standard | `kling-o3-standard` | Video, Reference, Transition | `720p` | `3`-`15` | `16:9` `9:16` `1:1` |
+| Kling O3 Pro | `kling-o3-pro` | Video, Reference, Transition | `720p` `1080p` | `3`-`15` | `16:9` `9:16` `1:1` |
+| Kling O3 Standard | `kling-o3-standard` | Video, Reference, Transition | `720p` `1080p` | `3`-`15` | `16:9` `9:16` `1:1` |
 | Kling 3.0 Pro | `kling-3.0-pro` | Video, Transition | `720p` | `3`-`15` | `16:9` `9:16` `1:1` |
 | Kling 3.0 Standard | `kling-3.0-standard` | Video, Transition | `720p` | `3`-`15` | `16:9` `9:16` `1:1` |
 | Google Gemini Omni | `gemini-omni-flash` | Video, Reference | `720p` | `3`-`10` | `16:9` `9:16` |
 
 > MiniMax H3 defaults to `1440p`. Text-to-video defaults to `16:9` and rejects `auto`; image-to-video forces `auto`. Reference requests with images default to `auto` but preserve an explicit fixed ratio; reference requests without images default to `16:9` and reject `auto`.
 
-> Seedance 2.5 defaults to `720p`, 5 seconds, and `16:9`. It accepts up to 50 mixed references (30 images, 10 videos, and 10 audios), with separate 30-second aggregate limits for video and audio. Transition requires exactly two images and a prompt and has no selectable aspect ratio. Generated audio, multi-shot, and off-peak generation are unsupported.
+> Seedance 2.5 defaults to `720p`, 5 seconds, and `16:9` without a reference video. Text-to-video and Reference accept `--aspect-ratio auto`; Reference with a video defaults to `--duration auto`, which locks framing to `auto`, while an explicit `4`–`30s` duration allows either automatic or fixed framing. It accepts up to 50 mixed references (30 images, 10 videos, and 10 audios), with separate 30-second aggregate limits for video and audio. Transition requires exactly two images and a prompt and has no selectable aspect ratio. Generated audio, multi-shot, and off-peak generation are unsupported.
+
+> Reference video editing is model-specific: V6 accepts up to 10 images / 2 videos; Gemini Omni up to 5 images / 1 video; Kling O3 up to 7 images without video or 4 images with 1 video; Grok Imagine accepts either 1–7 images or exactly 1 video. See `skills/capabilities/create-video.md` for media constraints and duration/framing behavior.
 
 ### Image Models
 

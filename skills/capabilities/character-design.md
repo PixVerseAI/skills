@@ -280,7 +280,7 @@ pixverse create image \
 
 ### `use <name> --for video "<scene prompt>"`
 
-Single character or multi-character — `pixverse create reference` accepts **1–7 images** by default, up to **9 on Seedance 2.0 and `minimax-h3`**, or up to **30 on Seedance 2.5**:
+Single character or multi-character — `pixverse create reference` accepts up to **10 images on the default V6**, **30 on Seedance 2.5**, **9 on Seedance 2.0 and `minimax-h3`**, **5 on Gemini Omni**, and **7 on the remaining image-only combinations**:
 
 ```bash
 pixverse create reference \
@@ -291,7 +291,7 @@ pixverse create reference \
 
 For comma-separated names (`use alice,bob --for video "..."`), resolve each name to its `image_id` and pass them all in `--images` order.
 
-> **Mixed reference inputs.** Seedance models and `minimax-h3` also accept `--videos <input...>` and `--audios <input...>`; audio requires at least one image or video. Seedance 2.5 allows up to 30 images / 10 videos / 10 audios, 50 inputs total, with separate 30-second aggregate video and audio limits. Seedance 2.0 and MiniMax H3 allow up to 9 images / 3 videos / 3 audios; Seedance 2.0 additionally enforces video total ≤ 15s and audio clips of 2–15s each / ≤ 15s total / ≤ 15MB for known local files. MiniMax H3 uses shared upload/backend validation beyond its model-specific counts. Each input may be a file path, HTTPS URL, asset ID, or media path.
+> **Mixed reference inputs and video editing.** V6 accepts up to 10 images / 2 videos; Gemini Omni up to 5 images / 1 video; Kling O3 up to 7 images alone or 4 images plus 1 video; Grok Imagine accepts either 1–7 images or exactly 1 video, never both. Seedance models and `minimax-h3` also accept `--audios`; audio requires a visual reference. Seedance 2.5 allows 30 images / 10 videos / 10 audios (50 total, video and audio each ≤30s). Seedance 2.0 and H3 allow 9 / 3 / 3; Seedance 2.0 additionally enforces video total ≤15s and audio clips of 2–15s each / ≤15s total / ≤15MB for known local files. See `pixverse:create-video` for per-model video format, size, dimensions, duration, and automatic output-parameter rules. Each input may be a file path, HTTPS URL, asset ID, or media path.
 
 ### Two-step alternative: I2I → I2V
 
