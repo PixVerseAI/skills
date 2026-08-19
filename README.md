@@ -109,25 +109,29 @@ See `skills/capabilities/miniapps.md` for normalized `params_schema` fields, med
 | Veo 3.1 Standard | `veo-3.1-standard` | Video, Transition | `720p` `1080p` `2160p` | `4` `6` `8` | `16:9` `9:16` |
 | Veo 3.1 Fast | `veo-3.1-fast` | Video, Transition | `720p` `1080p` `2160p` | `4` `6` `8` | `16:9` `9:16` |
 | Veo 3.1 Lite | `veo-3.1-lite` | Video, Transition | `720p` `1080p` | `4` `6` `8` | `16:9` `9:16` |
-| Grok Imagine | `grok-imagine` | Video, Extend, Reference | `480p` `720p` | `1`-`15` | `auto` `16:9` `4:3` `1:1` `9:16` `3:4` `3:2` `2:3` (Reference video forces `auto`) |
-| Grok Imagine 1.5 | `grok-imagine-1.5` | Video (image-to-video only) | `480p` `720p` | `1`-`15` | derived from input image |
+| Grok Imagine | `grok-imagine` | Video, Extend, Reference | `480p` `720p` | `1`-`15` (Reference video uses `auto`) | fixed ratios normally; Reference video derives framing from source |
+| Grok Imagine 1.5 | `grok-imagine-1.5` | Video (image-to-video only) | `480p` `720p` `1080p` | `1`-`15` | derived from input image |
 | Happy Horse 1.0 | `happyhorse-1.0` | Video | `720p` `1080p` | `3`-`15` | `16:9` `9:16` `1:1` `4:3` `3:4` |
-| Seedance 2.5 | `seedance-2.5` | Video, Reference, Transition (exactly 2 frames) | `480p` `720p` | `4`-`30` (Reference video also `auto`) | `auto` `21:9` `16:9` `4:3` `1:1` `3:4` `9:16` (mode-dependent) |
+| Seedance 2.5 | `seedance-2.5` | Video, Reference, Transition (exactly 2 frames) | `480p` `720p` `1080p` | `4`-`30` (Reference video also `auto`) | `auto` `21:9` `16:9` `4:3` `1:1` `3:4` `9:16` (mode-dependent) |
 | Seedance 2.0 Standard | `seedance-2.0-standard` | Video, Reference, Transition | `480p` `720p` `1080p` `2160p` | `4`-`15` | `16:9` `4:3` `1:1` `3:4` `9:16` `21:9` |
 | Seedance 2.0 Fast | `seedance-2.0-fast` | Video, Reference, Transition | `480p` `720p` | `4`-`15` | `16:9` `4:3` `1:1` `3:4` `9:16` `21:9` |
 | Seedance 2.0 Mini | `seedance-2.0-mini` | Video, Reference, Transition | `480p` `720p` | `4`-`15` | `16:9` `4:3` `1:1` `3:4` `9:16` `21:9` |
 | MiniMax H3 | `minimax-h3` | Video, Reference, Transition (exactly 2 frames) | `768p` `1440p` | `5`-`15` | `auto` `21:9` `16:9` `4:3` `1:1` `3:4` `9:16` (mode-dependent) |
-| Kling O3 Pro | `kling-o3-pro` | Video, Reference, Transition | `720p` `1080p` | `3`-`15` | `16:9` `9:16` `1:1` |
-| Kling O3 Standard | `kling-o3-standard` | Video, Reference, Transition | `720p` `1080p` | `3`-`15` | `16:9` `9:16` `1:1` |
-| Kling 3.0 Pro | `kling-3.0-pro` | Video, Transition | `720p` | `3`-`15` | `16:9` `9:16` `1:1` |
-| Kling 3.0 Standard | `kling-3.0-standard` | Video, Transition | `720p` | `3`-`15` | `16:9` `9:16` `1:1` |
+| Kling O3 Pro | `kling-o3-pro` | Video, Reference, Transition | model-selected (`--quality` omitted) | `3`-`15` | `16:9` `9:16` `1:1` |
+| Kling O3 Standard | `kling-o3-standard` | Video, Reference, Transition | model-selected (`--quality` omitted) | `3`-`15` | `16:9` `9:16` `1:1` |
+| Kling O3 4K | `kling-o3-4k` | Video, Reference, Transition | model-selected 4K tier (`--quality` omitted) | `3`-`15` | `16:9` `9:16` `1:1` |
+| Kling 3.0 Pro | `kling-3.0-pro` | Video, Transition | model-selected (`--quality` omitted) | `3`-`15` | `16:9` `9:16` `1:1` |
+| Kling 3.0 Standard | `kling-3.0-standard` | Video, Transition | model-selected (`--quality` omitted) | `3`-`15` | `16:9` `9:16` `1:1` |
+| Kling 3.0 4K | `kling-3.0-4k` | Video, Transition | model-selected 4K tier (`--quality` omitted) | `3`-`15` | `16:9` `9:16` `1:1` |
 | Google Gemini Omni | `gemini-omni-flash` | Video, Reference | `720p` | `3`-`10` | `16:9` `9:16` |
 
 > MiniMax H3 defaults to `1440p`. Text-to-video defaults to `16:9` and rejects `auto`; image-to-video forces `auto`. Reference requests with images default to `auto` but preserve an explicit fixed ratio; reference requests without images default to `16:9` and reject `auto`.
 
-> Seedance 2.5 defaults to `720p`, 5 seconds, and `16:9` without a reference video. Text-to-video and Reference accept `--aspect-ratio auto`; Reference with a video defaults to `--duration auto`, which locks framing to `auto`, while an explicit `4`–`30s` duration allows either automatic or fixed framing. It accepts up to 50 mixed references (30 images, 10 videos, and 10 audios), with separate 30-second aggregate limits for video and audio. Transition requires exactly two images and a prompt and has no selectable aspect ratio. Generated audio, multi-shot, and off-peak generation are unsupported.
+> Seedance 2.5 supports `480p`, `720p`, and `1080p` and defaults to `720p`, 5 seconds, and `16:9` without a reference video. Text-to-video and Reference accept `--aspect-ratio auto`; Reference with a video defaults to `--duration auto`, which locks framing to `auto`, while an explicit `4`–`30s` duration allows either automatic or fixed framing. Reference also accepts `--task-type auto|reference|edit|extend` (`auto` by default). It accepts up to 50 mixed references (30 images, 10 videos, and 10 audios), with separate 30-second aggregate limits for video and audio. Transition requires exactly two images and a prompt and has no selectable aspect ratio. Generated audio, multi-shot, and off-peak generation are unsupported.
 
-> Reference video editing is model-specific: V6 accepts up to 10 images / 2 videos; Gemini Omni up to 5 images / 1 video; Kling O3 up to 7 images without video or 4 images with 1 video; Grok Imagine accepts either 1–7 images or exactly 1 video. See `skills/capabilities/create-video.md` for media constraints and duration/framing behavior.
+> Kling resolution is selected by the model ID. All Kling video requests omit `quality`; an explicit `--quality` value is ignored with a warning. The `kling-o3-4k` tier supports Video, Reference, and Transition, while `kling-3.0-4k` supports Video and Transition.
+
+> Reference video editing is model-specific: V6 accepts up to 10 images / 2 videos; Gemini Omni up to 5 images / 1 video; Kling O3 (including the 4K tier) up to 7 images without video or 4 images with 1 video; Grok Imagine accepts either 1–7 images or exactly 1 video. V6, Gemini Omni, and Grok video inputs lock duration to `auto`; Grok video framing is source-derived and no aspect-ratio parameter is sent. See `skills/capabilities/create-video.md` for full media constraints.
 
 ### Image Models
 
@@ -160,7 +164,9 @@ See `skills/capabilities/miniapps.md` for normalized `params_schema` fields, med
 
 | Model | CLI value | Provider | Explicit lyrics | Auto lyrics | Instrumental | Image ref |
 |:---|:---|:---|:---|:---|:---|:---|
+| MiniMax Music 3.0 | `music-3.0` | MiniMax | Yes | Yes | Yes | No |
 | MiniMax Music 2.6 | `music-2.6` (default) | MiniMax | Yes | Yes | Yes | No |
+| ElevenLabs Music V2 | `music-v2` | ElevenLabs | Yes | Yes | Yes | No |
 | ElevenLabs Music | `music-v1` | ElevenLabs | Yes | Yes | Yes | No |
 | Google Lyria 3 Pro | `lyria-3-pro-preview` | Google | No | Yes | Yes | Up to 10 |
 

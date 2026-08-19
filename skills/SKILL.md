@@ -1,7 +1,7 @@
 ---
 name: pixverse-ai-image-and-video-generator
 description: PixVerse CLI — generate AI videos, images, audio, and MiniApp projects from the command line. Supports PixVerse V6, MiniMax H3, Veo, Sora, Grok, Seedance, Kling, Happy Horse video models; Nano Banana (Gemini), Seedream, Qwen, Kling, GPT Image image models; MiniMax / ElevenLabs voice (TTS) and MiniMax / ElevenLabs / Google Lyria music models; PixVerse MiniApps; and PixVerse's rich effect template library. Start here.
-version: 1.22.0
+version: 1.23.0
 homepage: https://pixverse.ai
 source: https://github.com/PixVerseAI/skills
 ---
@@ -41,7 +41,7 @@ Verify:
 pixverse --version
 ```
 
-**Requires Node.js >= 20.**
+**Requires Node.js >= 22.12.**
 
 ---
 
@@ -141,17 +141,19 @@ Use this to pick a model before diving into a sub-skill.
 | Veo 3.1 Fast | `veo-3.1-fast` | `2160p` | `4` `6` `8`s |
 | Veo 3.1 Lite | `veo-3.1-lite` | `1080p` | `4` `6` `8`s |
 | Grok Imagine | `grok-imagine` | `720p` | `1`–`15`s |
-| Grok Imagine 1.5 *(image-to-video only)* | `grok-imagine-1.5` | `720p` | `1`–`15`s |
+| Grok Imagine 1.5 *(image-to-video only)* | `grok-imagine-1.5` | `1080p` | `1`–`15`s |
 | Happy Horse 1.0 | `happyhorse-1.0` | `1080p` | `3`–`15`s |
-| Seedance 2.5 | `seedance-2.5` | `720p` | `4`–`30`s |
+| Seedance 2.5 | `seedance-2.5` | `1080p` | `4`–`30`s |
 | Seedance 2.0 Standard | `seedance-2.0-standard` | `2160p` | `4`–`15`s |
 | Seedance 2.0 Fast | `seedance-2.0-fast` | `720p` | `4`–`15`s |
 | Seedance 2.0 Mini | `seedance-2.0-mini` | `720p` | `4`–`15`s |
 | MiniMax H3 | `minimax-h3` | `1440p` | `5`–`15`s |
-| Kling O3 Pro | `kling-o3-pro` | `1080p` | `3`–`15`s |
-| Kling O3 Standard | `kling-o3-standard` | `1080p` | `3`–`15`s |
-| Kling 3.0 Pro | `kling-3.0-pro` | `720p` | `3`–`15`s |
-| Kling 3.0 Standard | `kling-3.0-standard` | `720p` | `3`–`15`s |
+| Kling O3 Pro | `kling-o3-pro` | model-selected | `3`–`15`s |
+| Kling O3 Standard | `kling-o3-standard` | model-selected | `3`–`15`s |
+| Kling O3 4K | `kling-o3-4k` | model-selected (4K tier) | `3`–`15`s |
+| Kling 3.0 Pro | `kling-3.0-pro` | model-selected | `3`–`15`s |
+| Kling 3.0 Standard | `kling-3.0-standard` | model-selected | `3`–`15`s |
+| Kling 3.0 4K | `kling-3.0-4k` | model-selected (4K tier) | `3`–`15`s |
 | Google Gemini Omni | `gemini-omni-flash` | `720p` | `3`–`10`s |
 
 ### Image Models (`pixverse create image --model <value>`)
@@ -185,7 +187,9 @@ Use this to pick a model before diving into a sub-skill.
 
 | Model | `--model` value | Provider | Explicit lyrics | Auto lyrics | Instrumental | Image ref |
 |:---|:---|:---|:---|:---|:---|:---|
+| MiniMax Music 3.0 | `music-3.0` | MiniMax | Yes | Yes | Yes | No |
 | MiniMax Music 2.6 *(default)* | `music-2.6` | MiniMax | Yes | Yes | Yes | No |
+| ElevenLabs Music V2 | `music-v2` | ElevenLabs | Yes | Yes | Yes | No |
 | ElevenLabs Music | `music-v1` | ElevenLabs | Yes | Yes | Yes | No |
 | Google Lyria 3 Pro | `lyria-3-pro-preview` | Google | No | Yes | Yes | Up to 10 |
 

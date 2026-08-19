@@ -36,7 +36,7 @@ pixverse music models --json
 |:---|:---|:---|
 | `--prompt <text>` | Music prompt (required) — literal, a local file path, or `-` for stdin | -- |
 | `--lyrics <text>` | Explicit lyrics for MiniMax / ElevenLabs — literal, a file path, or `-` for stdin | rejected by Lyria; omitted when `--instrumental` or `--auto-lyrics` takes precedence |
-| `-m, --model <id>` | Music model | `music-2.6` (default) — see Model Reference |
+| `-m, --model <id>` | Music model | `music-3.0`, `music-2.6` (default), `music-v2`, `music-v1`, or `lyria-3-pro-preview` — see Model Reference |
 | `--instrumental` | Generate instrumental music (no vocals) | highest priority: forces `auto_lyrics=false` and omits lyrics |
 | `--auto-lyrics` | Let the model generate the lyrics | supported by every model; explicit lyrics are omitted unless `--instrumental` takes precedence |
 | `--duration-seconds <sec>` | Target duration (sets `duration_auto=false`) | within model range |
@@ -62,11 +62,13 @@ Model compatibility is validated before this normalization. Lyria never accepts 
 
 | Model | `--model` value | Provider | Prompt max | Explicit lyrics | Auto lyrics | Instrumental | Duration | Image ref | Credits |
 |:---|:---|:---|---:|:---|:---|:---|:---|:---|---:|
+| MiniMax Music 3.0 | `music-3.0` | MiniMax | 2,000 | Up to 3,500 chars | Yes | Yes | 10–240s | No | 50 |
 | MiniMax Music 2.6 *(default)* | `music-2.6` | MiniMax | 2,000 | Up to 3,500 chars | Yes | Yes | 10–240s | No | 40 |
+| ElevenLabs Music V2 | `music-v2` | ElevenLabs | 4,100 | Up to 3,500 chars | Yes | Yes | 10–240s | No | 125 |
 | ElevenLabs Music | `music-v1` | ElevenLabs | 4,000 | Up to 3,500 chars | Yes | Yes | 10–240s | No | 150 |
 | Google Lyria 3 Pro | `lyria-3-pro-preview` | Google | 5,000 | No | Yes | Yes | 10–240s | Up to 10 images | 20 |
 
-> The ElevenLabs model ID is `music-v1` (the earlier `music_v1` form is invalid). Lyria supports `--auto-lyrics` and `--instrumental`, but does **not** take independent `--lyrics`; fold lyric-style instructions into `--prompt` when you are not using auto lyrics. `--image` is only valid for Lyria.
+> The ElevenLabs model IDs are `music-v2` and `music-v1` (the earlier `music_v1` form is invalid). Lyria supports `--auto-lyrics` and `--instrumental`, but does **not** take independent `--lyrics`; fold lyric-style instructions into `--prompt` when you are not using auto lyrics. `--image` is only valid for Lyria.
 
 ---
 
@@ -115,6 +117,18 @@ pixverse create music \
   --model music-2.6 \
   --output ./song.mp3 \
   --json
+```
+
+MiniMax Music 3.0 with auto-generated lyrics:
+
+```bash
+pixverse create music --model music-3.0 --prompt "modern cinematic pop with a soaring chorus" --auto-lyrics --duration-seconds 120 --json
+```
+
+ElevenLabs Music V2 instrumental:
+
+```bash
+pixverse create music --model music-v2 --prompt "minimal electronic pulse for a product reveal" --instrumental --json
 ```
 
 Let the model write lyrics, fixed duration:

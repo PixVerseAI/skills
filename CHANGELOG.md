@@ -4,6 +4,23 @@ All notable changes to PixVerse Skills will be documented in this file.
 
 Format follows [Keep a Changelog](https://keepachangelog.com/).
 
+## [1.23.0] - 2026-08-19
+
+Sync the skill docs to PixVerse CLI **v1.3.5**, covering CLI v1.3.3–v1.3.5.
+
+### Added
+- Add Seedance 2.5 `create reference --task-type auto|reference|edit|extend` guidance; `auto` remains the default and the flag is rejected for other models.
+- Add the `kling-o3-4k` Video / Reference / Transition model tier and the `kling-3.0-4k` Video / Transition model tier.
+- Add MiniMax Music 3.0 (`music-3.0`) and ElevenLabs Music V2 (`music-v2`), both with explicit lyrics, auto lyrics, instrumental generation, and 10–240-second durations; `music-2.6` remains the default.
+- Add `1080p` support for Seedance 2.5 across Video, Reference, and exactly-two-frame Transition, and for Grok Imagine 1.5 image-to-video.
+
+### Changed
+- Raise the documented PixVerse CLI runtime requirement from Node.js 20 to Node.js 22.12.
+- Document that Kling resolution is selected by model ID: all Kling video requests omit `quality`, and an explicit `--quality` is ignored with a warning.
+
+### Fixed
+- Correct Gemini Omni and Grok Imagine reference-video guidance: video inputs lock duration to `auto` and reject fixed values; Grok omits the aspect-ratio parameter and derives framing from the source video.
+
 ## [1.22.0] - 2026-08-11
 
 Sync the skill docs to PixVerse CLI **v1.3.2**.

@@ -44,7 +44,7 @@ Use transitions when you need to:
 |:---|:---|:---|
 | `--images <paths...>` | Image paths or URLs (2+ required) | -- |
 | `--prompt <text>` | Prompt to guide transition | optional generally; required for `seedance-2.5` and `minimax-h3` |
-| `-m, --model <model>` | Video model | `v6` (default, first/last frame only), `pixverse-c1` (first/last frame only), `v5.6`, `v5` (3+ frame only), `seedance-2.5` (exactly 2 frames), `seedance-2.0-standard`, `seedance-2.0-fast`, `seedance-2.0-mini`, `minimax-h3` (exactly 2 frames), `veo-3.1-standard`, `veo-3.1-fast`, `veo-3.1-lite`, `kling-o3-pro`, `kling-o3-standard`, `kling-3.0-pro`, `kling-3.0-standard` |
+| `-m, --model <model>` | Video model | `v6` (default, first/last frame only), `pixverse-c1` (first/last frame only), `v5.6`, `v5` (3+ frame only), `seedance-2.5` (exactly 2 frames), `seedance-2.0-standard`, `seedance-2.0-fast`, `seedance-2.0-mini`, `minimax-h3` (exactly 2 frames), `veo-3.1-standard`, `veo-3.1-fast`, `veo-3.1-lite`, `kling-o3-pro`, `kling-o3-standard`, `kling-o3-4k`, `kling-3.0-pro`, `kling-3.0-standard`, `kling-3.0-4k` |
 | `-q, --quality <q>` | Video quality | model-specific; up to `2160p` (see table below) |
 | `-d, --duration <sec>` | Duration | model-specific; `1`–`30` overall (default `5`) |
 | `--count <n>` | Generations | `1`-`4` |
@@ -64,7 +64,7 @@ Only specific models support Transition mode. Using other models will result in 
 | PixVerse C1 | `pixverse-c1` | `360p` `540p` `720p` `1080p` | `1`–`15` (any integer) | `16:9` `4:3` `1:1` `3:4` `9:16` `3:2` `2:3` | **First/last frame only** — no multi-frame; no `21:9` |
 | PixVerse v5.6 | `v5.6` | `360p` `480p` `540p` `720p` `1080p` | `1`–`10` (any integer) | `16:9` `4:3` `1:1` `3:4` `9:16` `3:2` `2:3` | First/last frame only (multi-frame: use `v5`) |
 | PixVerse v5 | `v5` | `360p` `480p` `540p` `720p` `1080p` | `1`–`10` (any integer) | `16:9` `4:3` `1:1` `3:4` `9:16` `3:2` `2:3` | **Multi-frame only** (3+ images); not valid for 2-frame transition |
-| Seedance 2.5 | `seedance-2.5` | `480p` `720p` (default) | `4`–`30` (any integer) | not selectable (no CLI flag) | Exactly 2 frames; prompt required; no generated audio/off-peak |
+| Seedance 2.5 | `seedance-2.5` | `480p` `720p` (default) `1080p` | `4`–`30` (any integer) | not selectable (no CLI flag) | Exactly 2 frames; prompt required; no generated audio/off-peak |
 | Seedance 2.0 Standard | `seedance-2.0-standard` | `480p` `720p` `1080p` `2160p` | `4`–`15` (any integer) | `16:9` `4:3` `1:1` `3:4` `9:16` `21:9` | External model; no off-peak |
 | Seedance 2.0 Fast | `seedance-2.0-fast` | `480p` `720p` | `4`–`15` (any integer) | `16:9` `4:3` `1:1` `3:4` `9:16` `21:9` | External model; no off-peak |
 | Seedance 2.0 Mini | `seedance-2.0-mini` | `480p` `720p` | `4`–`15` (any integer) | `16:9` `4:3` `1:1` `3:4` `9:16` `21:9` | External model; no off-peak |
@@ -72,10 +72,12 @@ Only specific models support Transition mode. Using other models will result in 
 | Veo 3.1 Standard | `veo-3.1-standard` | `720p` `1080p` `2160p` | `4` `6` `8` | `16:9` `9:16` | First/last frame only |
 | Veo 3.1 Fast | `veo-3.1-fast` | `720p` `1080p` `2160p` | `4` `6` `8` | `16:9` `9:16` | First/last frame only |
 | Veo 3.1 Lite | `veo-3.1-lite` | `720p` `1080p` | `4` `6` `8` | `16:9` `9:16` | First/last frame only |
-| Kling O3 Pro | `kling-o3-pro` | `720p` `1080p` | `3`–`15` (any integer) | `16:9` `9:16` `1:1` | External model; no off-peak |
-| Kling O3 Standard | `kling-o3-standard` | `720p` `1080p` | `3`–`15` (any integer) | `16:9` `9:16` `1:1` | External model; no off-peak |
-| Kling 3.0 Pro | `kling-3.0-pro` | `720p` | `3`–`15` (any integer) | `16:9` `9:16` `1:1` | External model; no off-peak |
-| Kling 3.0 Standard | `kling-3.0-standard` | `720p` | `3`–`15` (any integer) | `16:9` `9:16` `1:1` | External model; no off-peak |
+| Kling O3 Pro | `kling-o3-pro` | not applicable (omit `--quality`) | `3`–`15` (any integer) | `16:9` `9:16` `1:1` | External model; no off-peak |
+| Kling O3 Standard | `kling-o3-standard` | not applicable (omit `--quality`) | `3`–`15` (any integer) | `16:9` `9:16` `1:1` | External model; no off-peak |
+| Kling O3 4K | `kling-o3-4k` | not applicable (4K model tier) | `3`–`15` (any integer) | `16:9` `9:16` `1:1` | External model; no off-peak |
+| Kling 3.0 Pro | `kling-3.0-pro` | not applicable (omit `--quality`) | `3`–`15` (any integer) | `16:9` `9:16` `1:1` | External model; no off-peak |
+| Kling 3.0 Standard | `kling-3.0-standard` | not applicable (omit `--quality`) | `3`–`15` (any integer) | `16:9` `9:16` `1:1` | External model; no off-peak |
+| Kling 3.0 4K | `kling-3.0-4k` | not applicable (4K model tier) | `3`–`15` (any integer) | `16:9` `9:16` `1:1` | External model; no off-peak |
 
 > **V6 / C1 constraint:** V6 and `pixverse-c1` only support **first/last frame** transitions (2 images). For multi-frame transitions (3+ images), only `v5` is supported.
 >
@@ -83,7 +85,9 @@ Only specific models support Transition mode. Using other models will result in 
 >
 > **MiniMax H3 constraint:** H3 requires exactly two images and a non-empty prompt. It supports `768p` / `1440p` (default `1440p`), accepts integer durations `5`–`15`, and does not support generated audio or off-peak mode.
 >
-> **Seedance 2.5 constraint:** Seedance 2.5 requires exactly two images and a non-empty prompt. It supports `480p` / `720p` (default `720p`), accepts integer durations `4`–`30`, and does not expose an aspect-ratio flag or support generated audio/off-peak mode in Transition.
+> **Seedance 2.5 constraint:** Seedance 2.5 requires exactly two images and a non-empty prompt. It supports `480p` / `720p` / `1080p` (default `720p`), accepts integer durations `4`–`30`, and does not expose an aspect-ratio flag or support generated audio/off-peak mode in Transition.
+>
+> **Kling constraint:** Resolution is selected entirely by the Kling model ID. The CLI omits `quality` for every Kling transition; an explicit `--quality` is ignored with a warning. Use `kling-o3-4k` or `kling-3.0-4k` for the 4K tier.
 
 ### 3+ image constraint: automatic model fallback
 
@@ -155,7 +159,7 @@ pixverse create transition --model minimax-h3 --images ./start.jpg ./end.jpg --p
 Seedance 2.5 two-frame transition:
 
 ```bash
-pixverse create transition --model seedance-2.5 --images ./start.jpg ./end.jpg --prompt "A seamless transformation" --quality 720p --duration 20 --json
+pixverse create transition --model seedance-2.5 --images ./start.jpg ./end.jpg --prompt "A seamless transformation" --quality 1080p --duration 20 --json
 ```
 
 Submit without waiting:
