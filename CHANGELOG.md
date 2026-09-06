@@ -4,6 +4,21 @@ All notable changes to PixVerse Skills will be documented in this file.
 
 Format follows [Keep a Changelog](https://keepachangelog.com/).
 
+## [1.24.0] - 2026-09-06
+
+Sync the skill docs to PixVerse CLI **v1.3.10**, covering CLI v1.3.6–v1.3.10.
+
+### Added
+- Add FLUX 3 (`flux-3.0`) for text-to-video and image-to-video: `720p` / `1080p`, integer durations from `5` through `20` seconds, Auto plus fixed aspect ratios including `2:1`, and optional generated audio. Text-to-video defaults to `16:9`; image-to-video defaults to `auto`.
+- Add Wan 3.0 (`wan-3.0`) for video, two-frame transition, and mixed-media reference: `480p` / `720p` / `1080p`, integer durations from `2` through `30` seconds, Auto plus fixed aspect ratios, and optional generated audio. Reference accepts up to 10 images / 5 videos / 5 audios (20 total), including audio-only input.
+- Document the global `--region global|cn` flag (default `global`; `PIXVERSE_REGION` overrides) and CN-region capability differences: isolated login state, blocked standalone audio commands, and the CN model allowlist.
+
+### Changed
+- Extend the master model lists, create-video reference matrix, transition tables, and character-design mixed-input guidance with FLUX 3 and Wan 3.0.
+
+### Fixed
+- Document that an invalid `PIXVERSE_ACCESS_KEY` (backend code `10004`) is treated as an authentication error (exit code 3), matching an expired token.
+
 ## [1.23.0] - 2026-08-19
 
 Sync the skill docs to PixVerse CLI **v1.3.5**, covering CLI v1.3.3–v1.3.5.

@@ -11,6 +11,7 @@ Generate speech audio from text with `pixverse create voice`. This replaces the 
 
 - PixVerse CLI installed and authenticated (`pixverse auth login`)
 - The text to synthesize (literal, a file path, or `-` for stdin)
+- Voice is **not available** in `--region cn` (fails locally with exit code 6 before any upload or API request)
 
 ## Decision Tree
 
@@ -163,7 +164,7 @@ ffmpeg -i "$VIDEO_FILE" -i ./vo.mp3 -c:v copy -c:a aac -shortest ./final.mp4
 | 3 | Authentication error (token invalid/expired) |
 | 4 | Credit/subscription limit reached |
 | 5 | Generation failed or content policy violation |
-| 6 | Validation error (unknown model, text over limit, cross-provider flag, etc.) |
+| 6 | Validation error (unknown model, text over limit, cross-provider flag, region unavailable, etc.) |
 | 7 | Concurrent generation limit; wait for a slot, then retry |
 
 ---

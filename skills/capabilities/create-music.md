@@ -11,6 +11,7 @@ Generate music audio from a prompt with `pixverse create music`. Every model can
 
 - PixVerse CLI installed and authenticated (`pixverse auth login`)
 - A music prompt (literal, a file path, or `-` for stdin)
+- Music is **not available** in `--region cn` (fails locally with exit code 6 before any upload or API request)
 
 ## Decision Tree
 
@@ -162,7 +163,7 @@ ffmpeg -i "$VIDEO_FILE" -i ./score.mp3 -c:v copy -c:a aac -shortest ./final.mp4
 | 3 | Authentication error (token invalid/expired) |
 | 4 | Credit/subscription limit reached |
 | 5 | Generation failed or content policy violation |
-| 6 | Validation error (unknown model, prompt/lyrics over limit, `--image` on a non-Lyria model, etc.) |
+| 6 | Validation error (unknown model, prompt/lyrics over limit, `--image` on a non-Lyria model, region unavailable, etc.) |
 | 7 | Concurrent generation limit; wait for a slot, then retry |
 
 ---

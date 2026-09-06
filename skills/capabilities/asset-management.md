@@ -44,7 +44,7 @@ Browse generation history with pagination.
 
 | Flag | Description | Values |
 |:---|:---|:---|
-| `--type <video\|image\|audio\|miniapps>` | Asset type | `video` (default), `image`, `audio`, `miniapps` |
+| `--type <video\|image\|audio\|miniapps>` | Asset type | `video` (default), `image`, `audio`, `miniapps`. `--type audio` is unavailable in `--region cn` (exit code 6) |
 | `--source <create\|upload>` | Asset source | `create` (default), `upload` |
 | `--off-peak` | Filter off-peak generations only | flag (only valid with `--type video --source create`) |
 | `--limit <n>` | Items per page | `1`–`100`, default `20` |

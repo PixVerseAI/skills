@@ -7,7 +7,7 @@ description: Use when a user supplies (or is about to generate with) a video / i
 
 A model-agnostic advisory layer for generation prompts. It diagnoses common prompt weaknesses, shows the user a stronger alternative **side by side with their original**, and explains why — then waits. It applies a change **only** when the user explicitly accepts it.
 
-These principles hold across transformer-based video models (PixVerse V6 / C1, Veo, Sora, Grok, Seedance, Kling, Happy Horse, …) because they describe how such models *read* a prompt — left to right, with attention decaying, treating all text as positive instruction — not how any one model is wired.
+These principles hold across transformer-based video models (PixVerse V6 / C1, Veo, Sora, Grok, Seedance, Kling, Happy Horse, FLUX 3, Wan 3.0, …) because they describe how such models *read* a prompt — left to right, with attention decaying, treating all text as positive instruction — not how any one model is wired.
 
 ## The Cardinal Rule
 

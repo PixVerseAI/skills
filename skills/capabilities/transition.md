@@ -43,8 +43,8 @@ Use transitions when you need to:
 | Flag | Description | Values |
 |:---|:---|:---|
 | `--images <paths...>` | Image paths or URLs (2+ required) | -- |
-| `--prompt <text>` | Prompt to guide transition | optional generally; required for `seedance-2.5` and `minimax-h3` |
-| `-m, --model <model>` | Video model | `v6` (default, first/last frame only), `pixverse-c1` (first/last frame only), `v5.6`, `v5` (3+ frame only), `seedance-2.5` (exactly 2 frames), `seedance-2.0-standard`, `seedance-2.0-fast`, `seedance-2.0-mini`, `minimax-h3` (exactly 2 frames), `veo-3.1-standard`, `veo-3.1-fast`, `veo-3.1-lite`, `kling-o3-pro`, `kling-o3-standard`, `kling-o3-4k`, `kling-3.0-pro`, `kling-3.0-standard`, `kling-3.0-4k` |
+| `--prompt <text>` | Prompt to guide transition | optional generally; required for `seedance-2.5`, `minimax-h3`, and `wan-3.0` |
+| `-m, --model <model>` | Video model | `v6` (default, first/last frame only), `pixverse-c1` (first/last frame only), `v5.6`, `v5` (3+ frame only), `seedance-2.5` (exactly 2 frames), `seedance-2.0-standard`, `seedance-2.0-fast`, `seedance-2.0-mini`, `minimax-h3` (exactly 2 frames), `wan-3.0` (exactly 2 frames), `veo-3.1-standard`, `veo-3.1-fast`, `veo-3.1-lite`, `kling-o3-pro`, `kling-o3-standard`, `kling-o3-4k`, `kling-3.0-pro`, `kling-3.0-standard`, `kling-3.0-4k` |
 | `-q, --quality <q>` | Video quality | model-specific; up to `2160p` (see table below) |
 | `-d, --duration <sec>` | Duration | model-specific; `1`–`30` overall (default `5`) |
 | `--count <n>` | Generations | `1`-`4` |
@@ -69,6 +69,7 @@ Only specific models support Transition mode. Using other models will result in 
 | Seedance 2.0 Fast | `seedance-2.0-fast` | `480p` `720p` | `4`–`15` (any integer) | `16:9` `4:3` `1:1` `3:4` `9:16` `21:9` | External model; no off-peak |
 | Seedance 2.0 Mini | `seedance-2.0-mini` | `480p` `720p` | `4`–`15` (any integer) | `16:9` `4:3` `1:1` `3:4` `9:16` `21:9` | External model; no off-peak |
 | MiniMax H3 | `minimax-h3` | `768p` `1440p` (default) | `5`–`15` (any integer) | image-derived (no CLI flag) | Exactly 2 frames; prompt required; no generated audio/off-peak |
+| Wan 3.0 | `wan-3.0` | `480p` `720p` (default) `1080p` | `2`–`30` (any integer) | not selectable (no CLI flag) | Exactly 2 frames; prompt required; generated audio optional; no off-peak |
 | Veo 3.1 Standard | `veo-3.1-standard` | `720p` `1080p` `2160p` | `4` `6` `8` | `16:9` `9:16` | First/last frame only |
 | Veo 3.1 Fast | `veo-3.1-fast` | `720p` `1080p` `2160p` | `4` `6` `8` | `16:9` `9:16` | First/last frame only |
 | Veo 3.1 Lite | `veo-3.1-lite` | `720p` `1080p` | `4` `6` `8` | `16:9` `9:16` | First/last frame only |
@@ -84,6 +85,8 @@ Only specific models support Transition mode. Using other models will result in 
 > **Veo 3.1 constraint:** Standard/Fast support `720p` / `1080p` / `2160p`; Lite supports `720p` / `1080p`. All three accept durations `4` / `6` / `8` and use first/last-frame transitions.
 >
 > **MiniMax H3 constraint:** H3 requires exactly two images and a non-empty prompt. It supports `768p` / `1440p` (default `1440p`), accepts integer durations `5`–`15`, and does not support generated audio or off-peak mode.
+>
+> **Wan 3.0 constraint:** Wan 3.0 requires exactly two images and a non-empty prompt. It supports `480p` / `720p` / `1080p` (default `720p`), accepts integer durations `2`–`30`, and does not expose an aspect-ratio flag. Generated audio is optional; off-peak is unsupported.
 >
 > **Seedance 2.5 constraint:** Seedance 2.5 requires exactly two images and a non-empty prompt. It supports `480p` / `720p` / `1080p` (default `720p`), accepts integer durations `4`–`30`, and does not expose an aspect-ratio flag or support generated audio/off-peak mode in Transition.
 >
@@ -160,6 +163,12 @@ Seedance 2.5 two-frame transition:
 
 ```bash
 pixverse create transition --model seedance-2.5 --images ./start.jpg ./end.jpg --prompt "A seamless transformation" --quality 1080p --duration 20 --json
+```
+
+Wan 3.0 two-frame transition:
+
+```bash
+pixverse create transition --model wan-3.0 --images ./start.jpg ./end.jpg --prompt "A continuous tracking shot connects the two frames" --quality 720p --duration 8 --json
 ```
 
 Submit without waiting:

@@ -1,7 +1,7 @@
 ---
 name: pixverse-ai-image-and-video-generator
-description: PixVerse CLI — generate AI videos, images, audio, and MiniApp projects from the command line. Supports PixVerse V6, MiniMax H3, Veo, Sora, Grok, Seedance, Kling, Happy Horse video models; Nano Banana (Gemini), Seedream, Qwen, Kling, GPT Image image models; MiniMax / ElevenLabs voice (TTS) and MiniMax / ElevenLabs / Google Lyria music models; PixVerse MiniApps; and PixVerse's rich effect template library. Start here.
-version: 1.23.0
+description: PixVerse CLI — generate AI videos, images, audio, and MiniApp projects from the command line. Supports PixVerse V6, MiniMax H3, FLUX 3, Wan 3.0, Veo, Sora, Grok, Seedance, Kling, Happy Horse video models; Nano Banana (Gemini), Seedream, Qwen, Kling, GPT Image image models; MiniMax / ElevenLabs voice (TTS) and MiniMax / ElevenLabs / Google Lyria music models; PixVerse MiniApps; and PixVerse's rich effect template library. Start here.
+version: 1.24.0
 homepage: https://pixverse.ai
 source: https://github.com/PixVerseAI/skills
 ---
@@ -148,6 +148,8 @@ Use this to pick a model before diving into a sub-skill.
 | Seedance 2.0 Fast | `seedance-2.0-fast` | `720p` | `4`–`15`s |
 | Seedance 2.0 Mini | `seedance-2.0-mini` | `720p` | `4`–`15`s |
 | MiniMax H3 | `minimax-h3` | `1440p` | `5`–`15`s |
+| FLUX 3 | `flux-3.0` | `1080p` | `5`–`20`s |
+| Wan 3.0 | `wan-3.0` | `1080p` | `2`–`30`s |
 | Kling O3 Pro | `kling-o3-pro` | model-selected | `3`–`15`s |
 | Kling O3 Standard | `kling-o3-standard` | model-selected | `3`–`15`s |
 | Kling O3 4K | `kling-o3-4k` | model-selected (4K tier) | `3`–`15`s |
@@ -296,11 +298,14 @@ Located in `skills/references/`. These are read-only knowledge bases that capabi
 |:---|:---|
 | `--json` or `-p` | Pure JSON output to stdout (required for agent use) |
 | `--workspace-id <id>` | Per-command workspace override (0 = personal). Not persisted — only affects the single invocation. |
+| `--region <region>` | Service region: `global` or `cn` (default: `global`). Not persisted — only affects the single invocation. `PIXVERSE_REGION` overrides this flag. |
 | `--trace-id <id>` | Attach a caller-supplied UUIDv4 to all API requests in this invocation (for end-to-end tracing). Must be a valid UUIDv4. |
 | `-V, --version` | Show CLI version |
 | `-h, --help` | Show help for any command |
 
 Every command supports `--json`. All examples in skills use `--json` for machine-readable output.
+
+**Region**: Selection order is `PIXVERSE_REGION` > `--region` > `global`. Tokens, active workspace, and creation defaults are isolated per region — log in separately for `cn`. In `cn`, standalone voice/music commands and `--type audio` asset/task operations fail locally with exit code 6. CN video models: `v6`, `pixverse-c1`, `seedance-2.5`, `seedance-2.0-standard`, `seedance-2.0-fast`, `seedance-2.0-mini`, `happyhorse-1.0`, `v5.6` (plus `v5.5` for modify and `v5` for 3+ frame transition). CN image models: `qwen-image` (default), `seedream-5.0-lite`, `seedream-4.5`, `seedream-4.0`. Other models fail locally before upload.
 
 **Common creation conventions**:
 - **`-` for stdin** — text inputs (`--prompt`, `--text`, `--lyrics`) accept a literal string, a local file path, or `-` to read from stdin. Pipe long or multi-line prompts: `cat prompt.txt | pixverse create video --prompt - --json`.

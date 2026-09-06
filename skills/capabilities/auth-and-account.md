@@ -34,6 +34,8 @@ JSON output on success:
 
 After login, the CLI automatically syncs the active workspace from the server.
 
+Tokens, active workspace, and creation defaults are isolated per `--region`. Logging in under `--region cn` does not reuse a `global` token (and vice versa). An invalid `PIXVERSE_ACCESS_KEY` (backend code `10004`) is treated as an authentication error and exits with code 3.
+
 Decision tree:
 - If exit code 0 -> login succeeded, token is stored in `~/.pixverse/`
 - If exit code 1 -> unexpected error, check stderr
@@ -404,6 +406,9 @@ pixverse config defaults reset --json
    - The CLI sends it as the `Access-Key` header when no user token is available.
    - **Auth priority** (first match wins): explicit `Token` header → stored token (from `pixverse auth login`) → `PIXVERSE_ACCESS_KEY` env var.
    - `PIXVERSE_TOKEN` is **not** a supported env var and is ignored by current CLI versions.
+   - An invalid access key (backend code `10004`) exits with code 3, the same as an expired token. The key applies only to the currently selected region.
+
+9. **Region** (optional): `pixverse --region cn auth login --json` stores credentials for that region only. `PIXVERSE_REGION` overrides `--region`. Default is `global`.
 
 ---
 

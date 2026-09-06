@@ -208,7 +208,7 @@ balanced, symmetrical, and professional.
 
 | Parameter | Value | Rationale |
 |:---|:---|:---|
-| Model | Fallback chain — `gpt-image-2.0` → `gemini-3.1-flash` → `gemini-3.0` → `seedream-5.0-lite` | Try the strongest layout-following model first; fall through on `Failed` / `invalid param` / 404 image URL. Real runs have shown all four can fail or refuse intermittently, so a chain is required for reliability. |
+| Model | Fallback chain — `gpt-image-2.0` → `gemini-3.1-flash` → `gemini-3.0` → `seedream-5.0-lite` | Try the strongest layout-following model first; fall through on `Failed` / `invalid param` / 404 image URL. Real runs have shown all four can fail or refuse intermittently, so a chain is required for reliability. In `--region cn`, start at `seedream-5.0-lite` then `qwen-image` — the other chain models are not available. |
 | Quality | `1440p` (2K) | Enough resolution for each panel to be a usable reference |
 | Aspect ratio | `16:9` | Three full-body views plus a head column fit a wide frame |
 
@@ -280,7 +280,7 @@ pixverse create image \
 
 ### `use <name> --for video "<scene prompt>"`
 
-Single character or multi-character — `pixverse create reference` accepts up to **10 images on the default V6**, **30 on Seedance 2.5**, **9 on Seedance 2.0 and `minimax-h3`**, **5 on Gemini Omni**, and **7 on the remaining image-only combinations**:
+Single character or multi-character — `pixverse create reference` accepts up to **10 images on the default V6 and Wan 3.0**, **30 on Seedance 2.5**, **9 on Seedance 2.0 and `minimax-h3`**, **5 on Gemini Omni**, and **7 on the remaining image-only combinations**:
 
 ```bash
 pixverse create reference \
@@ -291,7 +291,7 @@ pixverse create reference \
 
 For comma-separated names (`use alice,bob --for video "..."`), resolve each name to its `image_id` and pass them all in `--images` order.
 
-> **Mixed reference inputs and video editing.** V6 accepts up to 10 images / 2 videos; Gemini Omni up to 5 images / 1 video; Kling O3 (Pro, Standard, or 4K) up to 7 images alone or 4 images plus 1 video; Grok Imagine accepts either 1–7 images or exactly 1 video, never both. Seedance models and `minimax-h3` also accept `--audios`; audio requires a visual reference. Seedance 2.5 allows 30 images / 10 videos / 10 audios (50 total, video and audio each ≤30s). Seedance 2.0 and H3 allow 9 / 3 / 3; Seedance 2.0 additionally enforces video total ≤15s and audio clips of 2–15s each / ≤15s total / ≤15MB for known local files. See `pixverse:create-video` for per-model video format, size, dimensions, duration, and automatic output-parameter rules. Each input may be a file path, HTTPS URL, asset ID, or media path.
+> **Mixed reference inputs and video editing.** V6 accepts up to 10 images / 2 videos; Gemini Omni up to 5 images / 1 video; Kling O3 (Pro, Standard, or 4K) up to 7 images alone or 4 images plus 1 video; Grok Imagine accepts either 1–7 images or exactly 1 video, never both; Wan 3.0 accepts up to 10 images / 5 videos / 5 audios (20 total), including audio-only. Seedance models and `minimax-h3` also accept `--audios`; audio requires a visual reference except on Wan 3.0. Seedance 2.5 allows 30 images / 10 videos / 10 audios (50 total, video and audio each ≤30s). Seedance 2.0 and H3 allow 9 / 3 / 3; Seedance 2.0 additionally enforces video total ≤15s and audio clips of 2–15s each / ≤15s total / ≤15MB for known local files. Wan 3.0 known video and audio clips are each 1–15s with an exact 15-second aggregate. See `pixverse:create-video` for per-model video format, size, dimensions, duration, and automatic output-parameter rules. Each input may be a file path, HTTPS URL, asset ID, or media path.
 
 ### Two-step alternative: I2I → I2V
 

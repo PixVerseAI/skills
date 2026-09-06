@@ -43,7 +43,7 @@ Check current generation status without waiting. One positional ID preserves the
 
 | Flag | Description | Values |
 |:---|:---|:---|
-| `--type <video\|image\|audio\|miniapps>` | Task type | `video` (default), `image`, `audio`, `miniapps` |
+| `--type <video\|image\|audio\|miniapps>` | Task type | `video` (default), `image`, `audio`, `miniapps`. `--type audio` is unavailable in `--region cn` (exit code 6) |
 | `--ids <id1,id2,...>` | Alternative comma-separated batch syntax | Do not combine with positional IDs |
 | `--json` | Output as JSON | flag |
 
@@ -116,7 +116,7 @@ Block until a generation task completes or times out.
 
 | Flag | Description | Values |
 |:---|:---|:---|
-| `--type <video\|image\|audio\|miniapps>` | Task type | `video` (default), `image`, `audio`, `miniapps` |
+| `--type <video\|image\|audio\|miniapps>` | Task type | `video` (default), `image`, `audio`, `miniapps`. `--type audio` is unavailable in `--region cn` (exit code 6) |
 | `--timeout <seconds>` | Max wait time | default `300` |
 | `--json` | Output as JSON | flag |
 

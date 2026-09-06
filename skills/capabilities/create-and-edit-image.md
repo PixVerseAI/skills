@@ -55,7 +55,7 @@ Each model has its own supported parameter combinations. **Always check this tab
 | Kling Image O3 | `kling-image-o3` | `1080p` `1440p` `2160p` | `16:9` `9:16` `1:1` `4:3` `3:4` `3:2` `2:3` `21:9` | 10 |
 | Kling Image V3 | `kling-image-v3` | `1080p` `1440p` | `16:9` `9:16` `1:1` `4:3` `3:4` `3:2` `2:3` `21:9` | 1 |
 
-> **Recommended:** The default is `gpt-image-2.0` (up to `2160p`; `--detail-level` defaults to `low`). For the widest resolution/aspect-ratio range prefer `gemini-3.1-flash` (up to `2160p`) or `seedream-5.0-lite` (up to `2160p`). Use `seedream-5.0-pro` when you need up to 10 I2I references at `1080p` / `1440p`, and `qwen-image` when you want a fast, lighter model (capped at `1080p`).
+> **Recommended:** The default is `gpt-image-2.0` (up to `2160p`; `--detail-level` defaults to `low`). For the widest resolution/aspect-ratio range prefer `gemini-3.1-flash` (up to `2160p`) or `seedream-5.0-lite` (up to `2160p`). Use `seedream-5.0-pro` when you need up to 10 I2I references at `1080p` / `1440p`, and `qwen-image` when you want a fast, lighter model (capped at `1080p`). In `--region cn`, the default is `qwen-image` and only `qwen-image`, `seedream-5.0-lite`, `seedream-4.5`, and `seedream-4.0` are available.
 
 > **Important:** Each model only accepts specific quality and aspect-ratio values. The CLI adjusts unsupported values to a model-valid fallback and writes a warning to stderr; choose from the table to avoid silent parameter changes.
 

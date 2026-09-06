@@ -117,6 +117,8 @@ See `skills/capabilities/miniapps.md` for normalized `params_schema` fields, med
 | Seedance 2.0 Fast | `seedance-2.0-fast` | Video, Reference, Transition | `480p` `720p` | `4`-`15` | `16:9` `4:3` `1:1` `3:4` `9:16` `21:9` |
 | Seedance 2.0 Mini | `seedance-2.0-mini` | Video, Reference, Transition | `480p` `720p` | `4`-`15` | `16:9` `4:3` `1:1` `3:4` `9:16` `21:9` |
 | MiniMax H3 | `minimax-h3` | Video, Reference, Transition (exactly 2 frames) | `768p` `1440p` | `5`-`15` | `auto` `21:9` `16:9` `4:3` `1:1` `3:4` `9:16` (mode-dependent) |
+| FLUX 3 | `flux-3.0` | Video | `720p` `1080p` | `5`-`20` | `auto` `21:9` `2:1` `16:9` `4:3` `1:1` `3:4` `9:16` |
+| Wan 3.0 | `wan-3.0` | Video, Reference, Transition (exactly 2 frames) | `480p` `720p` `1080p` | `2`-`30` (Reference video also `auto`) | `auto` `16:9` `4:3` `1:1` `3:4` `9:16` |
 | Kling O3 Pro | `kling-o3-pro` | Video, Reference, Transition | model-selected (`--quality` omitted) | `3`-`15` | `16:9` `9:16` `1:1` |
 | Kling O3 Standard | `kling-o3-standard` | Video, Reference, Transition | model-selected (`--quality` omitted) | `3`-`15` | `16:9` `9:16` `1:1` |
 | Kling O3 4K | `kling-o3-4k` | Video, Reference, Transition | model-selected 4K tier (`--quality` omitted) | `3`-`15` | `16:9` `9:16` `1:1` |
@@ -127,11 +129,15 @@ See `skills/capabilities/miniapps.md` for normalized `params_schema` fields, med
 
 > MiniMax H3 defaults to `1440p`. Text-to-video defaults to `16:9` and rejects `auto`; image-to-video forces `auto`. Reference requests with images default to `auto` but preserve an explicit fixed ratio; reference requests without images default to `16:9` and reject `auto`.
 
+> FLUX 3 is available only in `create video`. Text-to-video defaults to `16:9`; image-to-video defaults to `auto` while preserving an explicit fixed ratio. Generated audio is optional; multi-shot and off-peak are unsupported.
+
+> Wan 3.0 defaults to `720p`, 5 seconds, and `auto`, and is available in video, two-frame transition, and reference creation. Reference accepts up to 10 images, 5 videos, and 5 audios (20 total), including audio-only input. Video and audio reference durations are each limited to 15 seconds in aggregate. With a video reference, duration defaults to `auto`; a fixed output duration is limited by `30 - reference video duration`. Transition requires exactly two images and a prompt and has no selectable aspect ratio.
+
 > Seedance 2.5 supports `480p`, `720p`, and `1080p` and defaults to `720p`, 5 seconds, and `16:9` without a reference video. Text-to-video and Reference accept `--aspect-ratio auto`; Reference with a video defaults to `--duration auto`, which locks framing to `auto`, while an explicit `4`–`30s` duration allows either automatic or fixed framing. Reference also accepts `--task-type auto|reference|edit|extend` (`auto` by default). It accepts up to 50 mixed references (30 images, 10 videos, and 10 audios), with separate 30-second aggregate limits for video and audio. Transition requires exactly two images and a prompt and has no selectable aspect ratio. Generated audio, multi-shot, and off-peak generation are unsupported.
 
 > Kling resolution is selected by the model ID. All Kling video requests omit `quality`; an explicit `--quality` value is ignored with a warning. The `kling-o3-4k` tier supports Video, Reference, and Transition, while `kling-3.0-4k` supports Video and Transition.
 
-> Reference video editing is model-specific: V6 accepts up to 10 images / 2 videos; Gemini Omni up to 5 images / 1 video; Kling O3 (including the 4K tier) up to 7 images without video or 4 images with 1 video; Grok Imagine accepts either 1–7 images or exactly 1 video. V6, Gemini Omni, and Grok video inputs lock duration to `auto`; Grok video framing is source-derived and no aspect-ratio parameter is sent. See `skills/capabilities/create-video.md` for full media constraints.
+> Reference video editing is model-specific: V6 accepts up to 10 images / 2 videos; Gemini Omni up to 5 images / 1 video; Kling O3 (including the 4K tier) up to 7 images without video or 4 images with 1 video; Grok Imagine accepts either 1–7 images or exactly 1 video; Wan 3.0 accepts up to 10 images / 5 videos / 5 audios (20 total), including audio-only. V6, Gemini Omni, and Grok video inputs lock duration to `auto`; Grok video framing is source-derived and no aspect-ratio parameter is sent. See `skills/capabilities/create-video.md` for full media constraints.
 
 ### Image Models
 
