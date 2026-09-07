@@ -50,7 +50,7 @@ Extend a video's duration.
 | `--seed <n>` | Random seed | any integer |
 | `--audio` / `--no-audio` | Enable or disable audio generation | V6 only; ignored with a warning for Grok Imagine |
 | `--off-peak` | Off-peak pricing | flag |
-| `--idempotency-key <key>` | Safe-retry key — backend dedupes by key, so repeated submissions return the original task without re-charging | optional |
+| `--idempotency-key <key>` | Stable safe-retry key; see execution contract | optional |
 | `--no-wait` / `--timeout <sec>` / `--json` | Standard flags | -- |
 
 ### create upscale
@@ -61,24 +61,12 @@ Upscale a video to the fixed `2160p` target. `--quality` may be omitted because 
 |:---|:---|:---|
 | `--video <input>` | Video file path, HTTPS URL, video ID, or media path (required) | -- |
 | `-q, --quality <q>` | Target quality | `2160p` (default; only accepted value) |
-| `--idempotency-key <key>` | Stable safe-retry key; repeated submissions return the original task without re-charging | optional |
+| `--idempotency-key <key>` | Stable safe-retry key; see execution contract | optional |
 | `--no-wait` / `--timeout <sec>` / `--json` | Standard flags | -- |
 
-## JSON Output
+## Results and recovery
 
-Both post-processing commands produce the same video result format.
-
-Submitted (with `--no-wait`):
-
-```json
-{ "video_id": 123, "trace_id": "...", "status": "submitted" }
-```
-
-Completed (default, waits for result):
-
-```json
-{ "video_id": 123, "trace_id": "...", "status": "completed", "video_url": "...", "cover_url": "...", "prompt": "...", "model": "...", "duration": 5, "width": 1280, "height": 720, "created_at": "..." }
-```
+Use the shared [execution contract](../references/execution-contract.md) for submitted, completed, batch, and partial results, polling, and recovery. A single completed result contains `video_id` and `video_url`. Batch completions use `items[]`; do not parse a top-level ID from a batch result.
 
 ## Examples
 
@@ -99,39 +87,7 @@ pixverse create upscale --video https://example.com/source.mp4 --json
 pixverse create upscale --video upload/source.mp4 --json
 ```
 
-Combined pipeline -- extend, then upscale:
-
-```bash
-VID=<original_video_id>
-EXTENDED=$(pixverse create extend --video $VID --prompt "continue the scene" --json | jq -r '.video_id')
-pixverse task wait $EXTENDED --json
-FINAL=$(pixverse create upscale --video $EXTENDED --quality 2160p --json | jq -r '.video_id')
-pixverse task wait $FINAL --json
-pixverse asset download $FINAL --json
-```
-
-Add a generated voiceover, then mux it on yourself (speech is no longer a video command):
-
-```bash
-# 1. Generate the voiceover as a standalone audio asset (see pixverse:create-voice)
-pixverse create voice --text "Welcome to the future" --output ./voiceover.mp3 --json
-# 2. Download the finished video and capture the generated local filename
-VIDEO_FILE=$(pixverse asset download 123456 --dest . --json | jq -r '.file')
-# 3. Mux audio onto video with ffmpeg
-ffmpeg -i "$VIDEO_FILE" -i ./voiceover.mp3 -c:v copy -c:a aac -shortest ./final.mp4
-```
-
-## Error Handling
-
-| Exit Code | Meaning |
-|:---|:---|
-| 0 | Success |
-| 2 | Timeout waiting for generation |
-| 3 | Authentication error (token invalid/expired) |
-| 4 | Credit/subscription limit reached |
-| 5 | Generation failed or content policy violation |
-| 6 | Validation error (invalid flags/arguments) |
-| 7 | Concurrent generation limit; wait for a slot and safely retry |
+For extension, upscaling, or audio composition in a deliverable, follow [video production](../workflows/video-production.md).
 
 ## Related Skills
 

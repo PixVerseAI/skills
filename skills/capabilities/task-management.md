@@ -168,14 +168,16 @@ JSON output (MiniApp project completed):
 
 ## Status Codes
 
+A successful `task status` query can return queued, processing, or failed generation states with exit code 0. Inspect the payload; only `task wait` treats terminal generation failure as exit code 5. See the [execution contract](../references/execution-contract.md).
+
 | Code | Label | Meaning | Action |
 |:---|:---|:---|:---|
 | 5 | WAITING | Queued | Keep polling |
 | 9 | QUEUE | In queue | Keep polling |
 | 10 | PROCESSING | Generating | Keep polling |
 | 1 | NORMAL | Done -- success | Use result |
-| 8 | FAILED | Generation failed | Exit code 5 |
-| 7 | NOT_APPROVED | Content policy violation | Exit code 5 |
+| 8 | FAILED | Generation failed | Terminal failure; `task wait` exits 5 |
+| 7 | NOT_APPROVED | Content policy violation | Terminal failure; `task wait` exits 5 |
 
 ## Examples
 
@@ -231,20 +233,13 @@ Wait for image completion:
 pixverse task wait 789012 --type image --json
 ```
 
-Batch workflow -- submit multiple, then wait:
-
-```bash
-VID1=$(pixverse create video --prompt "ocean waves" --no-wait --json | jq -r '.video_id')
-VID2=$(pixverse create video --prompt "mountain sunset" --no-wait --json | jq -r '.video_id')
-pixverse task wait $VID1 --json
-pixverse task wait $VID2 --json
-```
+For batch submission and result preservation, follow [batch creation](../workflows/batch-creation.md).
 
 ## Error Handling
 
 | Exit Code | Meaning |
 |:---|:---|
-| 0 | Success -- task completed |
+| 0 | `task status`: query succeeded (inspect `status`); `task wait`: task completed |
 | 2 | Timeout -- task did not complete within the specified time. Increase `--timeout` or accept partial result |
 | 3 | Authentication error (token invalid/expired) |
 | 4 | Credit/subscription limit reached |

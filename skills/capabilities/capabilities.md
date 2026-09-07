@@ -11,7 +11,7 @@ Do **not** invent Canvas `node_type` → CLI command mappings, and do **not** co
 
 ## Prerequisites
 
-- PixVerse CLI v1.4.0 or later
+- PixVerse CLI v1.4.0 or later. Check `pixverse --version` once per session. On older releases, use the relevant `pixverse create <mode> --help` and static model reference; Canvas requires upgrading to a version that exposes its commands.
 - `capabilities` and `capabilities create` need **no login and no network**
 - `capabilities canvas` requires authentication (`pixverse auth login` or `PIXVERSE_ACCESS_KEY`)
 

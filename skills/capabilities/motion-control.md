@@ -39,7 +39,7 @@ Use motion control when you need to:
 | `-q, --quality <q>` | Video quality | `360p`, `480p`, `540p`, `720p` (default), `1080p` |
 | `--count <number>` | Number of generations | `1` (default), `2`, `3`, `4` |
 | `--off-peak` | Use off-peak pricing | flag |
-| `--idempotency-key <key>` | Stable safe-retry key; repeated submissions return the original task without re-charging | optional |
+| `--idempotency-key <key>` | Stable safe-retry key; see execution contract | optional |
 | `--no-wait` | Return immediately without polling | flag |
 | `--timeout <sec>` | Polling timeout | `300` (default) |
 | `--json` | JSON output | flag |
@@ -80,47 +80,9 @@ Images exceeding `1920×1920` pixels or `5 MB` are auto-resized and re-encoded b
 
 ---
 
-## JSON Output
+## Results and recovery
 
-### With --no-wait (submitted)
-
-```json
-{
-  "video_id": 123456,
-  "trace_id": "abc-123",
-  "status": "submitted"
-}
-```
-
-When `--count > 1`:
-
-```json
-{
-  "video_ids": [123456, 123457, 123458, 123459],
-  "trace_id": "abc-123",
-  "status": "submitted"
-}
-```
-
-### With wait (completed)
-
-```json
-{
-  "video_id": 123456,
-  "trace_id": "abc-123",
-  "status": "completed",
-  "video_url": "https://...",
-  "cover_url": "https://...",
-  "prompt": "",
-  "model": "v5.6",
-  "duration": 5,
-  "width": 1280,
-  "height": 720,
-  "created_at": "2026-01-01T00:00:00Z"
-}
-```
-
----
+Use the shared [execution contract](../references/execution-contract.md) for submitted, completed, batch, and partial results, polling, and recovery. A single completed result contains `video_id` and `video_url`. Batch completions use `items[]`; do not parse a top-level ID from a batch result.
 
 ## Examples
 
@@ -153,57 +115,11 @@ pixverse create motion-control \
   --json
 ```
 
-### Submit without waiting
-
-```bash
-RESULT=$(pixverse create motion-control \
-  --image ./character.jpg \
-  --video 123456 \
-  --no-wait --json)
-VIDEO_ID=$(echo "$RESULT" | jq -r '.video_id')
-pixverse task wait $VIDEO_ID --json
-pixverse asset download $VIDEO_ID --json
-```
-
-### Motion control + post-process pipeline
-
-```bash
-# Step 1: Generate motion-controlled video
-VID=$(pixverse create motion-control \
-  --image ./character.jpg \
-  --video 123456 \
-  --quality 720p --json | jq -r '.video_id')
-pixverse task wait $VID --json
-
-# Step 2: Upscale
-FINAL=$(pixverse create upscale \
-  --video $VID \
-  --quality 2160p --json | jq -r '.video_id')
-pixverse task wait $FINAL --json
-
-# Step 3: Download
-pixverse asset download $FINAL --json
-```
-
----
-
-## Error Handling
-
-| Exit Code | Meaning | Recovery |
-|:---|:---|:---|
-| 0 | Success | -- |
-| 2 | Timeout waiting for completion | Increase `--timeout` or use `--no-wait` then poll with `pixverse task wait` |
-| 3 | Auth token expired or invalid | Re-run `pixverse auth login` to refresh credentials |
-| 4 | Insufficient credits | Check balance with `pixverse account info --json`, then top up |
-| 5 | Generation failed | Check character image quality, try a different reference video |
-| 6 | Validation error | Character image must be a clear half-body or full-body shot; model must be `v5.6` |
-| 7 | Concurrent generation limit | Wait for a slot, then retry with the same `--idempotency-key` |
-
----
+For asynchronous creation and optional upscaling, follow the [motion-control workflow](../workflows/motion-control-pipeline.md) and [execution contract](../references/execution-contract.md).
 
 ## Related Skills
 
 - `pixverse:create-video` -- create videos from text or images
-- `pixverse:post-process-video` -- extend, upscale, or add audio to existing videos
+- `pixverse:post-process-video` -- extend or upscale existing videos
 - `pixverse:task-management` -- poll and manage tasks after using `--no-wait`
 - `pixverse:asset-management` -- download, list, and delete completed videos

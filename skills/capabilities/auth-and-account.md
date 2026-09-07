@@ -19,7 +19,7 @@ pixverse auth login --json
 
 **Browser auto-open behavior:**
 - In **interactive mode** (no `--json` / `-p`), the CLI tries to open the authorization URL in the system default browser (`open` on macOS, `xdg-open` on Linux, `Start-Process` on Windows). Failure to open is non-fatal — the URL is still printed.
-- In **JSON / pipe mode** (`--json` or `-p`), the CLI does **not** auto-open a browser, so automation environments stay side-effect-free. Agents must read `verification_uri_complete` (or the printed URL) from the output and route the user to it themselves.
+- In **JSON / pipe mode** (`--json` or `-p`), the CLI does **not** auto-open a browser, so automation environments stay side-effect-free. Agents must read the `Authorize at: ...` URL from stderr while the command is running and route the user to it. Stdout contains the final success JSON only after authorization.
 
 JSON output on success:
 ```json
@@ -423,11 +423,11 @@ pixverse config defaults reset --json
 
 Example error handling:
 ```bash
-pixverse account info --json 2>/tmp/pixverse_err
+RESULT=$(pixverse account info --json 2>/tmp/pixverse_err)
 EXIT_CODE=$?
 
 if [ $EXIT_CODE -eq 0 ]; then
-  CREDITS=$(cat /dev/stdin | jq -r '.credits.total')
+  CREDITS=$(printf '%s\n' "$RESULT" | jq -r '.credits.total')
   echo "Available credits: $CREDITS"
 elif [ $EXIT_CODE -eq 3 ]; then
   echo "Token expired, re-authenticating..."

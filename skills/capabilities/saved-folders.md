@@ -230,14 +230,7 @@ pixverse saved rename 12345 "Archived" --json
 pixverse saved delete 12345 --json
 ```
 
-Pipeline -- create video, then organize into a folder:
-
-```bash
-VID=$(pixverse create video --prompt "A sunset over the ocean" --json | jq -r '.video_id')
-pixverse saved add "$VID" --type video --json
-```
-
----
+After a successful [text-to-video workflow](../workflows/text-to-video-pipeline.md), add the retained video ID with `pixverse saved add "$VIDEO_ID" --type video --json`.
 
 ## Error Handling
 

@@ -76,27 +76,13 @@ pixverse voice presets --provider minimax --language en --json
 | Eleven v3 | `eleven-v3` | ElevenLabs | 5,000 |
 | Eleven Turbo v2.5 | `eleven-turbo-v2.5` | ElevenLabs | 40,000 |
 
-> Pass only these public model IDs. Old underscore forms (e.g. `eleven_v3`) are rejected with `Unknown model` — run `pixverse voice models` for the live list. Text exceeding the model's character limit is rejected (not truncated).
+> Pass only these public model IDs. Old underscore forms (e.g. `eleven_v3`) are rejected with `Unknown model` — run `pixverse voice models --json` for the installed list. Text exceeding the model's character limit is rejected (not truncated).
 
 ---
 
-## JSON Output
+## Results and recovery
 
-Submitted (with `--no-wait`):
-
-```json
-{ "audio_id": 9100, "trace_id": "...", "status": "submitted", "cost_credits": 10 }
-```
-
-Completed (default, waits for result):
-
-```json
-{ "audio_id": 9100, "trace_id": "...", "status": "completed", "audio_url": "https://...", "model": "speech-2.8-hd", "created_at": "..." }
-```
-
-> The audio is an asset of `--type audio`. List, inspect, download, or delete it with `pixverse asset … --type audio` and poll it with `pixverse task … --type audio` (see `pixverse:asset-management`, `pixverse:task-management`).
-
----
+Use the shared [execution contract](../references/execution-contract.md) for submitted, completed, batch, and partial results, polling, and recovery. A single completed result contains `audio_id` and `audio_url`. Poll and manage it with `--type audio`.
 
 ## Steps
 
@@ -145,29 +131,7 @@ pixverse create voice --text ./script.txt --voice-id 12345 --output ./narration.
 cat script.txt | pixverse create voice --text - --voice-id 12345 --json
 ```
 
-Add a voiceover to a finished video (mux externally):
-
-```bash
-pixverse create voice --text "Narration line" --voice-id 12345 --output ./vo.mp3 --json
-VIDEO_FILE=$(pixverse asset download <video_id> --dest . --json | jq -r '.file')
-ffmpeg -i "$VIDEO_FILE" -i ./vo.mp3 -c:v copy -c:a aac -shortest ./final.mp4
-```
-
----
-
-## Error Handling
-
-| Exit Code | Meaning |
-|:---|:---|
-| 0 | Success |
-| 2 | Timeout waiting for generation |
-| 3 | Authentication error (token invalid/expired) |
-| 4 | Credit/subscription limit reached |
-| 5 | Generation failed or content policy violation |
-| 6 | Validation error (unknown model, text over limit, cross-provider flag, region unavailable, etc.) |
-| 7 | Concurrent generation limit; wait for a slot, then retry |
-
----
+To combine completed voice audio with a video, follow [video production](../workflows/video-production.md); reuse existing files and select the intended audio stream explicitly.
 
 ## Related Skills
 

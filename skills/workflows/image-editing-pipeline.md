@@ -1,46 +1,15 @@
 ---
 name: pixverse:image-editing-pipeline
-description: Iteratively edit an image using I2I — refine until satisfied
+description: Refine an existing or generated image through iterative I2I edits
 ---
 
-### Pipeline
-1. Create initial image (T2I) or start from existing
-2. Review result (download or inspect URL)
-3. IF not satisfied → edit with I2I
-4. Repeat until satisfied
-5. Download final version
+Read [execution contract](../references/execution-contract.md) for result handling, retries, and defaults.
 
-### Full Example
-```bash
-# Step 1: Create initial image
-RESULT=$(pixverse create image --prompt "A modern living room with large windows" --model seedream-5.0-lite --quality 1800p --json)
-IMAGE_ID=$(echo "$RESULT" | jq -r '.image_id')
-IMAGE_URL=$(echo "$RESULT" | jq -r '.image_url')
+Use [create-and-edit-image](../capabilities/create-and-edit-image.md) to generate a starting image, or begin with the user's existing image.
 
-# Step 2: Review — download to inspect
-pixverse asset download $IMAGE_ID --type image --json
+1. Inspect the image; identify a concrete edit, including spatial location when relevant.
+2. Create an image with `--image <current-image-url-or-path>` and that edit prompt. Respect user choices of model, quality, framing, and features to preserve.
+3. Validate success and retain the new `image_id` and `image_url` directly from the result. Inspect it before deciding whether another edit is needed.
+4. Stop when the requested changes are satisfied; download the final ID with `--type image`.
 
-# Step 3: Edit — add warm lighting
-EDIT_RESULT=$(pixverse create image \
-  --prompt "Add warm golden sunset light streaming through the windows" \
-  --image "$IMAGE_URL" \
-  --model seedream-5.0-lite --quality 1800p --json)
-EDIT_ID=$(echo "$EDIT_RESULT" | jq -r '.image_id')
-
-# Step 4: Further edit — add plants
-FINAL_RESULT=$(pixverse create image \
-  --prompt "Add lush green indoor plants near the windows" \
-  --image "$(pixverse asset info $EDIT_ID --type image --json | jq -r '.image_url')" \
-  --model seedream-5.0-lite --quality 1800p --json)
-
-# Step 5: Download final
-pixverse asset download $(echo "$FINAL_RESULT" | jq -r '.image_id') --type image --json
-```
-
-### Prompting Tips
-- Be specific about what to change, not what to keep
-- Reference spatial locations: "in the top-left corner", "near the window"
-- Use style modifiers: "in watercolor style", "photorealistic"
-
-### Related Skills
-`pixverse:create-and-edit-image`, `pixverse:asset-management`
+Do not query `asset info` solely to retrieve a URL already returned by creation. Additional iterations consume credits; avoid an unbounded refinement loop.

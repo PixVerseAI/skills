@@ -4,6 +4,21 @@ All notable changes to PixVerse Skills will be documented in this file.
 
 Format follows [Keep a Changelog](https://keepachangelog.com/).
 
+## [1.26.0] - 2026-09-07
+
+### Changed
+- Reduce the entrypoint to task routing, version-aware discovery, and execution essentials; replace duplicate README model catalogs with installed-registry queries.
+- Share execution, prompt-editing, and persistent-asset contracts across capabilities; preserve model-specific constraints and design references on demand.
+- Shorten workflows while preserving their paths; reuse completed results and shared production steps.
+- Move storyboard cropping and concatenation into a local helper with ImageMagick 6/7 support and missing-audio handling.
+
+### Fixed
+- Prevent duplicate generation in result-parsing recipes; document single, batch, partial, and task-query outputs accurately.
+- Correct Seedance extension routing, required voice selection, stdin parsing, and failure propagation.
+- Preserve explicit prompt constraints, align character/item region fallback, and reconcile multi-view references with Seedance input preparation.
+- Make source updates clean-main and fast-forward only; cancellation never stashes changes, and update checks do not suggest downgrades.
+- Update the Windows example's runtime requirement and result checks; add offline regression coverage.
+
 ## [1.25.0] - 2026-09-07
 
 Sync the skill docs to PixVerse CLI **v1.4.0**.

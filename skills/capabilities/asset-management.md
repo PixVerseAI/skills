@@ -264,13 +264,7 @@ Delete a MiniApp project:
 pixverse asset delete 987654 --type miniapps --json
 ```
 
-Pipeline -- create, wait, download:
-
-```bash
-VID=$(pixverse create video --prompt "a sunset over the ocean" --json | jq -r '.video_id')
-pixverse task wait $VID --json
-pixverse asset download $VID --dest ./renders --json
-```
+For creation followed by download, follow the [text-to-video workflow](../workflows/text-to-video-pipeline.md).
 
 ## Error Handling
 

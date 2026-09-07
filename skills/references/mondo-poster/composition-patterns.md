@@ -195,7 +195,7 @@ Sophisticated Mondo designs often combine 2-3 patterns. Common pairings:
 
 - **Too many elements** — Mondo is about distillation, not accumulation (exception: Tyler Stout maximalist style)
 - **Photorealistic gradients** — Screen-print aesthetic demands flat color blocks and halftone textures
-- **Complex facial details** — Use silhouettes instead; faces rarely work in screen-print style
+- **Unnecessary facial detail** — Silhouettes suit minimal treatments; retain portraits for portrait-led styles or explicit requests
 - **Cluttered composition** — Even "busy" Mondo designs (Tyler Stout) have organized visual flow
-- **Missing vintage context** — Always anchor to a specific decade (60s/70s/80s) for authentic feel
+- **Mismatched era** — Use the selected artist/subject era when a vintage treatment is wanted; contemporary styles need no retro decade
 - **Digital-looking outputs** — Always include texture keywords: halftone, screen print, paper grain, ink layer

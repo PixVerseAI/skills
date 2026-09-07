@@ -1,36 +1,30 @@
-# PixVerse CLI — Full Video Production Pipeline (PowerShell)
-#
-# This script demonstrates a complete cinematic video pipeline:
-#   1. Generate a base image (T2I)
-#   2. Animate the image into a 12-second video using Sora 2 (I2V)
-#   3. Upscale to 2160p
-#   4. Download the final video
-#
-# Prerequisites:
-#   - Node.js >= 20
-#   - npm install -g pixverse
-#   - pixverse auth login --json
+# Image -> Sora 2 video -> upscale -> download. Node.js >= 22.12; authenticated CLI.
+# Shared behavior: ../../references/execution-contract.md
+param(
+    [string]$ImagePrompt = "A medieval fortress at dawn, cinematic composition",
+    [string]$AnimationPrompt = "Camera slowly approaches the fortress as banners move in the wind",
+    [string]$OutputDirectory = (Join-Path ([IO.Path]::GetTempPath()) ("pixverse-" + [guid]::NewGuid()))
+)
+$ErrorActionPreference = 'Stop'
 
-$ImagePrompt = "Ultra-realistic cinematic scene of a brutal historical battlefield, medieval warriors clashing with steel swords and heavy shields, mud, flying blood, dark storm clouds, fire burning in the background, epic scale, dense atmosphere, 9:16"
-$AnimationPrompt = "Cinematic trailer style, fast-paced action, dynamic camera movement, chaotic battlefield, hyper-realistic physics, aggressive motion"
+function Invoke-PixverseJson {
+    param([string[]]$CliArgs)
+    $Raw = & pixverse @CliArgs --json | Out-String
+    $Code = $LASTEXITCODE
+    if ($Code -ne 0) {
+        throw "PixVerse exited with code $Code. Retain any submitted IDs for recovery; do not blindly resubmit. Output: $Raw"
+    }
+    return ($Raw | ConvertFrom-Json)
+}
 
-Write-Host "Starting Cinematic Pipeline (Sora 2 - 12 Seconds)..." -ForegroundColor Cyan
-
-Write-Host "1. Generating base image (9:16)..." -ForegroundColor Yellow
-$ImgOutput = pixverse create image --prompt $ImagePrompt --aspect-ratio 9:16 --json | Out-String | ConvertFrom-Json
-$ImageUrl = $ImgOutput.image_url
-
-Write-Host "2. Animating the scene (Sora 2, 12 seconds)..." -ForegroundColor Yellow
-$VidOutput = pixverse create video --image $ImageUrl --prompt $AnimationPrompt --model sora-2 --duration 12 --json | Out-String | ConvertFrom-Json
-$VideoId = $VidOutput.video_id
-pixverse task wait $VideoId
-
-Write-Host "3. Upscaling to high fidelity..." -ForegroundColor Yellow
-$UpscaleOutput = pixverse create upscale --video $VideoId --quality 2160p --json | Out-String | ConvertFrom-Json
-$FinalId = $UpscaleOutput.video_id
-pixverse task wait $FinalId
-
-Write-Host "4. Downloading the mastered trailer..." -ForegroundColor Yellow
-pixverse asset download $FinalId --type video
-
-Write-Host "Done! The 12-second epic cut is saved to your current folder." -ForegroundColor Green
+New-Item -ItemType Directory -Path $OutputDirectory -ErrorAction Stop | Out-Null
+$Image = Invoke-PixverseJson -CliArgs @('create', 'image', '--prompt', $ImagePrompt, '--aspect-ratio', '9:16', '--idempotency-key', [guid]::NewGuid().ToString())
+if (-not $Image.image_url) { throw 'Completed image result has no image_url' }
+$Video = Invoke-PixverseJson -CliArgs @('create', 'video', '--image', $Image.image_url, '--prompt', $AnimationPrompt, '--model', 'sora-2', '--duration', '12', '--idempotency-key', [guid]::NewGuid().ToString())
+if (-not $Video.video_id) { throw 'Completed video result has no video_id' }
+$Upscale = Invoke-PixverseJson -CliArgs @('create', 'upscale', '--video', [string]$Video.video_id, '--quality', '2160p', '--idempotency-key', [guid]::NewGuid().ToString())
+if (-not $Upscale.video_id) { throw 'Completed upscale result has no video_id' }
+# Default create calls already waited. No additional task wait is needed.
+$Download = Invoke-PixverseJson -CliArgs @('asset', 'download', [string]$Upscale.video_id, '--type', 'video', '--dest', $OutputDirectory)
+if (-not $Download.file) { throw 'Download result has no file path' }
+Write-Host "Final video saved to: $($Download.file)"

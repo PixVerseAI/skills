@@ -73,23 +73,9 @@ Model compatibility is validated before this normalization. Lyria never accepts 
 
 ---
 
-## JSON Output
+## Results and recovery
 
-Submitted (with `--no-wait`):
-
-```json
-{ "audio_id": 9100, "trace_id": "...", "status": "submitted", "cost_credits": 40 }
-```
-
-Completed (default, waits for result):
-
-```json
-{ "audio_id": 9100, "trace_id": "...", "status": "completed", "audio_url": "https://...", "model": "music-2.6", "created_at": "..." }
-```
-
-> The track is an asset of `--type audio` with `create_mode=music`. List, inspect, download, or delete it with `pixverse asset … --type audio` and poll it with `pixverse task … --type audio` (see `pixverse:asset-management`, `pixverse:task-management`).
-
----
+Use the shared [execution contract](../references/execution-contract.md) for submitted, completed, batch, and partial results, polling, and recovery. A single completed result contains `audio_id` and `audio_url`. Poll and manage it with `--type audio`.
 
 ## Steps
 
@@ -144,29 +130,7 @@ Google Lyria with auto-generated lyrics and image references:
 pixverse create music --model lyria-3-pro-preview --prompt "an anthemic electronic song inspired by these scenes" --auto-lyrics --image ./scene1.jpg ./scene2.jpg --json
 ```
 
-Score a finished video (mux externally):
-
-```bash
-pixverse create music --prompt "calm ambient score" --instrumental --output ./score.mp3 --json
-VIDEO_FILE=$(pixverse asset download <video_id> --dest . --json | jq -r '.file')
-ffmpeg -i "$VIDEO_FILE" -i ./score.mp3 -c:v copy -c:a aac -shortest ./final.mp4
-```
-
----
-
-## Error Handling
-
-| Exit Code | Meaning |
-|:---|:---|
-| 0 | Success |
-| 2 | Timeout waiting for generation |
-| 3 | Authentication error (token invalid/expired) |
-| 4 | Credit/subscription limit reached |
-| 5 | Generation failed or content policy violation |
-| 6 | Validation error (unknown model, prompt/lyrics over limit, `--image` on a non-Lyria model, region unavailable, etc.) |
-| 7 | Concurrent generation limit; wait for a slot, then retry |
-
----
+To combine completed music with a video, follow [video production](../workflows/video-production.md); replace or mix original audio according to the requested result.
 
 ## Related Skills
 

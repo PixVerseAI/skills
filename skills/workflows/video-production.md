@@ -1,43 +1,27 @@
 ---
 name: pixverse:video-production
-description: Full video production pipeline — create, extend, upscale, add voiceover/music, and download
+description: Extend or upscale a video and optionally add voiceover or music
 ---
 
-### Pipeline
-1. Create base video (T2V, I2V, or Motion Control)
-2. Optionally extend duration
-3. Upscale to final resolution
-4. Optionally generate a voiceover (`create voice`) or music track (`create music`) and mux it on with `ffmpeg`
-5. Download
+Read [execution contract](../references/execution-contract.md) for result handling, retries, and defaults.
 
-### Full Example
+Reuse an existing video file or completed video ID when provided; do not regenerate it. Only when the task needs a new source video, generate using [create-video](../capabilities/create-video.md), [motion-control](../capabilities/motion-control.md), or [modify-video](../capabilities/modify-video.md).
+
+1. If requested and supported by the source/model, extend via [post-process-video](../capabilities/post-process-video.md). Validate success and replace the working video ID.
+2. If requested, upscale to a supported final resolution. Validate success and replace the ID again. Default create calls already wait.
+3. Reuse a supplied local video file. For a generated or remote asset ID, download once with `pixverse asset download <id> --type video --dest <directory> --json`; retain the returned `file` path.
+4. Reuse supplied voiceover/music files directly. Generate new audio only when requested and no suitable supplied audio is available, using [create-voice](../capabilities/create-voice.md) or [create-music](../capabilities/create-music.md). Voice requires selecting a preset and passing `--voice-id <preset-id>` (or `--provider-voice-id`). Both audio modes are unavailable in region `cn`.
+
+For example, after choosing a compatible voice:
+
 ```bash
-# Step 1: Create base video
-RESULT=$(pixverse create video --prompt "A person walking through a forest" --model v6 --quality 720p --duration 5 --json)
-VID=$(echo "$RESULT" | jq -r '.video_id')
-
-# Step 2: Extend to make it longer
-EXTENDED=$(pixverse create extend --video $VID --prompt "Continue walking deeper into the forest" --duration 5 --json | jq -r '.video_id')
-pixverse task wait $EXTENDED --json
-
-# Step 3: Upscale to 2160p
-FINAL=$(pixverse create upscale --video $EXTENDED --quality 2160p --json | jq -r '.video_id')
-pixverse task wait $FINAL --json
-
-# Step 4: Download
-pixverse asset download $FINAL --json
+pixverse create voice --text "Welcome to the forest" --voice-id "$VOICE_ID" --output "$AUDIO_FILE" --json
 ```
 
-### Variations
-- **Motion control start**: Replace Step 1 with `pixverse create motion-control --image ./char.jpg --video <ref-id> --json` to animate a character with reference motion, then continue with extend/upscale
-- **Add a voiceover** (after upscale): generate the audio standalone, then mux it on — speech is no longer a video command:
-  ```bash
-  pixverse create voice --text "Welcome to the forest" --output ./vo.mp3 --json
-  VIDEO_FILE=$(pixverse asset download $FINAL --dest . --json | jq -r '.file')
-  ffmpeg -i "$VIDEO_FILE" -i ./vo.mp3 -c:v copy -c:a aac -shortest ./final.mp4
-  ```
-- **Add a music track**: `pixverse create music --prompt "calm ambient forest score" --output ./score.mp3 --json`, then mux the same way
-- Skip extend if original duration is sufficient
+After confirming both files exist and the preceding commands succeeded, replace the original audio explicitly:
 
-### Related Skills
-`pixverse:create-video`, `pixverse:motion-control`, `pixverse:post-process-video`, `pixverse:create-voice`, `pixverse:create-music`, `pixverse:task-management`, `pixverse:asset-management`
+```bash
+ffmpeg -n -i "$VIDEO_FILE" -i "$AUDIO_FILE" -map 0:v:0 -map 1:a:0 -c:v copy -af apad -c:a aac -shortest "$FINAL_FILE"
+```
+
+Here audio is padded with silence or trimmed to the video duration, preserving the whole video. If the user wants original audio retained under music/voice, mix the tracks with an explicit `amix` filter instead of replacing them; inspect whether the video has an audio stream first. Choose distinct input/output paths in a task-specific directory. Check ffmpeg availability before local post-processing; follow existing user authorization for dependency installation.

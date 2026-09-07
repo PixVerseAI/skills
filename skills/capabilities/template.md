@@ -141,7 +141,7 @@ pixverse template info 12345 --json
 | `--seed <number>` | Random seed | any integer; image templates generate one automatically when omitted |
 | `--count <number>` | Number of generations | `1`–`4` |
 | `--off-peak` | Off-peak pricing | flag |
-| `--idempotency-key <key>` | Stable safe-retry key; repeated submissions return the original task without re-charging | optional |
+| `--idempotency-key <key>` | Stable safe-retry key; see execution contract | optional |
 | `--no-wait` | Return immediately without polling | flag |
 | `--timeout <sec>` | Polling timeout | `300` (default) |
 | `--json` | JSON output | flag |
@@ -152,48 +152,9 @@ For image templates, CLI v1.2.13 and later supplies a random seed when `--seed` 
 
 ---
 
-## JSON Output
+## Results and recovery
 
-### Video template (submitted)
-
-```json
-{ "video_id": 123456, "trace_id": "...", "status": "submitted" }
-```
-
-### Video template (completed)
-
-```json
-{
-  "video_id": 123456,
-  "trace_id": "...",
-  "status": "completed",
-  "video_url": "https://...",
-  "cover_url": "https://...",
-  "prompt": "...",
-  "model": "v5.5",
-  "duration": 5,
-  "width": 1280,
-  "height": 720,
-  "created_at": "2026-01-01T00:00:00Z"
-}
-```
-
-### Image template (completed)
-
-```json
-{
-  "image_id": 789012,
-  "trace_id": "...",
-  "status": "completed",
-  "image_url": "https://...",
-  "model": "v5.5",
-  "width": 1024,
-  "height": 1024,
-  "created_at": "2026-01-01T00:00:00Z"
-}
-```
-
----
+Use the shared [execution contract](../references/execution-contract.md) for submitted, completed, batch, and partial results, polling, and recovery. The template determines the output type: `video_id` / `video_url` or `image_id` / `image_url`. Pass the matching `--type` when polling.
 
 ## Steps: Create from Template
 
@@ -231,48 +192,7 @@ For image templates, CLI v1.2.13 and later supplies a random seed when `--seed` 
 
 ## Examples
 
-Search and use a template in one pipeline:
-
-```bash
-# Find a template
-TEMPLATE=$(pixverse template search "zoom in" --json | jq '.items[0].template_id')
-
-# Check its type
-INFO=$(pixverse template info $TEMPLATE --json)
-EFFECT_TYPE=$(echo $INFO | jq '.effect_type')
-
-# Create (assuming effect_type == 1)
-RESULT=$(pixverse create template --template-id $TEMPLATE --image ./photo.jpg --json)
-VIDEO_ID=$(echo $RESULT | jq -r '.video_id')
-
-# Download
-pixverse asset download $VIDEO_ID --json
-```
-
-No-wait pattern:
-
-```bash
-RESULT=$(pixverse create template --template-id 12345 --image ./face.jpg --no-wait --json)
-ID=$(echo $RESULT | jq -r '.video_id')
-pixverse task wait $ID --json
-pixverse asset download $ID --json
-```
-
----
-
-## Error Handling
-
-| Exit Code | Meaning | Recovery |
-|:---|:---|:---|
-| 0 | Success | -- |
-| 2 | Timeout | Increase `--timeout` or use `--no-wait` then `pixverse task wait` |
-| 3 | Auth expired | Re-run `pixverse auth login --json` |
-| 4 | Insufficient credits | Check `pixverse account info --json` |
-| 5 | Generation failed | Check image quality, try different template |
-| 6 | Validation error | Wrong number of images for `effect_type`, or image/video conflict |
-| 7 | Concurrent generation limit | Wait for a slot, then retry with the same `--idempotency-key` |
-
----
+After inspecting the live template schema, submit the appropriate command above. Preserve the creation exit status and result; use the [execution contract](../references/execution-contract.md) for single, batch, and asynchronous outputs. Image templates require `--type image` when polling; videos use `--type video`. Do not assume every template returns `video_id`.
 
 ## Related Skills
 
