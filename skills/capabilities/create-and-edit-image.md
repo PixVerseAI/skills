@@ -38,7 +38,7 @@ Want an image?
 
 ### Model Reference
 
-Each model has its own supported parameter combinations. **Always check this table before selecting flags.**
+Each model has its own supported parameter combinations. **Always check this table before selecting flags.** For the installed CLI's expanded flags, defaults, enums, and media limits, prefer `pixverse capabilities create image [--model <id>] --json` (offline as of CLI v1.4.0).
 
 | Model | `--model` value | Resolution | Aspect Ratio | Max I2I refs |
 |:---|:---|:---|:---|---:|

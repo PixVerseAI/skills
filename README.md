@@ -1,6 +1,6 @@
 # PixVerse Skills
 
-Agent skill library for [PixVerse CLI](https://www.npmjs.com/package/pixverse) — helps AI agents (Claude Code, Cursor, Codex, etc.) generate videos, images, audio (speech & music), and MiniApp projects through structured, composable workflows.
+Agent skill library for [PixVerse CLI](https://www.npmjs.com/package/pixverse) — helps AI agents (Claude Code, Cursor, Codex, etc.) generate videos, images, audio (speech & music), MiniApp projects, and Canvas workflows through structured, composable workflows.
 
 ## What is this?
 
@@ -47,6 +47,8 @@ skills/
     saved-folders.md                #   Organize assets into named folders
     template.md                     #   Browse and create from effect templates
     miniapps.md                     #   Discover and run PixVerse MiniApps
+    capabilities.md                 #   Offline Create registry + live Canvas capability queries
+    canvas.md                       #   Connected Canvas generation graphs
     workspace.md                    #   Team workspace management
     mondo-poster-design.md          #   Mondo-style poster, book cover, album art design
     character-design.md             #   Persistent characters — three-view sheet + cloud asset id reuse
@@ -94,6 +96,30 @@ pixverse asset download <project_id> --type miniapps --json
 ```
 
 See `skills/capabilities/miniapps.md` for normalized `params_schema` fields, media-path handling, output contracts, and the full project lifecycle.
+
+## Capabilities and Canvas
+
+PixVerse CLI v1.4.0 adds offline Create discovery and a top-level `canvas` group. Query the installed CLI instead of copying a static catalog:
+
+```bash
+pixverse capabilities --json
+pixverse capabilities create video --model v6 --json
+pixverse capabilities canvas --node-type image_generate --json
+```
+
+`capabilities` / `capabilities create` need no login. `capabilities canvas` is live and merges Canvas routes with the installed Create registry. Do not invent Canvas `node_type` mappings.
+
+Typical Canvas automation:
+
+```bash
+pixverse canvas project create --json
+pixverse canvas graph get --project-id "$PROJECT_ID" --json
+pixverse canvas patch dry-run --project-id "$PROJECT_ID" --patch patch.json --json
+pixverse canvas patch apply --project-id "$PROJECT_ID" --patch patch.json --json
+pixverse canvas dispatch --project-id "$PROJECT_ID" --node-ids image_01 --edit-version 13 --json
+```
+
+See `skills/capabilities/capabilities.md` and `skills/capabilities/canvas.md`.
 
 ## Supported Models
 

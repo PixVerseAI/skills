@@ -1,7 +1,7 @@
 ---
 name: pixverse-ai-image-and-video-generator
-description: PixVerse CLI — generate AI videos, images, audio, and MiniApp projects from the command line. Supports PixVerse V6, MiniMax H3, FLUX 3, Wan 3.0, Veo, Sora, Grok, Seedance, Kling, Happy Horse video models; Nano Banana (Gemini), Seedream, Qwen, Kling, GPT Image image models; MiniMax / ElevenLabs voice (TTS) and MiniMax / ElevenLabs / Google Lyria music models; PixVerse MiniApps; and PixVerse's rich effect template library. Start here.
-version: 1.24.0
+description: PixVerse CLI — generate AI videos, images, audio, MiniApp projects, and Canvas workflows from the command line. Supports PixVerse V6, MiniMax H3, FLUX 3, Wan 3.0, Veo, Sora, Grok, Seedance, Kling, Happy Horse video models; Nano Banana (Gemini), Seedream, Qwen, Kling, GPT Image image models; MiniMax / ElevenLabs voice (TTS) and MiniMax / ElevenLabs / Google Lyria music models; PixVerse MiniApps; Canvas graphs; and PixVerse's rich effect template library. Start here.
+version: 1.25.0
 homepage: https://pixverse.ai
 source: https://github.com/PixVerseAI/skills
 ---
@@ -96,6 +96,8 @@ Details:
 | I want to... | Use skill |
 |:---|:---|
 | Create a video from text or image | `pixverse:create-video` |
+| Look up installed Create or live Canvas capabilities before generating | `pixverse:capabilities` |
+| Build and run a connected Canvas generation graph | `pixverse:canvas` |
 | Review a prompt and get suggestions to improve it (advice only, any model — never auto-edits the prompt) | `pixverse:prompting-guide` |
 | Enhance a video prompt for better results (V6 / generic) | `pixverse:prompt-enhance` |
 | Optimize a prompt for Seedance 2.0 / 2.5 (auto-triggers when prompt has clear optimization headroom; skipped when prompt is already clean) | `pixverse:seedance-prompt-optimize` |
@@ -118,9 +120,11 @@ Details:
 | Design and reuse persistent characters across a story | `pixverse:character-design` |
 | Design and reuse persistent key items / props / objects | `pixverse:item-design` |
 
-> **Looking up models or parameters?** Don't wait until you're generating — read the relevant capabilities file directly:
+> **Looking up models or parameters?** Prefer the installed CLI's offline registry, then the skill tables:
+> - `pixverse capabilities create <mode> [--model <id>] --json` — expanded flags, defaults, enums, ranges, and media limits for this CLI version (no login)
 > - Video models & constraints → `skills/capabilities/create-video.md` (Model Reference section)
 > - Image models & constraints → `skills/capabilities/create-and-edit-image.md` (Model Reference section)
+> - Canvas node types, routes, and mappings → `pixverse capabilities canvas --json` (live; do not copy a static catalog)
 
 ---
 
@@ -247,6 +251,9 @@ Located in `skills/references/`. These are read-only knowledge bases that capabi
 | `create reference` | Generate or edit video with model-specific image/video/audio references |
 | `create motion-control` | Generate video with character image + motion reference video |
 | `create template` | Create video or image from an effect template |
+| `capabilities` | Show the installed static CLI capability bundle (offline) |
+| `capabilities create` | Show structured Create modes, models, parameters, defaults, and limits (offline) |
+| `capabilities canvas` | Query merged Canvas and CLI capabilities, or the raw Canvas response with `--raw` |
 | `template categories` | List template categories |
 | `template list` | Browse templates (with optional category filter) |
 | `template search` | Search templates by keyword |
@@ -289,6 +296,22 @@ Located in `skills/references/`. These are read-only knowledge bases that capabi
 | `config defaults set` | Set a per-mode creation default value |
 | `config defaults reset` | Reset creation defaults to built-in values |
 | `update` | Update the CLI to the latest version (`npm i -g pixverse@latest`) |
+| `canvas project create` | Create an empty Canvas project with an optional name and description |
+| `canvas graph get` | Get a Canvas project's nodes, connections, and edit version |
+| `canvas graph status` | Get the generation status of Canvas nodes |
+| `canvas graph invalid-nodes` | Show Canvas validation issues and invalid node details |
+| `canvas graph reconcile` | Recover generation for specific Canvas nodes |
+| `canvas node get` | Get details for a Canvas node |
+| `canvas node schema` | Show the current schema for a Canvas node type |
+| `canvas node versions` | List saved versions for a Canvas node |
+| `canvas node version` | Get a saved version for a Canvas node |
+| `canvas node version apply` | Set a saved version as the current Canvas node version |
+| `canvas node rerun` | Run generation again for a specific Canvas node |
+| `canvas node extract-audio` | Extract the full audio track from a Canvas video node |
+| `canvas patch dry-run` | Validate Canvas changes without saving them |
+| `canvas patch apply` | Apply validated changes to a Canvas project |
+| `canvas dispatch` | Start generation for specific ready Canvas nodes |
+| `canvas dispatch rebind` | Bind specific ready Canvas nodes to a dispatch plan |
 
 ---
 
@@ -309,7 +332,7 @@ Every command supports `--json`. All examples in skills use `--json` for machine
 
 **Common creation conventions**:
 - **`-` for stdin** — text inputs (`--prompt`, `--text`, `--lyrics`) accept a literal string, a local file path, or `-` to read from stdin. Pipe long or multi-line prompts: `cat prompt.txt | pixverse create video --prompt - --json`.
-- **`--idempotency-key <key>`** — supported by video/image generation and editing commands (`video`, `image`, `transition`, `extend`, `modify`, `upscale`, `reference`, `motion-control`, `template`). Supply a stable key for safe retries; the backend dedupes by key, so a repeated submission returns the original task without re-charging credits. Voice/music use `--client-request-id` instead, which is logged but does not dedupe.
+- **`--idempotency-key <key>`** — supported by video/image generation and editing commands (`video`, `image`, `transition`, `extend`, `modify`, `upscale`, `reference`, `motion-control`, `template`) and by `canvas patch dry-run` / `canvas patch apply`. Supply a stable key for safe retries; the backend dedupes by key, so a repeated submission returns the original task without re-charging credits. Canvas derives a key automatically when omitted. Voice/music use `--client-request-id` instead, which is logged but does not dedupe.
 
 **Interactive mode**: Run any creation command without arguments (and without `--json`) to enter the interactive wizard.
 

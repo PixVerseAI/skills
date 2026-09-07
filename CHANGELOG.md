@@ -4,6 +4,19 @@ All notable changes to PixVerse Skills will be documented in this file.
 
 Format follows [Keep a Changelog](https://keepachangelog.com/).
 
+## [1.25.0] - 2026-09-07
+
+Sync the skill docs to PixVerse CLI **v1.4.0**.
+
+### Added
+- Add `pixverse:capabilities` for offline Create discovery (`capabilities`, `capabilities create [mode] [--model]`) and live Canvas+CLI queries (`capabilities canvas`, including `--raw`, `--node-type`, `--selector`, and `--model`).
+- Add `pixverse:canvas` for the top-level Canvas command group: project create, graph inspect/status/reconcile, node schema/versions/rerun/extract-audio, patch dry-run/apply, dispatch, and dispatch rebind.
+- Document the agent Canvas workflow (capabilities → graph get → dry-run → apply → dispatch exact `executable_node_ids` → status) and the invariants that matter at the CLI surface: string IDs, `edit_version` locking, fail-closed adapter merges, dependency replace-via-delete, and `video_compose` remaining edge-free.
+
+### Changed
+- Point model and parameter lookup at `pixverse capabilities create` as the installed-CLI source of truth, and tell agents not to copy a static Canvas node catalog.
+- Extend the master command index, README skill map, and idempotency-key guidance to cover Canvas patches.
+
 ## [1.24.0] - 2026-09-06
 
 Sync the skill docs to PixVerse CLI **v1.3.10**, covering CLI v1.3.6–v1.3.10.
