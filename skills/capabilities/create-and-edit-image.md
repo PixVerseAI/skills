@@ -11,7 +11,7 @@ Use `create image --prompt` for text-to-image. Add `--image` for one reference o
 
 Check the CLI version once per session. On **1.4.0+**, query `pixverse capabilities create image --model <id> --json` for the chosen model. If none was specified, query `pixverse capabilities create image --json` to find the installed default. On older releases, use `pixverse create image --help` with the [static image model reference](../references/image-models.md); newer model entries may not be supported by that installation.
 
-Preserve the requested model and quality. Otherwise use defaults or select based on the requested resolution, reference count, and speed. In region `cn`, the default is `qwen-image` and the supported models differ; confirm availability before submission. Unsupported quality/ratio values can be adjusted with a warning on stderr, so choose model-valid values.
+Preserve the requested model and quality. Otherwise use defaults or select based on the requested resolution, reference count, and speed. CLI **1.4.1** changes the global built-in default to `gpt-image-2.5-flare` and adds `gpt-image-2.5-sunburst`; saved defaults or explicit flags still take precedence. In region `cn`, the default is `qwen-image` and the supported models differ; confirm availability before submission. Unsupported quality/ratio values can be adjusted with a warning on stderr, so choose model-valid values.
 
 ## Flags
 
@@ -22,14 +22,16 @@ Preserve the requested model and quality. Otherwise use defaults or select based
 | `--images <inputs...>` | Multiple image inputs (enables I2I): file paths, HTTPS URLs, image IDs, or media paths | -- |
 | `-m, --model <model>` | Image model | Installed registry; static fallback linked above |
 | `-q, --quality <q>` | Image quality | `512p`, `720p`, `1080p` (default), `1440p`, `1800p`, `2160p` (availability varies by model — see Parameter discovery above) |
-| `--aspect-ratio <ratio>` | Aspect ratio | `1:1` (default), `16:9`, `9:16`, `4:3`, `3:4`, `3:2`, `2:3`, `5:4`, `4:5`, `2:1`, `1:2`, `21:9`, `auto` (availability varies by model) |
-| `--detail-level <level>` | Optional rendering detail for **`gpt-image-2.0` only** | `low` (default when omitted), `medium`, `high`. Passing this with any other model fails with exit code 6 (validation). |
+| `--aspect-ratio <ratio>` | Aspect ratio | `1:1`, `16:9`, `9:16`, `4:3`, `3:4`, `3:2`, `2:3`, `5:4`, `4:5`, `2:1`, `1:2`, `21:9`, `auto` (availability and default vary by model and quality) |
+| `--detail-level <level>` | GPT Image rendering detail | 2.5 Flare/Sunburst: `low`, `medium`, `high`, `xhigh`, `max`; 2.0: `low`, `medium`, `high`. Default `low`; other models or unsupported values fail with exit 6. |
 | `--count <number>` | Number of generations | `1` (default), `2`, `3`, `4` |
 | `--seed <number>` | Random seed | any integer |
 | `--idempotency-key <key>` | Stable safe-retry key; see execution contract | optional |
 | `--no-wait` | Return immediately without polling | flag |
 | `--timeout <sec>` | Polling timeout | `300` (default) |
 | `--json` | JSON output | flag |
+
+For GPT Image 2.5, select quality before framing and read matching `capability.rules` (`when.quality`) from discovery. For example, `1080p + 9:16` is invalid; use `1440p + 9:16` for portrait output. Both variants support up to 16 references, independently of output count. See the [quality/ratio matrix](../references/image-models.md#gpt-image-25-quality-dependent-framing) for fallback details.
 
 ## Create or edit one image
 

@@ -19,7 +19,7 @@ Use `.pixverse/characters.json` or `.pixverse/items.json` in the project root. T
       "workspace_id": 0,
       "fields": {"short_description": "A cheerful apprentice wizard"},
       "source_prompt": "The actual generation prompt",
-      "generation": {"model": "gpt-image-2.0", "quality": "1440p", "aspect_ratio": "16:9"},
+      "generation": {"model": "gpt-image-2.5-flare", "quality": "1440p", "aspect_ratio": "16:9"},
       "cache": {"local_path": "./characters/aria/reference.png"},
       "created_at": "2026-04-22T13:14:29Z"
     }
@@ -45,7 +45,7 @@ Prefer atomic registry replacement after reading the latest contents. If multipl
 
 Use [create-and-edit-image](../capabilities/create-and-edit-image.md) for current models, reference limits, qualities, and region support, and [execution-contract](execution-contract.md) for task completion, retries, and outputs.
 
-For generated reference sheets, prefer `gpt-image-2.0` at `1440p` when available. If a fallback is warranted, candidates are `gemini-3.1-flash`, `gemini-3.0`, and `seedream-5.0-lite`; filter candidates by selected region and supported parameters before submitting. In CN, prefer `seedream-5.0-lite`; if using `qwen-image`, lower quality to its supported `1080p`. Respect explicit model requirements rather than silently changing them.
+For generated reference sheets on CLI 1.4.1+, prefer `gpt-image-2.5-flare` at `1440p` when available; set the caller's ratio explicitly (`16:9` for characters, `1:1` for items). Older installations can use `gpt-image-2.0` at those settings. If a fallback is warranted, candidates are `gemini-3.1-flash`, `gemini-3.0`, and `seedream-5.0-lite`; filter candidates by selected region and supported parameters before submitting. In CN, prefer `seedream-5.0-lite`; if using `qwen-image`, lower quality to its supported `1080p`. Respect explicit model requirements rather than silently changing them.
 
 A successful task supplies the image ID; confirm completed status, not merely presence of a URL. A temporary preview/HEAD failure is not evidence that image generation failed: inspect/download the existing asset before creating a replacement. Separate parameter errors, authentication/credit failures, moderation, and transient task failures. Do not retry all models for every failure. After a fallback also fails, report the cause instead of exhausting a costly chain. Retain task IDs so interrupted work can resume.
 

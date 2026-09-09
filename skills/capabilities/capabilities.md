@@ -108,6 +108,7 @@ Behavior:
 - `capability.models` keeps only that model
 - `parameters.model.enum` narrows to that model
 - Unsupported parameters keep `supported: false` and drop invalid defaults/enums/ranges
+- Conditional rules remain in `capability.rules`. Apply the rule matching selected inputs (for example `when.quality`) before choosing dependent parameters. GPT Image 2.5 exposes a base ratio union, but only a subset is valid at each quality; `--model` alone cannot choose that subset.
 - Still offline — this is not a live backend catalog
 
 ### Parameter fields

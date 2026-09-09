@@ -29,12 +29,12 @@ Load the registry ID, then use I2I with a brief identity anchor from known field
 
 ```bash
 pixverse create image --image <character_image_id> \
-  --model gpt-image-2.0 --quality 1440p --aspect-ratio 16:9 \
+  --model gpt-image-2.5-flare --quality 1440p --aspect-ratio 16:9 \
   --prompt "Same character as the reference: <known distinctive traits>. <requested scene>." \
   --json
 ```
 
-The example model/ratio are defaults for a compatible region; preserve requested output settings. A previous I2I failure is not a permanent prohibition on Gemini or another model.
+The example requires CLI 1.4.1+ in a compatible region; preserve requested output settings. A previous I2I failure is not a permanent prohibition on Gemini or another model.
 
 ## Reuse for video
 

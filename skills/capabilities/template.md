@@ -136,7 +136,7 @@ pixverse template info 12345 --json
 | `--video <pathOrId>` | Video file path or video ID | alternative to `--image` if template supports it |
 | `-q, --quality <q>` | Output quality | `720p` (default), model-dependent |
 | `-d, --duration <sec>` | Duration | from template default, or override |
-| `--aspect-ratio <ratio>` | Aspect ratio | optional override |
+| `--aspect-ratio <ratio>` | Aspect ratio | optional override; image templates validate against their model and selected quality |
 | `--prompt <text>` | Prompt override | optional — uses template default if omitted |
 | `--seed <number>` | Random seed | any integer; image templates generate one automatically when omitted |
 | `--count <number>` | Number of generations | `1`–`4` |

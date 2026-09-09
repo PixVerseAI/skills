@@ -4,6 +4,19 @@ All notable changes to PixVerse Skills will be documented in this file.
 
 Format follows [Keep a Changelog](https://keepachangelog.com/).
 
+## [1.27.0] - 2026-09-09
+
+Sync the skill docs to PixVerse CLI **v1.4.1**.
+
+### Added
+- Document GPT Image 2.5 Flare and Sunburst for T2I/I2I: quality-dependent aspect ratios, five detail levels, and up to 16 reference images; both models require CLI 1.4.1+ and the global region.
+
+### Changed
+- Track Flare as the new global image default while preserving explicit/saved defaults and CN's Qwen default.
+- Teach capability consumers to apply conditional quality rules instead of treating the base aspect-ratio union as valid at every resolution.
+- Update persistent-reference examples and the Windows portrait pipeline to use compatible quality/framing pairs; pass generated image IDs directly to video creation.
+- Document quality-aware aspect-ratio validation for image templates.
+
 ## [1.26.0] - 2026-09-07
 
 ### Changed

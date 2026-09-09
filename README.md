@@ -135,10 +135,10 @@ For CLI 1.4.0+, query the installed registry rather than maintaining another mod
 ```bash
 pixverse capabilities create --json
 pixverse capabilities create video --model v6 --json
-pixverse capabilities create image --model gpt-image-2.0 --json
+pixverse capabilities create image --model gpt-image-2.5-flare --json
 ```
 
-Queries are offline. Older CLI versions need their installed command help and version-compatible references; this skill documents CLI 1.4.0. Static model tables remain in the relevant [capabilities](skills/SKILL.md#select-an-operation) as an on-demand reference. Canvas and MiniApp schemas are live and must be discovered separately.
+Queries are offline. Older CLI versions need their installed command help and version-compatible references; this skill documents CLI 1.4.1. Static model tables remain in the relevant [capabilities](skills/SKILL.md#select-an-operation) as an on-demand reference. Canvas and MiniApp schemas are live and must be discovered separately.
 
 ## For AI Agent Developers
 

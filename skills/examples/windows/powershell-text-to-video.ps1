@@ -18,9 +18,9 @@ function Invoke-PixverseJson {
 }
 
 New-Item -ItemType Directory -Path $OutputDirectory -ErrorAction Stop | Out-Null
-$Image = Invoke-PixverseJson -CliArgs @('create', 'image', '--prompt', $ImagePrompt, '--aspect-ratio', '9:16', '--idempotency-key', [guid]::NewGuid().ToString())
-if (-not $Image.image_url) { throw 'Completed image result has no image_url' }
-$Video = Invoke-PixverseJson -CliArgs @('create', 'video', '--image', $Image.image_url, '--prompt', $AnimationPrompt, '--model', 'sora-2', '--duration', '12', '--idempotency-key', [guid]::NewGuid().ToString())
+$Image = Invoke-PixverseJson -CliArgs @('create', 'image', '--prompt', $ImagePrompt, '--quality', '1440p', '--aspect-ratio', '9:16', '--idempotency-key', [guid]::NewGuid().ToString())
+if ($Image.status -ne 'completed' -or -not $Image.image_id) { throw 'Expected a completed image with image_id' }
+$Video = Invoke-PixverseJson -CliArgs @('create', 'video', '--image', [string]$Image.image_id, '--prompt', $AnimationPrompt, '--model', 'sora-2', '--duration', '12', '--idempotency-key', [guid]::NewGuid().ToString())
 if (-not $Video.video_id) { throw 'Completed video result has no video_id' }
 $Upscale = Invoke-PixverseJson -CliArgs @('create', 'upscale', '--video', [string]$Video.video_id, '--quality', '2160p', '--idempotency-key', [guid]::NewGuid().ToString())
 if (-not $Upscale.video_id) { throw 'Completed upscale result has no video_id' }
