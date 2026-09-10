@@ -1,6 +1,6 @@
 # Video model fallback reference
 
-Read only when installed capability discovery is unavailable, or when mode-specific behavior needs clarification. This static catalog describes CLI 1.4.1; older installations may support fewer models. Reference-input details are in [video reference](video-reference.md).
+Read only when installed capability discovery is unavailable, or when mode-specific behavior needs clarification. This static catalog describes CLI 1.4.2; older installations may support fewer models. Reference-input details are in [video reference](video-reference.md).
 
 ## Model Reference
 

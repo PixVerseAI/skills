@@ -22,7 +22,7 @@ Preserve the requested model and quality. Otherwise use defaults or select based
 | `--images <inputs...>` | Multiple image inputs (enables I2I): file paths, HTTPS URLs, image IDs, or media paths | -- |
 | `-m, --model <model>` | Image model | Installed registry; static fallback linked above |
 | `-q, --quality <q>` | Image quality | `512p`, `720p`, `1080p` (default), `1440p`, `1800p`, `2160p` (availability varies by model — see Parameter discovery above) |
-| `--aspect-ratio <ratio>` | Aspect ratio | `1:1`, `16:9`, `9:16`, `4:3`, `3:4`, `3:2`, `2:3`, `5:4`, `4:5`, `2:1`, `1:2`, `21:9`, `auto` (availability and default vary by model and quality) |
+| `--aspect-ratio <ratio>` | Aspect ratio | `1:1`, `16:9`, `9:16`, `4:3`, `3:4`, `3:2`, `2:3`, `5:4`, `4:5`, `2:1`, `1:2`, `21:9`, `auto` (availability and default vary by model and installed CLI version) |
 | `--detail-level <level>` | GPT Image rendering detail | 2.5 Flare/Sunburst: `low`, `medium`, `high`, `xhigh`, `max`; 2.0: `low`, `medium`, `high`. Default `low`; other models or unsupported values fail with exit 6. |
 | `--count <number>` | Number of generations | `1` (default), `2`, `3`, `4` |
 | `--seed <number>` | Random seed | any integer |
@@ -31,7 +31,7 @@ Preserve the requested model and quality. Otherwise use defaults or select based
 | `--timeout <sec>` | Polling timeout | `300` (default) |
 | `--json` | JSON output | flag |
 
-For GPT Image 2.5, select quality before framing and read matching `capability.rules` (`when.quality`) from discovery. For example, `1080p + 9:16` is invalid; use `1440p + 9:16` for portrait output. Both variants support up to 16 references, independently of output count. See the [quality/ratio matrix](../references/image-models.md#gpt-image-25-quality-dependent-framing) for fallback details.
+On CLI **1.4.2+**, GPT Image 2.5 supports `1:1`, `16:9`, `9:16`, `3:2`, and `2:3` at every supported quality, with built-in default `16:9`. Quality no longer filters framing: `1080p + 9:16` is valid. Both variants support up to 16 references, independently of output count. See [framing and version compatibility](../references/image-models.md#gpt-image-25-framing) for the older 1.4.1 restrictions and fallback behavior.
 
 ## Create or edit one image
 

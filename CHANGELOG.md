@@ -4,6 +4,15 @@ All notable changes to PixVerse Skills will be documented in this file.
 
 Format follows [Keep a Changelog](https://keepachangelog.com/).
 
+## [1.28.0] - 2026-09-10
+
+Sync the skill docs to PixVerse CLI **v1.4.2**.
+
+### Changed
+- Remove quality-specific framing restrictions for GPT Image 2.5 Flare/Sunburst: all five supported ratios are now available at 1080p, 1440p, and 2160p.
+- Update the built-in GPT Image 2.5 aspect-ratio default to 16:9 while preserving explicit and saved settings.
+- Align capability discovery and image-template guidance with the removal of quality-dependent ratio rules; keep a short compatibility note for CLI 1.4.1.
+
 ## [1.27.0] - 2026-09-09
 
 Sync the skill docs to PixVerse CLI **v1.4.1**.
