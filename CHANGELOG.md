@@ -4,6 +4,28 @@ All notable changes to PixVerse Skills will be documented in this file.
 
 Format follows [Keep a Changelog](https://keepachangelog.com/).
 
+## [1.30.0] - 2026-10-08
+
+Sync the skill docs to PixVerse CLI **v1.4.7**, including v1.4.6 audio validation changes.
+
+### Changed
+- Remove obsolete local voice text and music prompt/lyrics length caps; preserve user input and defer provider-specific validation to the backend.
+- Explain absent audio length metadata in capability discovery without implying unlimited provider input; retain model compatibility and other local validation rules.
+- Update the CLI baseline and note the v1.4.7 media upload stability fix without changing upload commands or output contracts.
+
+## [1.29.0] - 2026-09-20
+
+Sync the skill docs to PixVerse CLI **v1.4.5**, including changes from v1.4.3–v1.4.4.
+
+### Added
+- Document `canvas arrange <id>` for arranging and saving the entire project layout, and positional project IDs across all 15 project-scoped Canvas operations.
+- Add MiniMax H3 Max video/reference/two-frame transition guidance, including its distinct quality, framing, and mixed-reference limits.
+
+### Changed
+- Preserve Canvas IDs as decimal strings, reject conflicting positional/flag inputs, and retain the compatible `--project-id` form.
+- Expand GPT Image 2.5 framing to ten aspect ratios at every supported quality, matching CLI 1.4.3+.
+- Document CLI 1.4.5 local download validation and no-overwrite behavior for assets, audio creation, and MiniApps; recover download failures without repeating generation.
+
 ## [1.28.0] - 2026-09-10
 
 Sync the skill docs to PixVerse CLI **v1.4.2**.

@@ -126,6 +126,8 @@ pixverse canvas patch apply --project-id "$PROJECT_ID" --patch patch.json --json
 pixverse canvas dispatch --project-id "$PROJECT_ID" --node-ids image_01 --edit-version 13 --json
 ```
 
+CLI 1.4.5 also accepts positional project IDs, for example `pixverse canvas graph get "$PROJECT_ID" --json`. Use `pixverse canvas arrange "$PROJECT_ID" --json` to arrange and save the entire layout, then read the graph to inspect it. The existing `--project-id` form remains supported.
+
 See `skills/capabilities/capabilities.md` and `skills/capabilities/canvas.md`.
 
 ## Models and parameters
@@ -138,7 +140,7 @@ pixverse capabilities create video --model v6 --json
 pixverse capabilities create image --model gpt-image-2.5-flare --json
 ```
 
-Queries are offline. Older CLI versions need their installed command help and version-compatible references; this skill documents CLI 1.4.2. Static model tables remain in the relevant [capabilities](skills/SKILL.md#select-an-operation) as an on-demand reference. Canvas and MiniApp schemas are live and must be discovered separately.
+Queries are offline. Older CLI versions need their installed command help and version-compatible references; this skill documents CLI 1.4.7. Static model tables remain in the relevant [capabilities](skills/SKILL.md#select-an-operation) as an on-demand reference. Canvas and MiniApp schemas are live and must be discovered separately.
 
 ## For AI Agent Developers
 

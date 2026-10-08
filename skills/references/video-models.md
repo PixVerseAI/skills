@@ -1,6 +1,6 @@
 # Video model fallback reference
 
-Read only when installed capability discovery is unavailable, or when mode-specific behavior needs clarification. This static catalog describes CLI 1.4.2; older installations may support fewer models. Reference-input details are in [video reference](video-reference.md).
+Read only when installed capability discovery is unavailable, or when mode-specific behavior needs clarification. This static catalog describes CLI 1.4.5; older installations may support fewer models. Reference-input details are in [video reference](video-reference.md).
 
 ## Model Reference
 
@@ -24,6 +24,7 @@ On CLI v1.4.0 or later, query `pixverse capabilities create video [--model <id>]
 | Seedance 2.0 Fast | `seedance-2.0-fast` | Video, Reference, Transition | `480p` `720p` | `4`–`15` (any integer) | `16:9` `4:3` `1:1` `3:4` `9:16` `21:9` |
 | Seedance 2.0 Mini | `seedance-2.0-mini` | Video, Reference, Transition | `480p` `720p` | `4`–`15` (any integer) | `16:9` `4:3` `1:1` `3:4` `9:16` `21:9` |
 | MiniMax H3 | `minimax-h3` | Video, Reference, Transition (exactly 2 frames) | `768p` `1440p` (default) | `5`–`15` (any integer) | `auto` `21:9` `16:9` `4:3` `1:1` `3:4` `9:16` (mode-dependent) |
+| MiniMax H3 Max | `minimax-h3-max` (CLI 1.4.4+) | Video, Reference, Transition (exactly 2 frames) | `480p` `768p` (default) `1080p` | `5`–`15` (any integer; default `5`) | T2V: `21:9` `16:9` `4:3` `1:1` `3:4` `9:16`; I2V forces `auto`; Reference also accepts/defaults to `auto`; transition has no selectable ratio |
 | FLUX 3 | `flux-3.0` | Video | `720p` `1080p` (default `720p`) | `5`–`20` (any integer) | `auto` `21:9` `2:1` `16:9` `4:3` `1:1` `3:4` `9:16` (T2V default `16:9`; I2V default `auto`) |
 | Wan 3.0 | `wan-3.0` | Video, Reference, Transition (exactly 2 frames) | `480p` `720p` (default) `1080p` | `2`–`30` (Reference video also `auto`) | `auto` `16:9` `4:3` `1:1` `3:4` `9:16` (video/reference default `auto`; transition has no selectable ratio) |
 | Kling O3 Pro | `kling-o3-pro` | Video, Reference, Transition | not applicable (omit `--quality`) | `3`–`15` (any integer) | `16:9` `9:16` `1:1` |
@@ -53,6 +54,7 @@ On CLI v1.4.0 or later, query `pixverse capabilities create video [--model <id>]
 - **Seedance 2.0 Fast**: External model; `480p` / `720p` only; duration starts at `4s` (minimum); supports `21:9`; available in Video, Reference, and Transition modes. No off-peak pricing.
 - **Seedance 2.0 Mini**: External model; same capabilities as Seedance 2.0 Fast — `480p` / `720p` only; duration starts at `4s` (minimum); supports `21:9`; available in Video, Reference, and Transition modes. No off-peak pricing.
 - **MiniMax H3** (`minimax-h3`): External model supporting `768p` / `1440p` (default `1440p`) and duration `5`–`15s`. T2V defaults to `16:9` and rejects `auto`; I2V always sends `auto` even if another ratio is supplied. Reference with at least one image defaults to `auto` but preserves an explicit fixed ratio; reference without images defaults to `16:9` and rejects `auto`. Reference accepts up to 9 images / 3 videos / 3 audios, and audio needs a visual reference. H3 reference validation is count-only at the model layer, unlike Seedance's clip-duration and local-audio-size checks. Prompts are required in Video, Reference, and exactly-two-frame Transition. Generated audio, multi-shot, and off-peak are unsupported.
+- **MiniMax H3 Max** (`minimax-h3-max`, CLI 1.4.4+): External model; `480p` / `768p` / `1080p` (default `768p`), integer duration `5`–`15s` (default `5`; no automatic duration). T2V defaults to `16:9` and rejects `auto`; I2V forces `auto`. Reference accepts `auto` plus all six fixed ratios and defaults to `auto` even without images; an explicit fixed ratio is preserved. Unlike H3, H3 Max reference framing does not inherit a saved ratio when the flag is omitted. Reference limits are 9 images / 3 videos / 3 audios, **12 total**, with at least one image or video. No model-specific format, size, dimensions, or clip-duration validation is added; shared upload rules and backend validation still apply. Prompts are required in all supported modes. Generated audio, multi-shot, off-peak, Extend, Modify, Motion Control, and 3+ frame Transition are unsupported. Available in the global CLI model list subject to upstream external-model access; unavailable in `--region cn`. Older CLI versions do not support this model.
 - **FLUX 3** (`flux-3.0`): External model; Video (T2V/I2V) only — no Reference, Transition, Extend, or Motion Control. `720p` / `1080p` (default `720p`); duration `5`–`20s` (default `5`). Aspect ratios include `auto` and `2:1` in addition to `21:9` `16:9` `4:3` `1:1` `3:4` `9:16`. T2V defaults to `16:9`; I2V defaults to `auto` while preserving an explicit fixed ratio. Generated audio can be enabled or disabled; multi-shot and off-peak are unsupported. Prompts are required.
 - **Wan 3.0** (`wan-3.0`): External model; `480p` / `720p` / `1080p` (default `720p`); duration `2`–`30s` (default `5` without a reference video). Video and Reference default framing to `auto` and also accept `16:9` `4:3` `1:1` `3:4` `9:16`. Reference accepts up to 10 images / 5 videos / 5 audios (20 total); audio-only is valid. Known video and audio clips are each `1`–`15s` with an exact 15-second aggregate. With a video reference, duration defaults to `auto`; a selected fixed duration is limited by `floor(30 - known reference-video duration)`. Exactly-two-frame Transition requires a prompt and does not expose an aspect-ratio flag. Generated audio is optional; multi-shot and off-peak are unsupported. Prompts are required in every supported mode.
 - **Kling O3 (Pro, Standard & 4K)**: External model tiers; resolution is selected entirely by model ID, so omit `--quality` (an explicit value is ignored with a warning). Duration starts at `3s` (minimum); aspect ratios are limited to `16:9` `9:16` `1:1`. Reference accepts up to 7 images without video or up to 4 images plus 1 MP4/MOV video (`1`–`15s`, ≤`200MB`, width/height ≤`2048`). All three tiers are available in Video, Reference, and Transition modes. No off-peak pricing.
@@ -76,6 +78,16 @@ pixverse create video --model minimax-h3 --prompt "A sweeping aerial shot across
 ```
 
 For H3 image-to-video, pass `--image`; the CLI uses aspect ratio `auto` regardless of an explicit `--aspect-ratio` value.
+
+### MiniMax H3 Max text-to-video
+
+```bash
+pixverse create video --model minimax-h3-max \
+  --prompt "A sweeping aerial shot across a crystalline desert" \
+  --quality 768p --duration 10 --aspect-ratio 21:9 --json
+```
+
+Use CLI 1.4.4+ in a supported region. Adding `--image` switches to I2V and forces `auto` framing; reference mode has its own default `auto` framing even for video-only input.
 
 ### FLUX 3 text-to-video
 

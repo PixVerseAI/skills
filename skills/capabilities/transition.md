@@ -43,7 +43,7 @@ Use transitions when you need to:
 | Flag | Description | Values |
 |:---|:---|:---|
 | `--images <paths...>` | Image paths or URLs (2+ required) | -- |
-| `--prompt <text>` | Prompt to guide transition | optional generally; required for `seedance-2.5`, `minimax-h3`, and `wan-3.0` |
+| `--prompt <text>` | Prompt to guide transition | optional generally; required for `seedance-2.5`, `minimax-h3`, `minimax-h3-max`, and `wan-3.0` |
 | `-m, --model <model>` | Video model | See the mode-specific model table below |
 | `-q, --quality <q>` | Video quality | model-specific; up to `2160p` (see table below) |
 | `-d, --duration <sec>` | Duration | model-specific; `1`–`30` overall (default `5`) |
@@ -69,6 +69,7 @@ Only specific models support Transition mode. Using other models will result in 
 | Seedance 2.0 Fast | `seedance-2.0-fast` | `480p` `720p` | `4`–`15` (any integer) | External model; no off-peak |
 | Seedance 2.0 Mini | `seedance-2.0-mini` | `480p` `720p` | `4`–`15` (any integer) | External model; no off-peak |
 | MiniMax H3 | `minimax-h3` | `768p` `1440p` (default) | `5`–`15` (any integer) | Exactly 2 frames; prompt required; no generated audio/off-peak |
+| MiniMax H3 Max | `minimax-h3-max` (CLI 1.4.4+) | `480p` `768p` (default) `1080p` | `5`–`15` (any integer; default `5`) | Exactly 2 frames; prompt required; no generated audio/off-peak; unavailable in `cn` |
 | Wan 3.0 | `wan-3.0` | `480p` `720p` (default) `1080p` | `2`–`30` (any integer) | Exactly 2 frames; prompt required; generated audio optional; no off-peak |
 | Veo 3.1 Standard | `veo-3.1-standard` | `720p` `1080p` `2160p` | `4` `6` `8` | First/last frame only |
 | Veo 3.1 Fast | `veo-3.1-fast` | `720p` `1080p` `2160p` | `4` `6` `8` | First/last frame only |
@@ -138,6 +139,14 @@ MiniMax H3 two-frame transition:
 ```bash
 pixverse create transition --model minimax-h3 --images ./start.jpg ./end.jpg --prompt "A smooth orbiting camera move connects the scenes" --quality 1440p --duration 10 --json
 ```
+
+MiniMax H3 Max two-frame transition (CLI 1.4.4+, global/upstream access required):
+
+```bash
+pixverse create transition --model minimax-h3-max --images ./start.jpg ./end.jpg --prompt "A smooth orbiting camera move connects the scenes" --quality 768p --duration 10 --json
+```
+
+H3 Max does not support 3+ frames, generated audio, multi-shot, or off-peak. Like other transitions, it has no selectable aspect-ratio flag. Do not use H3's `1440p` quality for H3 Max.
 
 Seedance 2.5 two-frame transition:
 

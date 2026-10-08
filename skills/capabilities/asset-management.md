@@ -80,12 +80,12 @@ For `--type miniapps`, JSON preserves the backend project detail and adds stable
 
 ### asset download <id>
 
-Download an asset to the local filesystem.
+Download an asset to the local filesystem. For CLI 1.4.5+ destination rules, filename validation, and collision recovery, read [local downloads](../references/execution-contract.md#local-downloads-cli-145). A collision is exit 6; retry the download to a fresh path without generating again.
 
 | Flag | Description | Values |
 |:---|:---|:---|
 | `--type <video\|image\|audio\|miniapps>` | Asset type (auto-detected if omitted) | `video`, `image`, `audio`; `miniapps` must be explicit |
-| `--dest <path>` | Destination directory | default: current directory |
+| `--dest <path>` | Destination directory; audio also accepts an exact filename | default: current directory; CLI 1.4.5+ never overwrites |
 | `--json` | Output as JSON | flag |
 
 JSON output:

@@ -18,6 +18,8 @@ pixverse capabilities create video --model v6 --json
 
 Use the installed result for supported flags, defaults, enums, and limits. On older releases, inspect `pixverse create video --help` and read the [static video model reference](../references/video-models.md) as needed; a static entry does not establish support in an older install. Preserve the user's chosen model and parameters.
 
+MiniMax H3 Max (`minimax-h3-max`) requires **CLI 1.4.4+**, is available in the global model list subject to upstream access, and is unavailable in `cn`. T2V/I2V supports `480p`, `768p` (default), or `1080p`, with integer duration `5`–`15` (default `5`). T2V uses six fixed ratios (default `16:9`, no `auto`); I2V forces `auto`. Generated audio, multi-shot, and off-peak are unsupported. See the [model reference](../references/video-models.md) for mode differences; do not inherit H3's `1440p` default.
+
 ## create video -- Flags
 
 | Flag | Description | Values / Default |
@@ -27,7 +29,7 @@ Use the installed result for supported flags, defaults, enums, and limits. On ol
 | `-m, --model <model>` | Video model | Installed registry; static fallback linked above |
 | `-d, --duration <sec>` | Duration in seconds | model-specific; `1`–`30` overall (default `5`; see Parameter discovery above) |
 | `-q, --quality <q>` | Video quality | model-specific; `360p`–`2160p` overall (see Parameter discovery above) |
-| `--aspect-ratio <ratio>` | Aspect ratio | model-specific; Seedance 2.5 T2V, FLUX 3, and Wan 3.0 also accept `auto`; H3 image-to-video forces `auto` (see Parameter discovery above) |
+| `--aspect-ratio <ratio>` | Aspect ratio | model-specific; Seedance 2.5 T2V, FLUX 3, and Wan 3.0 also accept `auto`; H3 and H3 Max image-to-video force `auto` (see Parameter discovery above) |
 | `--seed <number>` | Random seed | any integer |
 | `--count <number>` | Number of generations | `1` (default), `2`, `3`, `4` |
 | `--audio` / `--no-audio` | Enable or disable audio generation | boolean toggle (default: on for supported models) |

@@ -43,7 +43,7 @@ pixverse music models --json
 | `--duration-seconds <sec>` | Target duration (sets `duration_auto=false`) | within model range |
 | `--no-duration-auto` | Disable automatic duration (requires `--duration-seconds`) | flag |
 | `--image <input...>` | Reference image(s) — **Google Lyria only**: file paths, HTTPS URLs, image IDs, or media paths | up to 10 |
-| `--output <path>` | Download the finished music to this file/dir | optional |
+| `--output <path>` | Download the finished music to this file/dir | optional; never overwrites in CLI 1.4.5+ |
 | `--client-request-id <id>` | Caller-side request id (logged only) | optional |
 | `--no-wait` | Return immediately without polling | flag |
 | `--timeout <sec>` | Polling timeout | `300` (default) |
@@ -61,19 +61,23 @@ Model compatibility is validated before this normalization. Lyria never accepts 
 
 ### Model Reference
 
-| Model | `--model` value | Provider | Prompt max | Explicit lyrics | Auto lyrics | Instrumental | Duration | Image ref | Credits |
-|:---|:---|:---|---:|:---|:---|:---|:---|:---|---:|
-| MiniMax Music 3.0 | `music-3.0` | MiniMax | 2,000 | Up to 3,500 chars | Yes | Yes | 10–240s | No | 50 |
-| MiniMax Music 2.6 *(default)* | `music-2.6` | MiniMax | 2,000 | Up to 3,500 chars | Yes | Yes | 10–240s | No | 40 |
-| ElevenLabs Music V2 | `music-v2` | ElevenLabs | 4,100 | Up to 3,500 chars | Yes | Yes | 10–240s | No | 125 |
-| ElevenLabs Music | `music-v1` | ElevenLabs | 4,000 | Up to 3,500 chars | Yes | Yes | 10–240s | No | 150 |
-| Google Lyria 3 Pro | `lyria-3-pro-preview` | Google | 5,000 | No | Yes | Yes | 10–240s | Up to 10 images | 20 |
+| Model | `--model` value | Provider | Explicit lyrics | Auto lyrics | Instrumental | Duration | Image ref | Credits |
+|:---|:---|:---|:---|:---|:---|:---|:---|---:|
+| MiniMax Music 3.0 | `music-3.0` | MiniMax | Yes | Yes | Yes | 10–240s | No | 50 |
+| MiniMax Music 2.6 *(default)* | `music-2.6` | MiniMax | Yes | Yes | Yes | 10–240s | No | 40 |
+| ElevenLabs Music V2 | `music-v2` | ElevenLabs | Yes | Yes | Yes | 10–240s | No | 125 |
+| ElevenLabs Music | `music-v1` | ElevenLabs | Yes | Yes | Yes | 10–240s | No | 150 |
+| Google Lyria 3 Pro | `lyria-3-pro-preview` | Google | No | Yes | Yes | 10–240s | Up to 10 images | 20 |
 
 > The ElevenLabs model IDs are `music-v2` and `music-v1` (the earlier `music_v1` form is invalid). Lyria supports `--auto-lyrics` and `--instrumental`, but does **not** take independent `--lyrics`; fold lyric-style instructions into `--prompt` when you are not using auto lyrics. `--image` is only valid for Lyria.
+
+CLI 1.4.6+ does not impose local prompt or lyrics length caps; provider-specific validation is deferred to the backend. Preserve supplied input instead of truncating or splitting it to satisfy obsolete local limits, and report backend validation errors. This does not imply unlimited provider input. Required prompt, lyrics support, flag compatibility, and duration checks still apply. Older installations can retain local caps.
 
 ---
 
 ## Results and recovery
+
+With `--output`, successful JSON includes `local_path`. Follow [local download rules](../references/execution-contract.md#local-downloads-cli-145): output collisions fail with exit 6; recover the completed audio and download to a new path rather than submitting TTS/music again.
 
 Use the shared [execution contract](../references/execution-contract.md) for submitted, completed, batch, and partial results, polling, and recovery. A single completed result contains `audio_id` and `audio_url`. Poll and manage it with `--type audio`.
 

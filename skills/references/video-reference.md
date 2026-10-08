@@ -7,8 +7,8 @@ Read for `create reference` image/video/audio inputs. On CLI 1.4.0+, query `pixv
 | Flag | Description | Values / Default |
 |:---|:---|:---|
 | `--images <inputs...>` | Image references; limits depend on model and whether video is also supplied (see matrix below) | file path, HTTPS URL, image ID, or media path |
-| `--videos <inputs...>` | Video references for V6, Seedance, `minimax-h3`, `wan-3.0`, Gemini Omni, Kling O3, and Grok Imagine; model-specific limits apply | file path, HTTPS URL, video ID, or media path |
-| `--audios <inputs...>` | Audio references for Seedance / `minimax-h3` / `wan-3.0`. Seedance and H3 require ≥1 image/video; Wan 3.0 also accepts audio-only. Seedance 2.5: max 10 and ≤30s total. Seedance 2.0: max 3, each 2–15s, ≤15s total, and known local files ≤15MB. Wan 3.0: max 5, each 1–15s, exact total ≤15s. H3 uses count-only model validation | file path, HTTPS URL, audio ID, or media path |
+| `--videos <inputs...>` | Video references for V6, Seedance, `minimax-h3` / `minimax-h3-max`, `wan-3.0`, Gemini Omni, Kling O3, and Grok Imagine; model-specific limits apply | file path, HTTPS URL, video ID, or media path |
+| `--audios <inputs...>` | Audio references for Seedance / MiniMax H3 / H3 Max / `wan-3.0`. Seedance and both H3 models require ≥1 image/video; Wan 3.0 also accepts audio-only. Seedance 2.5: max 10 and ≤30s total. Seedance 2.0: max 3, each 2–15s, ≤15s total, and known local files ≤15MB. Wan 3.0: max 5, each 1–15s, exact total ≤15s. Both H3 models use count-only model validation (H3 Max also caps total references at 12) | file path, HTTPS URL, audio ID, or media path |
 | `--prompt <text>` | Prompt text (required) | -- |
 | `-m, --model <model>` | Video model | See the Reference media matrix below |
 | `-q, --quality <q>` | Video quality | model-specific; up to `2160p` (see [video model reference](video-models.md)) |
@@ -33,6 +33,7 @@ Read for `create reference` image/video/audio inputs. On CLI 1.4.0+, query `pixv
 | Seedance 2.5 | max 30 | max 10 | max 10 | max 50 inputs; known video total ≤ `30s`, known audio total ≤ `30s`; video input defaults to `--duration auto`, but explicit `4`–`30s` is allowed |
 | Seedance 2.0 variants | max 9 | max 3 | max 3 | MP4/MOV videos, each `2`–`15s`, ceil-each total ≤ `15s`, each ≤ `50MB`; audio each `2`–`15s`, total ≤ `15s`, known local file ≤ `15MB` |
 | MiniMax H3 | max 9 | max 3 | max 3 | model-level validation is count-only; remaining media validation is shared/backend-side |
+| MiniMax H3 Max (`minimax-h3-max`, CLI 1.4.4+) | max 9 | max 3 | max 3 | max **12 total** inputs; audio needs an image/video; `480p`/`768p` (default)/`1080p`; fixed `5`–`15s` (default `5`, no duration `auto`); ratio `auto` (default) or six fixed ratios, including when no image is supplied; count-only model validation |
 | Wan 3.0 (`wan-3.0`) | max 10 | max 5 | max 5 | max 20 inputs; audio-only is valid; known video each `1`–`15s` and exact total ≤ `15s`; known audio each `1`–`15s` and exact total ≤ `15s`; video input defaults to `--duration auto`, while a fixed duration is capped at `floor(30 - known reference-video duration)` |
 | Gemini Omni (`gemini-omni-flash`) | max 5 | max 1 | no | MP4/MOV `1`–`10s`; images and video may mix; video input locks `--duration auto` and rejects fixed values |
 | Kling O3 Pro / Standard / 4K | max 7 without video; max 4 with video | max 1 | no | MP4/MOV `1`–`15s`, ≤ `200MB`, width/height ≤ `2048`; images and video may mix; omit `--quality` because the model ID selects resolution |
@@ -44,7 +45,7 @@ Seedance 2.5 Reference with video and automatic duration locks `--aspect-ratio a
 
 ## Steps for Reference Generation / Video Editing
 
-1. Choose the model from the Reference media matrix, then prepare a valid image/video combination. Seedance and MiniMax H3 also accept audio references when accompanied by a visual input. Wan 3.0 accepts mixed image/video/audio references and also allows audio-only input.
+1. Choose the model from the Reference media matrix, then prepare a valid image/video combination. Seedance and MiniMax H3/H3 Max also accept audio references when accompanied by a visual input. Wan 3.0 accepts mixed image/video/audio references and also allows audio-only input.
 2. Write a prompt describing the output or edit. Assets keep flag order and use per-type labels such as `@image1`, `@video1`, and `@audio1`.
 3. Run the command:
    ```bash
@@ -99,6 +100,17 @@ pixverse create reference --model minimax-h3 \
 ```
 
 Because this reference request includes an image, omitting `--aspect-ratio` would default to `auto`; the explicit fixed `16:9` value is preserved. H3 reference requests without images default to `16:9` and do not accept `auto`.
+
+### MiniMax H3 Max mixed references
+
+```bash
+pixverse create reference --model minimax-h3-max \
+  --videos ./motion.mp4 --audios ./dialogue.mp3 \
+  --prompt "Follow @video1 with the delivery reference in @audio1" \
+  --quality 768p --duration 10 --aspect-ratio auto --json
+```
+
+Requires CLI 1.4.4+ and global-region/upstream model access; unavailable in `--region cn`. Unlike H3, H3 Max defaults to `auto` framing even without an image, ignoring a saved ratio unless explicitly supplied. Fixed choices are `21:9`, `16:9`, `4:3`, `1:1`, `3:4`, and `9:16`. Duration remains a fixed integer `5`–`15`, not `auto`, even with video. Up to 9 images, 3 videos, and 3 audios are allowed, but their combined count must not exceed 12 (for example, 9+3+3 is invalid). Count checks run before upload. There are no H3 Max-specific media format/size/dimension/clip-duration checks; shared upload rules and backend validation apply. Audio reference input does not enable an output-audio toggle: generated audio, multi-shot, and off-peak are unsupported.
 
 ### Wan 3.0 mixed references
 

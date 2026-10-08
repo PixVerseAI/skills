@@ -41,7 +41,7 @@ pixverse voice presets --provider minimax --language en --json
 | `--provider-voice-id <id>` | Provider's raw voice ID (use when not using a preset) | -- |
 | `--language <code>` | Language code | `auto` (default) |
 | `--speed <n>` | Speech speed | ElevenLabs `0.7`–`1.2`; MiniMax `0.5`–`2.0` (default `1.0`) |
-| `--output <path>` | Download the finished audio to this file/dir | optional |
+| `--output <path>` | Download the finished audio to this file/dir | optional; never overwrites in CLI 1.4.5+ |
 | `--client-request-id <id>` | Caller-side request id (logged only, not deduped) | optional |
 | `--no-wait` | Return immediately without polling | flag |
 | `--timeout <sec>` | Polling timeout | `300` (default) |
@@ -68,19 +68,23 @@ pixverse voice presets --provider minimax --language en --json
 
 ### Model Reference
 
-| Model | `--model` value | Provider | Max characters |
-|:---|:---|:---|---:|
-| MiniMax Speech 2.8 HD *(default)* | `speech-2.8-hd` | MiniMax | 10,000 |
-| MiniMax Speech 2.8 Turbo | `speech-2.8-turbo` | MiniMax | 10,000 |
-| Eleven Multilingual v2 | `eleven-multilingual-v2` | ElevenLabs | 10,000 |
-| Eleven v3 | `eleven-v3` | ElevenLabs | 5,000 |
-| Eleven Turbo v2.5 | `eleven-turbo-v2.5` | ElevenLabs | 40,000 |
+| Model | `--model` value | Provider |
+|:---|:---|:---|
+| MiniMax Speech 2.8 HD *(default)* | `speech-2.8-hd` | MiniMax |
+| MiniMax Speech 2.8 Turbo | `speech-2.8-turbo` | MiniMax |
+| Eleven Multilingual v2 | `eleven-multilingual-v2` | ElevenLabs |
+| Eleven v3 | `eleven-v3` | ElevenLabs |
+| Eleven Turbo v2.5 | `eleven-turbo-v2.5` | ElevenLabs |
 
-> Pass only these public model IDs. Old underscore forms (e.g. `eleven_v3`) are rejected with `Unknown model` — run `pixverse voice models --json` for the installed list. Text exceeding the model's character limit is rejected (not truncated).
+> Pass only these public model IDs. Old underscore forms (e.g. `eleven_v3`) are rejected with `Unknown model` — run `pixverse voice models --json` for the installed list.
+
+CLI 1.4.6+ does not impose a local text length cap; provider-specific validation is deferred to the backend. This does not imply unlimited provider input. Preserve the supplied text instead of truncating or splitting it to satisfy obsolete local limits; report backend validation errors. Empty text and incompatible provider flags still fail locally. Older installations can retain local caps.
 
 ---
 
 ## Results and recovery
+
+With `--output`, successful JSON includes `local_path`. Follow [local download rules](../references/execution-contract.md#local-downloads-cli-145): output collisions fail with exit 6; recover the completed audio and download to a new path rather than submitting TTS/music again.
 
 Use the shared [execution contract](../references/execution-contract.md) for submitted, completed, batch, and partial results, polling, and recovery. A single completed result contains `audio_id` and `audio_url`. Poll and manage it with `--type audio`.
 

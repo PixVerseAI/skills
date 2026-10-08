@@ -38,7 +38,7 @@ pixverse capabilities --json
 
 No login, no workspace switch, no HTTP, no generation credits.
 
-Human-readable output shows CLI version, manifest version, command count, Create mode count, and whether Canvas is runtime-discovered.
+Human-readable output shows CLI version, manifest version, command count, Create mode count, and whether Canvas is runtime-discovered. The installed command manifest also records Canvas CLI surface changes: **1.4.5+** adds `canvas arrange <id>` and positional IDs for all 15 project-scoped operations, retaining `--project-id`. See [Canvas project IDs and arrangement](canvas.md#project-ids-cli-145).
 
 The bundled file uses a compact encoding (`capability_domains.create.encoding: "normalized"`). Prefer `capabilities create` when you need an expanded, query-ready structure. MiniApps are a separate product surface and are **not** in the Create mode list.
 
@@ -132,6 +132,8 @@ Each parameter uses a stable logical key plus the real CLI `flag`. Structured fi
 
 Types, defaults, and enums use normalized JSON values. Integers are numbers, not strings. Reference automatic duration is JSON integer `0`; the CLI flag remains `--duration auto` and is normalized before submit.
 
+CLI 1.4.6+ omits voice text and music prompt/lyrics length caps from the offline registry. Missing length metadata means there is no declared local cap, not that the provider accepts unlimited input; backend validation still applies.
+
 ### Validation errors (exit 6)
 
 These fail before any request:
@@ -144,7 +146,7 @@ JSON errors go to stderr and may include `valid_modes` or `valid_models`.
 
 ## capabilities canvas (online)
 
-Merges live Canvas node types, adapter routes, and field mappings with the **installed** CLI Create registry. Needs login. Does not create tasks, mutate projects, or charge generation credits.
+Merges live Canvas node types, adapter routes, and field mappings with the **installed** CLI Create registry. Needs login. Does not create tasks, mutate projects, or charge generation credits. `capabilities canvas` and `canvas node schema` do not take a project ID; they discover node capabilities, not saved project positions. For a project layout use `canvas graph get <id>` (1.4.5+), and to change that layout use `canvas arrange <id>`; see [Canvas](canvas.md).
 
 ```bash
 # All nodes, merged

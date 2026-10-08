@@ -1,7 +1,7 @@
 ---
 name: pixverse-ai-image-and-video-generator
 description: Generate and edit images, videos, speech, and music with PixVerse CLI; run effect templates, MiniApps, and connected Canvas workflows. Use for PixVerse generation, asset management, and creative production pipelines.
-version: 1.28.0
+version: 1.30.0
 homepage: https://pixverse.ai
 source: https://github.com/PixVerseAI/skills
 ---
@@ -20,7 +20,7 @@ For a single operation, read its capability. For a multi-step deliverable, start
 
 1. Check `pixverse --version`. If missing, install with `npm install -g pixverse` (Node.js >= 22.12); an existing older installation need not be changed for unrelated tasks.
 2. On CLI **1.4.0+**, query only the required mode/model: `pixverse capabilities create video --model v6 --json`. Use `pixverse capabilities create --json` to discover mode/model IDs if unknown. These queries are offline and need no login. Avoid the full `pixverse capabilities --json` bundle for a narrow task.
-3. On older versions, use `pixverse create <mode> --help` and the relevant capability's static reference. This skill documents CLI 1.4.2; a static table does not prove an older installation supports a model or flag. If support cannot be established, report the required upgrade instead of submitting an invented combination.
+3. On older versions, use `pixverse create <mode> --help` and the relevant capability's static reference. This skill documents CLI 1.4.7; a static table does not prove an older installation supports a model or flag. If support cannot be established, report the required upgrade instead of submitting an invented combination.
 4. Before account operations or generation, check `pixverse auth status --json` if login state is unknown. For login, run `pixverse auth login --json` and show the returned authorization URL; JSON mode does not open the browser automatically. See [auth and account](capabilities/auth-and-account.md) for access keys, configuration, and recovery.
 
 Canvas capabilities and MiniApp schemas are live: query the relevant node/app before constructing a request. See [capability discovery](capabilities/capabilities.md). Do not infer Canvas node mappings from Create model names.
@@ -39,7 +39,7 @@ Canvas capabilities and MiniApp schemas are live: query the relevant node/app be
 | Music / soundtrack | [create-music](capabilities/create-music.md) |
 | Browse and run effects | [template](capabilities/template.md) |
 | Discover and run preset apps | [miniapps](capabilities/miniapps.md) |
-| Build or operate a Canvas graph | [canvas](capabilities/canvas.md) |
+| Build, operate, or automatically arrange a Canvas graph | [canvas](capabilities/canvas.md) |
 | Query/wait for an existing task | [task-management](capabilities/task-management.md) |
 | Upload, inspect, download, or delete assets | [asset-management](capabilities/asset-management.md) |
 | Organize saved folders | [saved-folders](capabilities/saved-folders.md) |

@@ -1,6 +1,6 @@
 # CLI execution contract
 
-Read once when executing a creation chain or handling results. This describes CLI 1.4.2; use installed command help and version-specific behavior on older releases. Canvas and MiniApps keep their own result and concurrency contracts in their capabilities.
+Read once when executing a creation chain or handling results. This describes CLI 1.4.7; use installed command help and version-specific behavior on older releases. Canvas and MiniApps keep their own result and concurrency contracts in their capabilities.
 
 ## Streams and task identity
 
@@ -91,6 +91,18 @@ Voice/music `--client-request-id` is tracing, not deduplication. Do not automati
 
 ## Media inputs and reuse
 
+CLI 1.4.7 fixes media upload stability; upgrade older installations when encountering upload transport failures. Upload commands and result fields remain unchanged.
+
 Local files and external HTTPS image URLs are uploaded; URLs can be downloaded locally and re-uploaded. Reuse an existing compatible asset ID or media path to avoid that transfer. `http://` inputs are rejected. Image/video/audio acceptance and media limits depend on the command/model; query the installed capability before assembling mixed references.
 
 Check generation status before consuming a URL. A missing or temporarily inaccessible download does not establish that generation failed: retry the download or inspect the existing asset before generating again. Download each confirmed result once and retain its local path for post-processing.
+
+## Local downloads (CLI 1.4.5+)
+
+`asset download --dest` selects a directory for video, image, and MiniApp assets. Audio downloads and `create voice/music --output` also accept an explicit filename: an existing directory or a missing extension-less path is treated as a directory; another path with an extension is an exact filename. `miniapps create --output` remains directory-only. Retain the returned path: asset downloads use `file`, while creation with `--output` uses `local_path`.
+
+Downloads never overwrite or auto-rename an occupied target, including a file, directory, or symlink. Invalid filenames/IDs and collisions produce exit 6 with error JSON on stderr. Choose a fresh destination and download the existing asset again; a local output failure is not a reason to repeat paid generation. If creation failed while downloading, recover its task/asset ID from available diagnostics or asset history first.
+
+The download layer accepts only positive safe-integer media IDs; malformed backend IDs are rejected even with an explicit audio filename. This media-ID restriction is separate from Canvas project IDs, which remain decimal strings and can exceed JavaScript's safe-integer range. Server-provided audio filenames are untrusted: unsafe names fall back to a generated filename inside the selected directory. Use the returned path instead of predicting it.
+
+Completed files are published without replacement after transfer; failed transfers clean only their own staging files. Filesystems without hard-link support fail safely: use a compatible local destination rather than bypassing the no-overwrite behavior. Caller-selected directories may be symlinks resolved to their canonical directory; the destination is not restricted to the current working directory.

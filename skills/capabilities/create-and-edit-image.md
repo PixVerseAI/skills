@@ -31,7 +31,7 @@ Preserve the requested model and quality. Otherwise use defaults or select based
 | `--timeout <sec>` | Polling timeout | `300` (default) |
 | `--json` | JSON output | flag |
 
-On CLI **1.4.2+**, GPT Image 2.5 supports `1:1`, `16:9`, `9:16`, `3:2`, and `2:3` at every supported quality, with built-in default `16:9`. Quality no longer filters framing: `1080p + 9:16` is valid. Both variants support up to 16 references, independently of output count. See [framing and version compatibility](../references/image-models.md#gpt-image-25-framing) for the older 1.4.1 restrictions and fallback behavior.
+On CLI **1.4.3+**, GPT Image 2.5 supports all ten ratios: `1:1`, `16:9`, `9:16`, `4:3`, `3:4`, `3:2`, `2:3`, `2:1`, `1:2`, and `21:9` at every supported quality, with built-in default `16:9`. Quality no longer filters framing: `1080p + 9:16` is valid. Both variants support up to 16 references, independently of output count. See [framing and version compatibility](../references/image-models.md#gpt-image-25-framing) for the older 1.4.1 quality-dependent restrictions, the five-ratio 1.4.2 list, and fallback behavior.
 
 ## Create or edit one image
 

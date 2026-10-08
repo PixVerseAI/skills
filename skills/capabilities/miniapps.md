@@ -110,7 +110,7 @@ pixverse miniapps create \
 |:---|:---|:---|
 | `--id <app_id>` | MiniApp ID | required; obtain from `miniapps list` |
 | `--params <input>` | App arguments as a JSON object | required; literal JSON, file path, or `-` for stdin |
-| `--output <path>` | Download the completed project's primary asset | optional destination directory |
+| `--output <path>` | Download the completed project's primary asset | optional destination directory; never overwrites in CLI 1.4.5+ |
 | `--no-wait` | Return immediately after submission | flag |
 | `--timeout <seconds>` | Polling timeout | default `300` |
 | `--json` | Pure JSON output | required for agent workflows |
@@ -177,7 +177,7 @@ When waiting succeeds, the project payload includes the following fields. `trace
 }
 ```
 
-When `--output` is supplied, `local_path` is added. If a project has multiple assets, only the primary asset is downloaded: the first video, otherwise the first image.
+When `--output` is supplied, `local_path` is added. See [local download rules](../references/execution-contract.md#local-downloads-cli-145); a collision requires a fresh destination for the existing project's asset, not a new project submission. If a project has multiple assets, only the primary asset is downloaded: the first video, otherwise the first image.
 
 ## Manage a Project
 
