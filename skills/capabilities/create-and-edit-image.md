@@ -22,16 +22,18 @@ Preserve the requested model and quality. Otherwise use defaults or select based
 | `--images <inputs...>` | Multiple image inputs (enables I2I): file paths, HTTPS URLs, image IDs, or media paths | -- |
 | `-m, --model <model>` | Image model | Installed registry; static fallback linked above |
 | `-q, --quality <q>` | Image quality | `512p`, `720p`, `1080p` (default), `1440p`, `1800p`, `2160p` (availability varies by model — see Parameter discovery above) |
-| `--aspect-ratio <ratio>` | Aspect ratio | `1:1`, `16:9`, `9:16`, `4:3`, `3:4`, `3:2`, `2:3`, `5:4`, `4:5`, `2:1`, `1:2`, `21:9`, `auto` (availability and default vary by model and installed CLI version) |
-| `--detail-level <level>` | GPT Image rendering detail | 2.5 Flare/Sunburst: `low`, `medium`, `high`, `xhigh`, `max`; 2.0: `low`, `medium`, `high`. Default `low`; other models or unsupported values fail with exit 6. |
+| `--aspect-ratio <ratio>` | Aspect ratio | `1:1`, `16:9`, `9:16`, `4:3`, `3:4`, `3:2`, `2:3`, `5:4`, `4:5`, `2:1`, `1:2`, `21:9`, `1:4`, `4:1`, `1:8`, `8:1`, `auto` (availability and default vary by model and installed CLI version) |
+| `--detail-level <level>` | Model-specific rendering detail | 2.5 Flare/Sunburst: `low`, `medium`, `high`, `xhigh`, `max`; 2.0: `low`, `medium`, `high`. GPT default `low`. Nano Banana 2.1: `minimal`, `medium` (default), `high`. Other models or unsupported values fail with exit 6. |
 | `--count <number>` | Number of generations | `1` (default), `2`, `3`, `4` |
-| `--seed <number>` | Random seed | any integer |
+| `--seed <number>` | Random seed | any integer; silently ignored by Nano Banana 2.1 |
 | `--idempotency-key <key>` | Stable safe-retry key; see execution contract | optional |
 | `--no-wait` | Return immediately without polling | flag |
 | `--timeout <sec>` | Polling timeout | `300` (default) |
 | `--json` | JSON output | flag |
 
 On CLI **1.4.3+**, GPT Image 2.5 supports all ten ratios: `1:1`, `16:9`, `9:16`, `4:3`, `3:4`, `3:2`, `2:3`, `2:1`, `1:2`, and `21:9` at every supported quality, with built-in default `16:9`. Quality no longer filters framing: `1080p + 9:16` is valid. Both variants support up to 16 references, independently of output count. See [framing and version compatibility](../references/image-models.md#gpt-image-25-framing) for the older 1.4.1 quality-dependent restrictions, the five-ratio 1.4.2 list, and fallback behavior.
+
+Nano Banana 2.1 (`gemini-nano-banana-2.1`, CLI 1.4.8+, global only) supports T2I/I2I with up to 14 references and 1–4 outputs. See [model-specific defaults and constraints](../references/image-models.md#nano-banana-21), including detail levels and seed omission.
 
 ## Create or edit one image
 

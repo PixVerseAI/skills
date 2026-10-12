@@ -4,6 +4,17 @@ All notable changes to PixVerse Skills will be documented in this file.
 
 Format follows [Keep a Changelog](https://keepachangelog.com/).
 
+## [1.31.0] - 2026-10-12
+
+Sync the skill docs to PixVerse CLI **v1.4.8** and the latest main-branch Detail Level support.
+
+### Added
+- Document Nano Banana 2.1 T2I/I2I in the global region: three resolutions, Auto plus fourteen fixed ratios, up to fourteen references, and model-specific Detail Level values.
+
+### Changed
+- Distinguish Nano Banana 2.1's default medium detail and silent seed omission from GPT Image behavior; retain shared quality/framing defaults.
+- Clarify the independent 1–4 image output count across models and refresh the CLI baseline.
+
 ## [1.30.0] - 2026-10-08
 
 Sync the skill docs to PixVerse CLI **v1.4.7**, including v1.4.6 audio validation changes.
