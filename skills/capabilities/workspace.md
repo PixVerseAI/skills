@@ -9,6 +9,8 @@ Covers: `workspace list`, `workspace status`, `workspace switch`, `workspace man
 
 ---
 
+CLI 1.4.10+ delegated `chatgpt` auth profiles support personal workspace only. Do not switch them to a team; see [MCP pairing](../references/auth-pairing.md).
+
 ## Concepts
 
 **Workspace** is an organizational context that determines which assets, credits, and team members you are working with.

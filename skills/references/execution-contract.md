@@ -1,6 +1,6 @@
 # CLI execution contract
 
-Read once when executing a creation chain or handling results. This describes CLI 1.4.8; use installed command help and version-specific behavior on older releases. Canvas and MiniApps keep their own result and concurrency contracts in their capabilities.
+Read once when executing a creation chain or handling results. This describes CLI 1.4.10; use installed command help and version-specific behavior on older releases. Canvas, MiniApps and [schema-driven templates](../capabilities/template.md#schema-driven-templates-cli-149) keep their own result contracts in their capabilities.
 
 ## Streams and task identity
 

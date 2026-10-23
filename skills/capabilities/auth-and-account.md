@@ -9,6 +9,8 @@ Covers: `auth login`, `auth logout`, `auth status`, `account info`, `account usa
 
 ---
 
+For CLI 1.4.10+ MCP-authorized device sessions, read [isolated pairing](../references/auth-pairing.md). The ordinary login/logout and access-key instructions below apply to the default profile; `PIXVERSE_AUTH_PROFILE=chatgpt` requires `auth pair` and personal workspace.
+
 ## auth login
 
 OAuth device flow — the CLI prints an authorization URL, the user opens it in a browser and authorizes, and the token is stored automatically.
@@ -399,7 +401,7 @@ pixverse config defaults reset --json
    pixverse config defaults set --mode video --model v6 --quality 1080p --json
    ```
 
-7. **Token refresh**: If any command exits with code 3, re-run `pixverse auth login --json`.
+7. **Token recovery**: In the default profile, exit 3 requires ordinary login again. In the `chatgpt` profile, follow the pairing reference instead.
 
 8. **Server-to-server access key** (optional, for automation without interactive login):
    - Set `PIXVERSE_ACCESS_KEY=<your-access-key>` in the environment.

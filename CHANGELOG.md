@@ -4,6 +4,18 @@ All notable changes to PixVerse Skills will be documented in this file.
 
 Format follows [Keep a Changelog](https://keepachangelog.com/).
 
+## [1.32.0] - 2026-10-23
+
+Sync the skill docs to PixVerse CLI **v1.4.10**, including v1.4.9 template support.
+
+### Added
+- Document schema-driven template inputs, fixed output settings, multiple typed outputs, text truncation and recovery without resubmission.
+- Add MCP-to-CLI pairing guidance with exact account verification, isolated profiles, bounded pending recovery and device revocation.
+
+### Changed
+- Scope classic template flags/results separately from schema-driven templates.
+- Distinguish delegated personal-workspace authentication from ordinary login, logout and access-key recovery; refresh the CLI baseline.
+
 ## [1.31.0] - 2026-10-12
 
 Sync the skill docs to PixVerse CLI **v1.4.8** and the latest main-branch Detail Level support.

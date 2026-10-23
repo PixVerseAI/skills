@@ -93,7 +93,7 @@ JSON output:
 
 ### template info \<id\>
 
-Get full details of a specific template.
+Get full details of a specific template. Always inspect this response before choosing inputs or overrides; the table below describes classic effects.
 
 | Field | Description |
 |:---|:---|
@@ -115,9 +115,9 @@ pixverse template info 12345 --json
 
 ---
 
-## Understanding `effect_type`
+## Classic effect inputs
 
-`effect_type` determines what input the template requires:
+For classic effects, `effect_type` determines the required input. On CLI 1.4.9+, other template types use ordered `input_fields` instead; follow [schema-driven templates](#schema-driven-templates-cli-149) below.
 
 | `effect_type` | Input required |
 |:---|:---|
@@ -127,7 +127,7 @@ pixverse template info 12345 --json
 
 ---
 
-## create template -- Flags
+## Classic effect flags
 
 | Flag | Description | Values / Default |
 |:---|:---|:---|
@@ -152,11 +152,11 @@ For image templates, CLI v1.2.13 and later supplies a random seed when `--seed` 
 
 ---
 
-## Results and recovery
+## Classic effect results and recovery
 
 Use the shared [execution contract](../references/execution-contract.md) for submitted, completed, batch, and partial results, polling, and recovery. The template determines the output type: `video_id` / `video_url` or `image_id` / `image_url`. Pass the matching `--type` when polling.
 
-## Steps: Create from Template
+## Steps: Create from a Classic Effect
 
 1. Find a template ID:
    ```bash
@@ -193,6 +193,26 @@ Use the shared [execution contract](../references/execution-contract.md) for sub
 ## Examples
 
 After inspecting the live template schema, submit the appropriate command above. Preserve the creation exit status and result; use the [execution contract](../references/execution-contract.md) for single, batch, and asynchronous outputs. Image templates require `--type image` when polling; videos use `--type video`. Do not assume every template returns `video_id`.
+
+## Schema-driven templates (CLI 1.4.9+)
+
+The same `create template --template-id <id>` command supports additional template types whose detail declares ordered `input_fields`. Inspect the full `template info <id> --json` result; do not derive their input requirements from classic `effect_type` or force their output into a single video/image ID.
+
+- Match each field's `content_type` (`image`, `video`, `text`), `required` (required unless explicitly false), `max_size` (bytes), and video `min_duration` / `max_duration` (seconds).
+- Supply images with `--image` in slot order, one video with `--video`, and one editable text value with `--prompt`. Image and video can coexist when the schema includes both. More than one video or text slot is unsupported; there is no audio input flag.
+- Compact image inputs reserve enough values for required slots, then fill optional slots from left to right. For optional-then-required slots, one image fills the required slot. Empty placeholders are accepted only when they produce that same mapping; ambiguous selections fail with exit 6 before uploads. Do not invent named slot flags.
+- Omitted/empty text uses the template default. A template without a text slot rejects `--prompt`. CLI truncates supplied text to 5000 Unicode code points; keep it within that limit or obtain an authorized rewrite before submission to avoid losing user content.
+- Output settings belong to the template. Explicit `--quality`, `--duration`, `--aspect-ratio`, `--seed`, `--count`, `--off-peak`, and `--idempotency-key` overrides are rejected. `--no-wait`, `--timeout`, `--json`, and pipe mode remain supported.
+
+After inspecting a template with image, video and editable text slots:
+
+```bash
+pixverse create template --template-id "$TEMPLATE_ID" --image ./subject.png --video ./motion.mp4 --prompt "Requested direction" --no-wait --json
+```
+
+Accepted JSON preserves `template_id`, optional `set_id`, and `outputs: [{media_id, media_type}]`. With waiting enabled, ordered `results` are appended, each carrying its output identity and either `detail` or `error`. Preserve every output and poll with `task wait <media_id> --type <media_type> --json`; do not rerun generation to recover results.
+
+Partial polling failures keep all IDs and completed details. Timeout exits 2, confirmed generation failure 5, network/read failure 1; authentication/credit/concurrency failures retain their typed codes. Missing or malformed accepted outputs exit 1 and put recovery information (`response`, `valid_outputs`, template ID and available trace) on stderr. Inspect it before any retry: submission may already have created tasks. This interface consumes published templates; it does not author or publish them.
 
 ## Related Skills
 

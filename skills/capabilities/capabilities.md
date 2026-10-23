@@ -13,7 +13,7 @@ Do **not** invent Canvas `node_type` → CLI command mappings, and do **not** co
 
 - PixVerse CLI v1.4.0 or later. Check `pixverse --version` once per session. On older releases, use the relevant `pixverse create <mode> --help` and static model reference; Canvas requires upgrading to a version that exposes its commands.
 - `capabilities` and `capabilities create` need **no login and no network**
-- `capabilities canvas` requires authentication (`pixverse auth login` or `PIXVERSE_ACCESS_KEY`)
+- `capabilities canvas` requires authentication (ordinary login/access key, or an isolated [paired session](../references/auth-pairing.md) on CLI 1.4.10+)
 
 ## Decision Tree
 
@@ -110,6 +110,8 @@ Behavior:
 - Unsupported parameters keep `supported: false` and drop invalid defaults/enums/ranges
 - If `capability.rules` contains conditions, apply matching rules before choosing dependent parameters. GPT Image 2.5 had quality-specific ratio rules in CLI 1.4.1; CLI 1.4.2 removes them and accepts its full ratio enum at every quality. Do not invent rules absent from the installed query.
 - Still offline — this is not a live backend catalog
+
+For template creation, the offline registry describes shared flags, not a specific template’s accepted overrides. Read `template info <id> --json`; [schema-driven templates](template.md#schema-driven-templates-cli-149) define their own inputs and fixed output settings.
 
 ### Parameter fields
 
