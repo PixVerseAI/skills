@@ -1,6 +1,6 @@
 # Image model fallback reference
 
-Read when installed capability discovery is unavailable or to compare model-specific limits. This static reference describes CLI 1.4.8, not necessarily the installed version.
+Read when installed capability discovery is unavailable or to compare model-specific limits. This static reference describes CLI 1.4.13, not necessarily the installed version.
 
 ### Model Reference
 
@@ -39,6 +39,8 @@ Both 2.5 models accept detail levels `low` (default), `medium`, `high`, `xhigh`,
 The global built-in default in CLI 1.4.8 is `gpt-image-2.5-flare`, `1080p`, `16:9`, detail `low`; explicit flags and saved creation defaults can override it. GPT Image 2.0 remains available explicitly. For `auto`, `5:4`, or `4:5` framing, check Gemini or Seedream's rows above; these ratios are not supported by GPT Image 2.5. In `--region cn`, the default remains `qwen-image`; only `qwen-image`, `seedream-5.0-lite`, `seedream-4.5`, and `seedream-4.0` are available. Neither GPT Image 2.5 variant is available in CN.
 
 Unsupported quality/ratio values are adjusted with a warning on stderr. Unsupported models or detail levels are validation errors; do not retry them as transient generation failures.
+
+CLI **1.4.11+** also supports `--background auto|transparent|opaque` on both GPT Image 2.5 variants for T2I/I2I. Omission submits `auto`; other models reject an explicit background. The backend chooses output format, so transparent background does not guarantee a PNG file.
 
 ### Nano Banana 2.1
 

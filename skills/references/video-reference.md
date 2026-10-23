@@ -2,6 +2,8 @@
 
 Read for `create reference` image/video/audio inputs. On CLI 1.4.0+, query `pixverse capabilities create reference --model <id> --json`; older versions require `pixverse create reference --help` and the static constraints below. Keep supplied model and media choices.
 
+CLI 1.4.11+ supports `--relax-mode [true|false]` / `--no-relax-mode` for `create reference`; see [Relax semantics and entitlement](execution-contract.md#relax-mode-cli-1411).
+
 ## create reference -- Flags
 
 | Flag | Description | Values / Default |

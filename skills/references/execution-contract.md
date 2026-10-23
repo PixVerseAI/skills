@@ -1,6 +1,6 @@
 # CLI execution contract
 
-Read once when executing a creation chain or handling results. This describes CLI 1.4.10; use installed command help and version-specific behavior on older releases. Canvas, MiniApps and [schema-driven templates](../capabilities/template.md#schema-driven-templates-cli-149) keep their own result contracts in their capabilities.
+Read once when executing a creation chain or handling results. This describes CLI 1.4.13; use installed command help and version-specific behavior on older releases. Canvas, MiniApps and [schema-driven templates](../capabilities/template.md#schema-driven-templates-cli-149) keep their own result contracts in their capabilities.
 
 ## Streams and task identity
 
@@ -66,6 +66,15 @@ pixverse asset download "$VIDEO_ID" --type video --json
 
 Do not run create a second time to parse an ID. Do not pipe create straight into `jq` without preserving its failure status: empty input can make the parser exit successfully. For scripted pipelines use explicit checks (as above) or appropriate shell failure propagation, and validate required fields. Store concurrent workflow files in a unique temporary directory, not shared fixed `/tmp` names.
 
+## Relax mode (CLI 1.4.11+)
+
+Only `create image`, `video`, `transition`, `reference`, `modify`, and `motion-control` accept Relax flags:
+
+- `--relax-mode` or `--relax-mode true` sends true; `--relax-mode false` or `--no-relax-mode` sends false. The `--relax-mode=true/false` forms also work.
+- Omission sends no Relax field; it is not an explicit false. Preserve the user's choice. If both positive/negative flags appear, the last wins; prefer a single unambiguous choice.
+- Values are case-sensitive; invalid or empty values fail with exit 6 before media upload. Registry `supported: true` means CLI pass-through, not model support or account entitlement. The backend decides eligibility and pricing; do not promise free video or retry a rejected Relax request as paid generation automatically.
+- Relax is separate from `--off-peak`; existing off-peak restrictions still apply. Other creation modes, templates and MiniApps do not gain these flags. Canvas fields still require live adapter discovery.
+
 ## Waiting and recovery
 
 Creation waits by default. A completed response already contains the result; no second `task wait` or `asset info` is needed to retrieve the same ID/URL. For long-running or parallel jobs, submit with `--no-wait`, save all IDs immediately, and call `task wait` once per pending task. Save each wait response for later use.
@@ -91,7 +100,7 @@ Voice/music `--client-request-id` is tracing, not deduplication. Do not automati
 
 ## Media inputs and reuse
 
-CLI 1.4.7 fixes media upload stability; upgrade older installations when encountering upload transport failures. Upload commands and result fields remain unchanged.
+CLI 1.4.12 adds bounded automatic upload fallback for transient transport failures. Let the CLI finish its recovery; network permission, signature, validation and local-file errors are not solved by fallback. A conflicting existing object is accepted only after content verification, and media registration occurs once after a successful upload. Upload commands and result fields remain unchanged; exhausted attempts use the existing stderr/error contract. Upgrade older installations when encountering upload transport failures.
 
 Local files and external HTTPS image URLs are uploaded; URLs can be downloaded locally and re-uploaded. Reuse an existing compatible asset ID or media path to avoid that transfer. `http://` inputs are rejected. Image/video/audio acceptance and media limits depend on the command/model; query the installed capability before assembling mixed references.
 

@@ -4,6 +4,18 @@ All notable changes to PixVerse Skills will be documented in this file.
 
 Format follows [Keep a Changelog](https://keepachangelog.com/).
 
+## [1.33.0] - 2026-10-23
+
+Sync the skill docs to PixVerse CLI **v1.4.13**, including v1.4.11–v1.4.12 changes.
+
+### Added
+- Document explicit Relax enable/disable/omission semantics across six creation modes, backend-owned entitlement and separation from off-peak pricing.
+- Add GPT Image 2.5 background choices for T2I/I2I without promising a particular output format.
+
+### Changed
+- Preserve supplied Canvas patch base versions without requiring equality with the latest Graph; retain contextual validation and backend conflict recovery.
+- Describe bounded media upload fallback and verified conflict recovery; refresh the CLI baseline.
+
 ## [1.32.0] - 2026-10-23
 
 Sync the skill docs to PixVerse CLI **v1.4.10**, including v1.4.9 template support.

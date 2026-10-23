@@ -7,6 +7,8 @@ description: Create smooth transition animations between two or more keyframe im
 
 Create smooth transition animations between two or more keyframe images using PixVerse's transition generation.
 
+CLI 1.4.11+ supports `--relax-mode [true|false]` / `--no-relax-mode`; see [Relax semantics and entitlement](../references/execution-contract.md#relax-mode-cli-1411).
+
 ## Prerequisites
 
 - PixVerse CLI installed and authenticated (`pixverse auth login`)

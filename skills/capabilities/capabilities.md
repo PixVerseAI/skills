@@ -113,6 +113,8 @@ Behavior:
 
 For template creation, the offline registry describes shared flags, not a specific template’s accepted overrides. Read `template info <id> --json`; [schema-driven templates](template.md#schema-driven-templates-cli-149) define their own inputs and fixed output settings.
 
+CLI 1.4.11+ declares `relax_mode` with no boolean default and `on_invalid: backend` in six creation modes; this describes pass-through, not account eligibility. Image `background` is model-specific. See [Relax rules](../references/execution-contract.md#relax-mode-cli-1411) and [image options](create-and-edit-image.md#flags).
+
 ### Parameter fields
 
 Each parameter uses a stable logical key plus the real CLI `flag`. Structured fields include:

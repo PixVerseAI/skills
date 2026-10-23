@@ -13,6 +13,8 @@ Examples of what this skill does:
 - Transform the scene: "replace the background with a snowy mountain"
 - Alter visual style: "make the scene look like a watercolor painting"
 
+CLI 1.4.11+ supports `--relax-mode [true|false]` / `--no-relax-mode`; see [Relax semantics and entitlement](../references/execution-contract.md#relax-mode-cli-1411).
+
 ## Prerequisites
 
 - PixVerse CLI installed and authenticated (`pixverse auth login`)

@@ -261,7 +261,9 @@ printf '%s' '{"schema_version":"canvas_agent_graph.v1","base_edit_version":12,"n
 | `--idempotency-key <key>` | Optional; derived automatically from `project_id` + canonical `graph_patch` |
 | `--session-id <id>` / `--run-id <id>` | Optional positive decimal strings |
 
-For the same project and unchanged patch, dry-run and apply reuse the same derived key. Supply `--idempotency-key` only when the workflow must own the retry key. After the graph changes, rebuild the patch and use a **new** key. Do not replay an old patch with only `base_edit_version` replaced (backend `800044`).
+For the same project and unchanged patch, dry-run and apply reuse the same derived key. Supply `--idempotency-key` only when the workflow must own the retry key. When revising a patch after a graph change, rebuild it against the intended state and use a **new** key. Do not reuse an old key with only `base_edit_version` replaced (backend `800044`).
+
+CLI **1.4.13+** forwards the supplied `base_edit_version` unchanged in both dry-run and apply even when it differs from the latest Graph version. Do not rewrite it merely to satisfy the former local equality check. The CLI still reads Graph/capability context and validates schema, nodes, selectors, models and inputs; backend concurrency checks can still reject the request. Read the latest Graph when preparing a new patch, and inspect any backend conflict before retrying.
 
 ### Local validation (exit 6 before HTTP)
 

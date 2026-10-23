@@ -7,6 +7,8 @@ description: Generate video by combining a character image with a motion referen
 
 Generate videos by transferring motion from a reference video onto a character image. The character's pose and movement follow the reference video while preserving the character's appearance.
 
+CLI 1.4.11+ supports `--relax-mode [true|false]` / `--no-relax-mode`; see [Relax semantics and entitlement](../references/execution-contract.md#relax-mode-cli-1411).
+
 ## Prerequisites
 
 - PixVerse CLI installed and authenticated (`pixverse auth login`)

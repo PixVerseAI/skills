@@ -7,6 +7,8 @@ description: Create images from text (T2I) or edit existing images (I2I) using A
 
 Use `create image --prompt` for text-to-image. Add `--image` for one reference or `--images` for several references to edit or combine existing images.
 
+CLI 1.4.11+ supports `--relax-mode [true|false]` / `--no-relax-mode`; see [Relax semantics and entitlement](../references/execution-contract.md#relax-mode-cli-1411).
+
 ## Parameter discovery
 
 Check the CLI version once per session. On **1.4.0+**, query `pixverse capabilities create image --model <id> --json` for the chosen model. If none was specified, query `pixverse capabilities create image --json` to find the installed default. On older releases, use `pixverse create image --help` with the [static image model reference](../references/image-models.md); newer model entries may not be supported by that installation.
@@ -23,6 +25,7 @@ Preserve the requested model and quality. Otherwise use defaults or select based
 | `-m, --model <model>` | Image model | Installed registry; static fallback linked above |
 | `-q, --quality <q>` | Image quality | `512p`, `720p`, `1080p` (default), `1440p`, `1800p`, `2160p` (availability varies by model — see Parameter discovery above) |
 | `--aspect-ratio <ratio>` | Aspect ratio | `1:1`, `16:9`, `9:16`, `4:3`, `3:4`, `3:2`, `2:3`, `5:4`, `4:5`, `2:1`, `1:2`, `21:9`, `1:4`, `4:1`, `1:8`, `8:1`, `auto` (availability and default vary by model and installed CLI version) |
+| `--background <value>` | GPT Image 2.5 Flare/Sunburst background (CLI 1.4.11+) | `auto` (default), `transparent`, `opaque`; T2I and I2I. Other models or invalid values fail with exit 6 before upload. Output format is backend-selected; no `--output-format` flag. |
 | `--detail-level <level>` | Model-specific rendering detail | 2.5 Flare/Sunburst: `low`, `medium`, `high`, `xhigh`, `max`; 2.0: `low`, `medium`, `high`. GPT default `low`. Nano Banana 2.1: `minimal`, `medium` (default), `high`. Other models or unsupported values fail with exit 6. |
 | `--count <number>` | Number of generations | `1` (default), `2`, `3`, `4` |
 | `--seed <number>` | Random seed | any integer; silently ignored by Nano Banana 2.1 |

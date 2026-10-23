@@ -8,6 +8,8 @@ description: Create AI videos from text prompts (T2V), images (I2V), reference m
 For text-to-video use `create video --prompt`; add `--image` for image-to-video.
 For `create reference` with image/video/audio references or source-video editing, read [reference generation](../references/video-reference.md) only. Do not load the reference matrix for a normal text/image-to-video request.
 
+CLI 1.4.11+ supports `--relax-mode [true|false]` / `--no-relax-mode`; see [Relax semantics and entitlement](../references/execution-contract.md#relax-mode-cli-1411).
+
 ## Parameter discovery
 
 Check the CLI version once per session. On **1.4.0+**, query only the selected mode and model:
