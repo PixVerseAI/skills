@@ -10,6 +10,8 @@ For `create reference` with image/video/audio references or source-video editing
 
 CLI 1.4.11+ supports `--relax-mode [true|false]` / `--no-relax-mode`; see [Relax semantics and entitlement](../references/execution-contract.md#relax-mode-cli-1411).
 
+Kling 4.0 (`kling-4.0`, CLI 1.4.15+, global only) supports `720p`/`1080p` and 3–30 seconds. Unlike older Kling tiers, it accepts `--quality`; see [Kling 4.0 defaults and framing](../references/video-models.md#kling-40-cli-1415).
+
 ## Parameter discovery
 
 Check the CLI version once per session. On **1.4.0+**, query only the selected mode and model:

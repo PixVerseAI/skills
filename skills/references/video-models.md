@@ -27,6 +27,7 @@ On CLI v1.4.0 or later, query `pixverse capabilities create video [--model <id>]
 | MiniMax H3 Max | `minimax-h3-max` (CLI 1.4.4+) | Video, Reference, Transition (exactly 2 frames) | `480p` `768p` (default) `1080p` | `5`–`15` (any integer; default `5`) | T2V: `21:9` `16:9` `4:3` `1:1` `3:4` `9:16`; I2V forces `auto`; Reference also accepts/defaults to `auto`; transition has no selectable ratio |
 | FLUX 3 | `flux-3.0` | Video | `720p` `1080p` (default `720p`) | `5`–`20` (any integer) | `auto` `21:9` `2:1` `16:9` `4:3` `1:1` `3:4` `9:16` (T2V default `16:9`; I2V default `auto`) |
 | Wan 3.0 | `wan-3.0` | Video, Reference, Transition (exactly 2 frames) | `480p` `720p` (default) `1080p` | `2`–`30` (Reference video also `auto`) | `auto` `16:9` `4:3` `1:1` `3:4` `9:16` (video/reference default `auto`; transition has no selectable ratio) |
+| Kling 4.0 | `kling-4.0` (CLI 1.4.15+) | Video, Reference, two-frame Transition | `720p`, `1080p` (default) | `3`–`30` (integer; default `5`) | `16:9` `9:16` `1:1` `21:9`; Reference also `auto` |
 | Kling O3 Pro | `kling-o3-pro` | Video, Reference, Transition | not applicable (omit `--quality`) | `3`–`15` (any integer) | `16:9` `9:16` `1:1` |
 | Kling O3 Standard | `kling-o3-standard` | Video, Reference, Transition | not applicable (omit `--quality`) | `3`–`15` (any integer) | `16:9` `9:16` `1:1` |
 | Kling O3 4K | `kling-o3-4k` | Video, Reference, Transition | not applicable (4K model tier) | `3`–`15` (any integer) | `16:9` `9:16` `1:1` |
@@ -98,3 +99,9 @@ pixverse create video --model flux-3.0 \
 ```
 
 FLUX 3 is video-only (T2V and I2V). Text-to-video defaults to `16:9`; image-to-video defaults to `auto` while preserving an explicit fixed ratio. Supported qualities are `720p` / `1080p` (default `720p`); duration is any integer from `5` through `20` seconds (default `5`). Generated audio is optional; multi-shot and off-peak are unsupported.
+
+### Kling 4.0 (CLI 1.4.15+)
+
+Available in the global region for T2V/I2V, Reference and exactly two-frame Transition; not Extend, Modify, Motion Control or multi-frame Transition. Unlike Kling O3/3.0 tiers, it sends `quality`: `1080p` is the built-in default even ahead of a generic saved quality, while explicit `--quality 720p` is honored. Duration is integer 3–30 seconds (built-in default 5); invalid durations use the CLI's nearest-value adjustment.
+
+T2V supports `16:9`, `9:16`, `1:1`, `21:9` (default `16:9`). I2V and Transition derive framing from images and omit the ratio. Reference additionally accepts `auto` but defaults to `16:9`; do not infer `auto` or replace output duration just because video inputs are supplied. Audio control, multi-shot and off-peak are unsupported. See [reference limits](video-reference.md#reference-media-matrix) for mixed inputs.

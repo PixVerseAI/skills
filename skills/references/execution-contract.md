@@ -1,6 +1,6 @@
 # CLI execution contract
 
-Read once when executing a creation chain or handling results. This describes CLI 1.4.13; use installed command help and version-specific behavior on older releases. Canvas, MiniApps and [schema-driven templates](../capabilities/template.md#schema-driven-templates-cli-149) keep their own result contracts in their capabilities.
+Read once when executing a creation chain or handling results. This describes CLI 1.4.15; use installed command help and version-specific behavior on older releases. Canvas, MiniApps and [schema-driven templates](../capabilities/template.md#schema-driven-templates-cli-149) keep their own result contracts in their capabilities.
 
 ## Streams and task identity
 
@@ -79,6 +79,8 @@ Only `create image`, `video`, `transition`, `reference`, `modify`, and `motion-c
 
 Creation waits by default. A completed response already contains the result; no second `task wait` or `asset info` is needed to retrieve the same ID/URL. For long-running or parallel jobs, submit with `--no-wait`, save all IDs immediately, and call `task wait` once per pending task. Save each wait response for later use.
 
+CLI 1.4.15 uses a 60-second shared API request timeout, including creation submission and upload registration. This is separate from generation polling `--timeout` and storage-transfer deadlines; increasing polling timeout does not extend a submission request.
+
 `task status` exit 0 means the query succeeded, not that generation completed. Check `status` / `status_code`: 1 completed, 5/9/10 pending, 7/8 failed. Batch status queries return an ID-keyed map and can contain individual `error` objects even when the command succeeds. `task wait` waits for completion and reports generation failure separately.
 
 | Exit | Meaning | Next action |
@@ -101,6 +103,8 @@ Voice/music `--client-request-id` is tracing, not deduplication. Do not automati
 ## Media inputs and reuse
 
 CLI 1.4.12 adds bounded automatic upload fallback for transient transport failures. Let the CLI finish its recovery; network permission, signature, validation and local-file errors are not solved by fallback. A conflicting existing object is accepted only after content verification, and media registration occurs once after a successful upload. Upload commands and result fields remain unchanged; exhausted attempts use the existing stderr/error contract. Upgrade older installations when encountering upload transport failures.
+
+CLI 1.4.14 extends upload fallback to TLS/certificate and wrapped connection failures while verifying each alternative endpoint. Do not disable certificate verification to bypass these failures. CLI 1.4.15 defaults video uploads to 50 MiB for local files and URL downloads, unless an explicit model/template limit applies (for example Kling O3/4.0 reference videos: 200 MiB).
 
 Local files and external HTTPS image URLs are uploaded; URLs can be downloaded locally and re-uploaded. Reuse an existing compatible asset ID or media path to avoid that transfer. `http://` inputs are rejected. Image/video/audio acceptance and media limits depend on the command/model; query the installed capability before assembling mixed references.
 

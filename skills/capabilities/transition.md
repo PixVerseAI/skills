@@ -76,6 +76,7 @@ Only specific models support Transition mode. Using other models will result in 
 | Veo 3.1 Standard | `veo-3.1-standard` | `720p` `1080p` `2160p` | `4` `6` `8` | First/last frame only |
 | Veo 3.1 Fast | `veo-3.1-fast` | `720p` `1080p` `2160p` | `4` `6` `8` | First/last frame only |
 | Veo 3.1 Lite | `veo-3.1-lite` | `720p` `1080p` | `4` `6` `8` | First/last frame only |
+| Kling 4.0 | `kling-4.0` (CLI 1.4.15+) | `720p`, `1080p` (default) | `3`–`30` (integer; default `5`) | Exactly two frames; automatic image framing; no audio control, multi-shot or off-peak |
 | Kling O3 Pro | `kling-o3-pro` | not applicable (omit `--quality`) | `3`–`15` (any integer) | External model; no off-peak |
 | Kling O3 Standard | `kling-o3-standard` | not applicable (omit `--quality`) | `3`–`15` (any integer) | External model; no off-peak |
 | Kling O3 4K | `kling-o3-4k` | not applicable (4K model tier) | `3`–`15` (any integer) | External model; no off-peak |
@@ -85,7 +86,7 @@ Only specific models support Transition mode. Using other models will result in 
 
 Transition framing is derived from the input images; this command has no `--aspect-ratio` flag. On CLI v1.4.0 or later, prefer `pixverse capabilities create transition --model <id> --json`; on older versions, confirm flags with `pixverse create transition --help` and use this table as a fallback.
 
-> **Kling constraint:** Resolution is selected entirely by the Kling model ID. The CLI omits `quality` for every Kling transition; an explicit `--quality` is ignored with a warning. Use `kling-o3-4k` or `kling-3.0-4k` for the 4K tier.
+> **Kling O3/3.0 constraint:** Resolution is selected entirely by the Kling model ID. The CLI omits `quality` for Kling O3/3.0 transitions; an explicit `--quality` is ignored with a warning. Use `kling-o3-4k` or `kling-3.0-4k` for the 4K tier.
 
 ### 3+ image constraint: automatic model fallback
 

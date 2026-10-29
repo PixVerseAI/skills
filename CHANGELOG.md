@@ -4,6 +4,17 @@ All notable changes to PixVerse Skills will be documented in this file.
 
 Format follows [Keep a Changelog](https://keepachangelog.com/).
 
+## [1.34.0] - 2026-10-28
+
+Sync the skill docs to PixVerse CLI **v1.4.15**, including v1.4.14 upload recovery.
+
+### Added
+- Document Kling 4.0 Video, Reference and two-frame Transition, with explicit quality, mode-specific framing, 3–30 second duration and mixed-reference constraints.
+
+### Changed
+- Scope older Kling model-tier quality rules to O3/3.0 instead of all Kling models.
+- Explain verified TLS upload fallback, the shared 60-second API timeout and default 50 MiB video upload ceiling without changing model/template-specific limits.
+
 ## [1.33.0] - 2026-10-23
 
 Sync the skill docs to PixVerse CLI **v1.4.13**, including v1.4.11–v1.4.12 changes.

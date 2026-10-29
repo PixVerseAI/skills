@@ -9,7 +9,7 @@ CLI 1.4.11+ supports `--relax-mode [true|false]` / `--no-relax-mode` for `create
 | Flag | Description | Values / Default |
 |:---|:---|:---|
 | `--images <inputs...>` | Image references; limits depend on model and whether video is also supplied (see matrix below) | file path, HTTPS URL, image ID, or media path |
-| `--videos <inputs...>` | Video references for V6, Seedance, `minimax-h3` / `minimax-h3-max`, `wan-3.0`, Gemini Omni, Kling O3, and Grok Imagine; model-specific limits apply | file path, HTTPS URL, video ID, or media path |
+| `--videos <inputs...>` | Video references for V6, Seedance, `minimax-h3` / `minimax-h3-max`, `wan-3.0`, Gemini Omni, Kling 4.0 / O3, and Grok Imagine; model-specific limits apply | file path, HTTPS URL, video ID, or media path |
 | `--audios <inputs...>` | Audio references for Seedance / MiniMax H3 / H3 Max / `wan-3.0`. Seedance and both H3 models require ≥1 image/video; Wan 3.0 also accepts audio-only. Seedance 2.5: max 10 and ≤30s total. Seedance 2.0: max 3, each 2–15s, ≤15s total, and known local files ≤15MB. Wan 3.0: max 5, each 1–15s, exact total ≤15s. Both H3 models use count-only model validation (H3 Max also caps total references at 12) | file path, HTTPS URL, audio ID, or media path |
 | `--prompt <text>` | Prompt text (required) | -- |
 | `-m, --model <model>` | Video model | See the Reference media matrix below |
@@ -38,6 +38,7 @@ CLI 1.4.11+ supports `--relax-mode [true|false]` / `--no-relax-mode` for `create
 | MiniMax H3 Max (`minimax-h3-max`, CLI 1.4.4+) | max 9 | max 3 | max 3 | max **12 total** inputs; audio needs an image/video; `480p`/`768p` (default)/`1080p`; fixed `5`–`15s` (default `5`, no duration `auto`); ratio `auto` (default) or six fixed ratios, including when no image is supplied; count-only model validation |
 | Wan 3.0 (`wan-3.0`) | max 10 | max 5 | max 5 | max 20 inputs; audio-only is valid; known video each `1`–`15s` and exact total ≤ `15s`; known audio each `1`–`15s` and exact total ≤ `15s`; video input defaults to `--duration auto`, while a fixed duration is capped at `floor(30 - known reference-video duration)` |
 | Gemini Omni (`gemini-omni-flash`) | max 5 | max 1 | no | MP4/MOV `1`–`10s`; images and video may mix; video input locks `--duration auto` and rejects fixed values |
+| Kling 4.0 (CLI 1.4.15+) | max 10 | max 5 | no | Mixed images/videos allowed; MP4/MOV, each `3`–`30s`, ≤`30s` total, ≤`200MB` per video, width/height ≤`2048`. Output `720p`/`1080p` (default), integer `3`–`30s`; video input does not replace output duration. |
 | Kling O3 Pro / Standard / 4K | max 7 without video; max 4 with video | max 1 | no | MP4/MOV `1`–`15s`, ≤ `200MB`, width/height ≤ `2048`; images and video may mix; omit `--quality` because the model ID selects resolution |
 | Grok Imagine (`grok-imagine`) | `1`–`7` in image mode | exactly 1 in video mode | no | images and video are mutually exclusive; video must be MP4 `1`–`8.7s`, locks `--duration auto`, rejects fixed duration, and derives framing from the source video without sending aspect ratio |
 
@@ -131,3 +132,9 @@ pixverse create reference --images ./char1.jpg ./char2.jpg --prompt "Two charact
 ```
 
 Return to [create video](../capabilities/create-video.md).
+
+Kling 4.0 reference example (after checking input constraints):
+
+```bash
+pixverse create reference --model kling-4.0 --images ./character.png --videos ./motion.mp4 --quality 1080p --duration 10 --aspect-ratio auto --prompt "Follow the reference movement" --json
+```
