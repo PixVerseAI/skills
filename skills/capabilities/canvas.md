@@ -279,6 +279,8 @@ CLI **1.4.13+** forwards the supplied `base_edit_version` unchanged in both dry-
 
 Backend still owns DAG validation, deleted-node ownership, and concurrent graph state. Unknown selector, unavailable model, missing route condition, unknown CLI parameter, or illegal value is rejected locally with exit 6. Local precheck does **not** write CLI defaults back into the user's patch.
 
+CLI **1.4.16+** accepts JSON booleans or numeric `0`/`1` for Canvas `audio` and `multi_shot`, preserving the supplied value and omitted-field behavior. Strings such as `"true"` or `"1"` are not numeric/boolean switches. Mode/model validation remains in force; this exception does not apply to every boolean field.
+
 ### Updates and dependencies
 
 Updates are not JSON Merge Patch and not full-node replacement:

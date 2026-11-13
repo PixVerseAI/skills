@@ -115,6 +115,8 @@ For template creation, the offline registry describes shared flags, not a specif
 
 CLI 1.4.11+ declares `relax_mode` with no boolean default and `on_invalid: backend` in six creation modes; this describes pass-through, not account eligibility. Image `background` is model-specific. See [Relax rules](../references/execution-contract.md#relax-mode-cli-1411) and [image options](create-and-edit-image.md#flags).
 
+`supported: false` for `audio`, `multi_shot` or `off_peak` describes unavailable CLI control, not an assertion that the model cannot generate sound, multiple shots, or receive service-side scheduling. Do not promise silent output merely because an audio switch is unsupported.
+
 ### Parameter fields
 
 Each parameter uses a stable logical key plus the real CLI `flag`. Structured fields include:

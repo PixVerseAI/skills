@@ -1,6 +1,6 @@
 # Image model fallback reference
 
-Read when installed capability discovery is unavailable or to compare model-specific limits. This static reference describes CLI 1.4.13, not necessarily the installed version.
+Read when installed capability discovery is unavailable or to compare model-specific limits. This static reference describes CLI 1.4.18, not necessarily the installed version.
 
 ### Model Reference
 
@@ -12,6 +12,7 @@ On CLI v1.4.0 or later, query `pixverse capabilities create image [--model <id>]
 | GPT Image 2.5 Sunburst | `gpt-image-2.5-sunburst` (CLI 1.4.1+) | `1080p` `1440p` `2160p` | `1:1` `16:9` `9:16` `4:3` `3:4` `3:2` `2:3` `2:1` `1:2` `21:9` (CLI 1.4.3+) | 16 |
 | GPT Image 2 | `gpt-image-2.0` | `1080p` `1440p` `2160p` | `1:1` `16:9` `9:16` `4:3` `3:4` `3:2` `2:3` `2:1` `1:2` `21:9` | 9 |
 | Qwen Image | `qwen-image` | `720p` `1080p` | `1:1` `16:9` `9:16` `4:3` `3:4` `5:4` `4:5` `3:2` `2:3` `21:9` | 3 |
+| Seedream 5.5 | `seedream-5.5` (CLI 1.4.17+, global only) | `1080p` `1.5k` `1440p` `1800p` | `auto` `1:1` `16:9` `9:16` `4:3` `3:4` `5:4` `4:5` `3:2` `2:3` `21:9` | 10 |
 | Seedream 5.0 Pro | `seedream-5.0-pro` | `1080p` `1440p` | `auto` `1:1` `16:9` `9:16` `4:3` `3:4` `5:4` `4:5` `3:2` `2:3` `21:9` | 10 |
 | Seedream 5.0 Lite | `seedream-5.0-lite` | `1440p` `1800p` `2160p` | `auto` `1:1` `16:9` `9:16` `4:3` `3:4` `5:4` `4:5` `3:2` `2:3` `21:9` | 6 |
 | Seedream 4.5 | `seedream-4.5` | `1440p` `2160p` | `auto` `1:1` `16:9` `9:16` `4:3` `3:4` `5:4` `4:5` `3:2` `2:3` `21:9` | 6 |
@@ -28,7 +29,7 @@ On CLI v1.4.0 or later, query `pixverse capabilities create image [--model <id>]
 
 On CLI **1.4.3+**, Flare and Sunburst accept all ten ratios (`1:1`, `16:9`, `9:16`, `4:3`, `3:4`, `3:2`, `2:3`, `2:1`, `1:2`, `21:9`) at every supported quality (`1080p`, `1440p`, `2160p`). There are no quality-specific aspect-ratio rules. Both `1080p + 9:16` and `2160p + 1:1` are valid; do not upgrade quality or switch models merely to obtain those ratios.
 
-The built-in omitted ratio is `16:9`. Supported explicit or saved ratios are preserved. A ratio outside the model's supported list warns and falls back to `1:1`; unsupported quality still follows the ordinary image-quality fallback. `1K` is an interactive label for `1080p`, not a quality flag value.
+The built-in omitted ratio is `16:9`. Supported explicit or saved ratios are preserved. A ratio outside the model's supported list warns and falls back to `1:1`; unsupported quality still follows the ordinary image-quality fallback. CLI 1.4.17+ accepts case-insensitive image quality aliases: `1K` → `1080p`, `1.5K` → `1.5k`, `2K` → `1440p`, `3K` → `1800p`, `4K` → `2160p`. Aliases still require model support; older installations should use canonical values.
 
 **CLI 1.4.2 compatibility:** all qualities accept only `1:1`, `16:9`, `9:16`, `3:2`, and `2:3`; the other five ratios were added in 1.4.3. Do not apply the expanded list to 1.4.2.
 
@@ -40,7 +41,7 @@ The global built-in default in CLI 1.4.8 is `gpt-image-2.5-flare`, `1080p`, `16:
 
 Unsupported quality/ratio values are adjusted with a warning on stderr. Unsupported models or detail levels are validation errors; do not retry them as transient generation failures.
 
-CLI **1.4.11+** also supports `--background auto|transparent|opaque` on both GPT Image 2.5 variants for T2I/I2I. Omission submits `auto`; other models reject an explicit background. The backend chooses output format, so transparent background does not guarantee a PNG file.
+CLI **1.4.11+** also supports `--background auto|transparent|opaque` on both GPT Image 2.5 variants for T2I/I2I. Seedream 5.5 also supports these backgrounds from CLI 1.4.17. Omission submits `auto`; other models reject an explicit background. The backend chooses output format, so transparent background does not guarantee a PNG file.
 
 ### Nano Banana 2.1
 
@@ -54,3 +55,7 @@ Use `gemini-nano-banana-2.1` for T2I or I2I on CLI **1.4.8+**, in the global reg
 ```bash
 pixverse create image --model gemini-nano-banana-2.1 --prompt "A panoramic botanical illustration" --quality 2160p --aspect-ratio 8:1 --detail-level high --json
 ```
+
+### Seedream 5.5 (CLI 1.4.17+)
+
+Supports T2I/I2I with up to 10 references and 1–4 outputs. Built-in quality and unsupported-quality fallback are `1080p` (1K); 1.5K, 2K and 3K are supported, but 4K is not. Shared image framing defaults still apply; `auto` is supported, not automatically selected for I2I. Background is `auto` (default), `transparent` or `opaque`; `--detail-level` is unsupported. No output-format, width or height controls are added. The CLI passes prompts through without a new local length cap or truncation; backend validation still applies.

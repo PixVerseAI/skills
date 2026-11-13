@@ -7,6 +7,8 @@ description: Browse and apply PixVerse effect templates — including viral AI e
 
 Discover and use PixVerse effect templates to create videos or images. Templates are pre-configured effects that take your image (or video) as input and apply a specific transformation.
 
+CLI **1.4.17+** adds normalized `input_requirements` to `template info --json`, alongside original detail fields. Use its `images.required` / `optional`, `video_alternative`, `prompt.mode` and ordered `slots` before generating. `complete: false` means some requirements are unknown; inspect current detail rather than guessing. Slot descriptions and `example_url` clarify inputs: view an example before describing its visual contents, and never treat it as the user's supplied reference. `display_prompt` is presentation text, not a demand for user input.
+
 ## Decision Tree
 
 ```
@@ -123,7 +125,7 @@ For classic effects, `effect_type` determines the required input. On CLI 1.4.9+,
 |:---|:---|
 | `0` | No image/video — text only |
 | `1` | 1 image (or 1 video if `supported_features == 1000`) |
-| `N > 1` | Exactly N images |
+| `N > 1` | N required images; optional references may follow when declared |
 
 ---
 
@@ -137,7 +139,7 @@ For classic effects, `effect_type` determines the required input. On CLI 1.4.9+,
 | `-q, --quality <q>` | Output quality | `720p` (default), model-dependent |
 | `-d, --duration <sec>` | Duration | from template default, or override |
 | `--aspect-ratio <ratio>` | Aspect ratio | optional override; image templates validate against their model; CLI 1.4.2 does not filter ratios by quality |
-| `--prompt <text>` | Prompt override | optional — uses template default if omitted |
+| `--prompt <text>` | Prompt override | follow `input_requirements.prompt.mode`: disabled rejects explicit prompts; editable text is optional; older missing metadata retains legacy behavior |
 | `--seed <number>` | Random seed | any integer; image templates generate one automatically when omitted |
 | `--count <number>` | Number of generations | `1`–`4` |
 | `--off-peak` | Off-peak pricing | flag |
@@ -146,7 +148,7 @@ For classic effects, `effect_type` determines the required input. On CLI 1.4.9+,
 | `--timeout <sec>` | Polling timeout | `300` (default) |
 | `--json` | JSON output | flag |
 
-> **Note:** `--image` and `--video` are mutually exclusive.
+> **Note:** `--image` and `--video` are mutually exclusive for classic effects. On CLI 1.4.17+, ordinary video effects with required image inputs accept up to `input_requirements.images.optional` additional images through the same `--image` list, required images first. Image-output and text-only effects report zero optional images. A supported video alternative replaces the required image and cannot be combined with any images. `supported_features` may be scalar or an array containing `1000`.
 
 For image templates, CLI v1.2.13 and later supplies a random seed when `--seed` is omitted. This prevents the backend `invalid param` failure while preserving explicit seeds for reproducible output. Video-template seed behavior is unchanged.
 
@@ -198,10 +200,10 @@ After inspecting the live template schema, submit the appropriate command above.
 
 The same `create template --template-id <id>` command supports additional template types whose detail declares ordered `input_fields`. Inspect the full `template info <id> --json` result; do not derive their input requirements from classic `effect_type` or force their output into a single video/image ID.
 
-- Match each field's `content_type` (`image`, `video`, `text`), `required` (required unless explicitly false), `max_size` (bytes), and video `min_duration` / `max_duration` (seconds).
+- Match each field's `content_type` (`image`, `video`, `text`), normalized `required`, `max_size` (bytes), and video `min_duration` / `max_duration` (seconds).
 - Supply images with `--image` in slot order, one video with `--video`, and one editable text value with `--prompt`. Image and video can coexist when the schema includes both. More than one video or text slot is unsupported; there is no audio input flag.
 - Compact image inputs reserve enough values for required slots, then fill optional slots from left to right. For optional-then-required slots, one image fills the required slot. Empty placeholders are accepted only when they produce that same mapping; ambiguous selections fail with exit 6 before uploads. Do not invent named slot flags.
-- Omitted/empty text uses the template default. A template without a text slot rejects `--prompt`. CLI truncates supplied text to 5000 Unicode code points; keep it within that limit or obtain an authorized rewrite before submission to avoid losing user content.
+- On CLI 1.4.17+, omitted/blank text uses the slot default; required text without a nonblank default must be supplied and fails before uploads when missing. A template without a text slot rejects `--prompt`. CLI truncates supplied text to 5000 Unicode code points; keep it within that limit or obtain an authorized rewrite before submission to avoid losing user content.
 - Output settings belong to the template. Explicit `--quality`, `--duration`, `--aspect-ratio`, `--seed`, `--count`, `--off-peak`, and `--idempotency-key` overrides are rejected. `--no-wait`, `--timeout`, `--json`, and pipe mode remain supported.
 
 After inspecting a template with image, video and editable text slots:

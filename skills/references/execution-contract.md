@@ -1,6 +1,6 @@
 # CLI execution contract
 
-Read once when executing a creation chain or handling results. This describes CLI 1.4.15; use installed command help and version-specific behavior on older releases. Canvas, MiniApps and [schema-driven templates](../capabilities/template.md#schema-driven-templates-cli-149) keep their own result contracts in their capabilities.
+Read once when executing a creation chain or handling results. This describes CLI 1.4.18; use installed command help and version-specific behavior on older releases. Canvas, MiniApps and [schema-driven templates](../capabilities/template.md#schema-driven-templates-cli-149) keep their own result contracts in their capabilities.
 
 ## Streams and task identity
 
@@ -81,7 +81,9 @@ Creation waits by default. A completed response already contains the result; no 
 
 CLI 1.4.15 uses a 60-second shared API request timeout, including creation submission and upload registration. This is separate from generation polling `--timeout` and storage-transfer deadlines; increasing polling timeout does not extend a submission request.
 
-`task status` exit 0 means the query succeeded, not that generation completed. Check `status` / `status_code`: 1 completed, 5/9/10 pending, 7/8 failed. Batch status queries return an ID-keyed map and can contain individual `error` objects even when the command succeeds. `task wait` waits for completion and reports generation failure separately.
+`task status` exit 0 means the query succeeded, not that generation completed. Check `status` / `status_code`: 1 completed, 5/9/10 pending, 8 failed; 7/17 moderation-rejected. Batch status queries return an ID-keyed map and can contain individual `error` objects even when the command succeeds. `task wait` waits for completion and reports generation failure separately.
+
+CLI **1.4.18+** treats status `7` and external moderation status `17` as terminal rejection for image/video/audio polling. `task status` still exits 0 for a successful query; waiting or creation polling exits 5 on rejection. Structured moderation errors include `error_type: "content_rejected"`, `status_code`, and `asset_id`. Preserve the ID, report the rejection, and stop polling; do not retry the same generation automatically or reinterpret it as a timeout.
 
 | Exit | Meaning | Next action |
 |:---|:---|:---|

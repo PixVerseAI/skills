@@ -4,6 +4,19 @@ All notable changes to PixVerse Skills will be documented in this file.
 
 Format follows [Keep a Changelog](https://keepachangelog.com/).
 
+## [1.35.0] - 2026-11-13
+
+Sync the skill docs to PixVerse CLI **v1.4.18**, including v1.4.16–v1.4.17 changes.
+
+### Added
+- Document Seedream 5.5 T2I/I2I, background choices and case-insensitive image quality aliases.
+- Explain normalized template input requirements, optional reference ordering and required text/default behavior.
+
+### Changed
+- Accept boolean or numeric Canvas audio/multi-shot switches without changing their values or model validation.
+- Treat external moderation status 17 as terminal, preserving existing query/wait exit semantics and structured error recovery.
+- Distinguish unavailable CLI controls from model generation capabilities; refresh the CLI baseline.
+
 ## [1.34.0] - 2026-10-28
 
 Sync the skill docs to PixVerse CLI **v1.4.15**, including v1.4.14 upload recovery.

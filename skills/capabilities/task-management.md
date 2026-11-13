@@ -168,6 +168,8 @@ JSON output (MiniApp project completed):
 
 ## Status Codes
 
+CLI 1.4.18+ recognizes moderation rejection statuses `7` and `17` as terminal. Waiting exits 5; preserve the asset ID and inspect `error_type: "content_rejected"` when present. See [moderation and recovery](../references/execution-contract.md#waiting-and-recovery).
+
 A successful `task status` query can return queued, processing, or failed generation states with exit code 0. Inspect the payload; only `task wait` treats terminal generation failure as exit code 5. See the [execution contract](../references/execution-contract.md).
 
 | Code | Label | Meaning | Action |
