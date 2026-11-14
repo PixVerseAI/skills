@@ -1,74 +1,59 @@
 # Image model fallback reference
 
-Read when installed capability discovery is unavailable or to compare model-specific limits. This static reference describes CLI 1.4.20, not necessarily the installed version.
+Read when installed capability discovery is unavailable or to compare model-specific limits. Prefer `pixverse capabilities create image --model <id> --json`. This static reference describes CLI 1.4.20.
 
-### Model Reference
-
-On CLI v1.4.0 or later, query `pixverse capabilities create image [--model <id>] --json` for installed flags and constraints. Check `pixverse --version` once per session. On older versions, use `pixverse create image --help` with the table below as a fallback; newer models or flags may be unavailable.
-
-| Model | `--model` value | Resolution | Aspect Ratio | Max I2I refs |
+| Model | `--model` value | Resolution | Aspect ratio | Max I2I refs |
 |:---|:---|:---|:---|---:|
-| GPT Image 2.5 Flare | `gpt-image-2.5-flare` (global default, CLI 1.4.1+) | `1080p` `1440p` `2160p` | `1:1` `16:9` `9:16` `4:3` `3:4` `3:2` `2:3` `2:1` `1:2` `21:9` (CLI 1.4.3+) | 16 |
-| GPT Image 2.5 Sunburst | `gpt-image-2.5-sunburst` (CLI 1.4.1+) | `1080p` `1440p` `2160p` | `1:1` `16:9` `9:16` `4:3` `3:4` `3:2` `2:3` `2:1` `1:2` `21:9` (CLI 1.4.3+) | 16 |
-| GPT Image 2 | `gpt-image-2.0` | `1080p` `1440p` `2160p` | `1:1` `16:9` `9:16` `4:3` `3:4` `3:2` `2:3` `2:1` `1:2` `21:9` | 9 |
-| Qwen Image | `qwen-image` | `720p` `1080p` | `1:1` `16:9` `9:16` `4:3` `3:4` `5:4` `4:5` `3:2` `2:3` `21:9` | 3 |
-| MiniMax H3 Image | `minimax-h3-image` (CLI 1.4.20+, global only) | `1080p` `1440p` `2160p` | `auto` `1:1` `16:9` `9:16` `4:3` `3:4` `5:4` `4:5` `3:2` `2:3` `21:9` | 16 |
-| Seedream 5.5 | `seedream-5.5` (CLI 1.4.17+, global only) | `1080p` `1.5k` `1440p` `1800p` | `auto` `1:1` `16:9` `9:16` `4:3` `3:4` `5:4` `4:5` `3:2` `2:3` `21:9` | 10 |
-| Seedream 5.0 Pro | `seedream-5.0-pro` | `1080p` `1440p` | `auto` `1:1` `16:9` `9:16` `4:3` `3:4` `5:4` `4:5` `3:2` `2:3` `21:9` | 10 |
-| Seedream 5.0 Lite | `seedream-5.0-lite` | `1440p` `1800p` `2160p` | `auto` `1:1` `16:9` `9:16` `4:3` `3:4` `5:4` `4:5` `3:2` `2:3` `21:9` | 6 |
-| Seedream 4.5 | `seedream-4.5` | `1440p` `2160p` | `auto` `1:1` `16:9` `9:16` `4:3` `3:4` `5:4` `4:5` `3:2` `2:3` `21:9` | 6 |
-| Seedream 4.0 | `seedream-4.0` | `1080p` `1440p` `2160p` | `auto` `1:1` `16:9` `9:16` `4:3` `3:4` `5:4` `4:5` `3:2` `2:3` `21:9` | 6 |
-| Gemini 2.5 Flash (aka Nanobanana) | `gemini-2.5-flash` | `1080p` | `auto` `1:1` `16:9` `9:16` `4:3` `3:4` `5:4` `4:5` `3:2` `2:3` `21:9` | 3 |
-| Gemini 3.0 (aka Nano Banana Pro) | `gemini-3.0` | `1080p` `1440p` `2160p` | `auto` `1:1` `16:9` `9:16` `4:3` `3:4` `5:4` `4:5` `3:2` `2:3` `21:9` | 9 |
-| Nano Banana 2.1 | `gemini-nano-banana-2.1` (CLI 1.4.8+, global only) | `1080p` `1440p` `2160p` | `auto` `1:1` `3:2` `2:3` `3:4` `4:3` `4:5` `5:4` `9:16` `16:9` `21:9` `1:4` `4:1` `1:8` `8:1` | 14 |
-| Gemini 3.1 Flash (aka Nano Banana 2) | `gemini-3.1-flash` | `512p` `1080p` `1440p` `2160p` | `auto` `1:1` `16:9` `9:16` `4:3` `3:4` `5:4` `4:5` `3:2` `2:3` `21:9` | 9 |
-| Gemini 3.1 Flash Lite (aka Nano Banana 2 Lite) | `gemini-3.1-flash-lite` | `1080p` | `auto` `1:1` `3:2` `2:3` `3:4` `4:3` `4:5` `5:4` `9:16` `16:9` `21:9` | 14 |
+| GPT Image 2.5 Flare | `gpt-image-2.5-flare` (global default) | `1080p` `1440p` `2160p` | `1:1` `16:9` `9:16` `4:3` `3:4` `3:2` `2:3` `2:1` `1:2` `21:9` | 16 |
+| GPT Image 2.5 Sunburst | `gpt-image-2.5-sunburst` | `1080p` `1440p` `2160p` | same as Flare | 16 |
+| GPT Image 2 | `gpt-image-2.0` | `1080p` `1440p` `2160p` | same as Flare | 9 |
+| Qwen Image | `qwen-image` (CN default) | `720p` `1080p` | `1:1` `16:9` `9:16` `4:3` `3:4` `5:4` `4:5` `3:2` `2:3` `21:9` | 3 |
+| MiniMax H3 Image | `minimax-h3-image` (CLI 1.4.20+) | `1080p` `1440p` `2160p` | `auto` `1:1` `16:9` `9:16` `4:3` `3:4` `5:4` `4:5` `3:2` `2:3` `21:9` | 16 |
+| Seedream 5.5 | `seedream-5.5` | `1080p` `1.5k` `1440p` `1800p` | `auto` `1:1` `16:9` `9:16` `4:3` `3:4` `5:4` `4:5` `3:2` `2:3` `21:9` | 10 |
+| Seedream 5.0 Pro | `seedream-5.0-pro` | `1080p` `1440p` | same as Seedream 5.5 | 10 |
+| Seedream 5.0 Lite | `seedream-5.0-lite` | `1440p` `1800p` `2160p` | same as Seedream 5.5 | 6 |
+| Seedream 4.5 | `seedream-4.5` | `1440p` `2160p` | same as Seedream 5.5 | 6 |
+| Seedream 4.0 | `seedream-4.0` | `1080p` `1440p` `2160p` | same as Seedream 5.5 | 6 |
+| Gemini 2.5 Flash (aka Nanobanana) | `gemini-2.5-flash` | `1080p` | same as Seedream 5.5 | 3 |
+| Gemini 3.0 (aka Nano Banana Pro) | `gemini-3.0` | `1080p` `1440p` `2160p` | same as Seedream 5.5 | 9 |
+| Nano Banana 2.1 | `gemini-nano-banana-2.1` | `1080p` `1440p` `2160p` | Seedream 5.5 ratios plus `1:4` `4:1` `1:8` `8:1` | 14 |
+| Gemini 3.1 Flash (aka Nano Banana 2) | `gemini-3.1-flash` | `512p` `1080p` `1440p` `2160p` | same as Seedream 5.5 | 9 |
+| Gemini 3.1 Flash Lite (aka Nano Banana 2 Lite) | `gemini-3.1-flash-lite` | `1080p` | same as Seedream 5.5 | 14 |
 | Kling Image O3 | `kling-image-o3` | `1080p` `1440p` `2160p` | `16:9` `9:16` `1:1` `4:3` `3:4` `3:2` `2:3` `21:9` | 10 |
-| Kling Image V3 | `kling-image-v3` | `1080p` `1440p` | `16:9` `9:16` `1:1` `4:3` `3:4` `3:2` `2:3` `21:9` | 1 |
+| Kling Image V3 | `kling-image-v3` | `1080p` `1440p` | same as Kling Image O3 | 1 |
 
-### GPT Image 2.5 framing
+**Region:** `--region cn` defaults to `qwen-image` and allows only `qwen-image`, `seedream-5.0-lite`, `seedream-4.5`, and `seedream-4.0`. All other models are global only.
 
-On CLI **1.4.3+**, Flare and Sunburst accept all ten ratios (`1:1`, `16:9`, `9:16`, `4:3`, `3:4`, `3:2`, `2:3`, `2:1`, `1:2`, `21:9`) at every supported quality (`1080p`, `1440p`, `2160p`). There are no quality-specific aspect-ratio rules. Both `1080p + 9:16` and `2160p + 1:1` are valid; do not upgrade quality or switch models merely to obtain those ratios.
+## Shared defaults and validation
 
-The built-in omitted ratio is `16:9`. Supported explicit or saved ratios are preserved. A ratio outside the model's supported list warns and falls back to `1:1`; unsupported quality still follows the ordinary image-quality fallback. CLI 1.4.17+ accepts case-insensitive image quality aliases: `1K` → `1080p`, `1.5K` → `1.5k`, `2K` → `1440p`, `3K` → `1800p`, `4K` → `2160p`. Aliases still require model support; older installations should use canonical values.
+- The global built-in default is `gpt-image-2.5-flare`. Built-in quality is `1080p` (Seedream 5.0 Lite and 4.5: `1440p`), and framing is `16:9`. Explicit flags and saved creation defaults take precedence. Adding an image does not select `auto`; pass it explicitly where supported.
+- Quality aliases are case-insensitive: `1K`=`1080p`, `1.5K`=`1.5k`, `2K`=`1440p`, `3K`=`1800p`, `4K`=`2160p`. They still require model support.
+- An unsupported quality or ratio is adjusted with a warning on stderr. Unsupported models, detail levels, or backgrounds are validation errors (exit 6) raised before upload; do not retry them as transient failures.
+- Reference caps (above) are validated before upload and are independent of the 1–4 output `--count`.
 
-**CLI 1.4.2 compatibility:** all qualities accept only `1:1`, `16:9`, `9:16`, `3:2`, and `2:3`; the other five ratios were added in 1.4.3. Do not apply the expanded list to 1.4.2.
+## Model-specific flags
 
-**CLI 1.4.1 compatibility:** that version restricted ratios by quality and used a `1:1` built-in default at `1080p`. Use its installed `capability.rules` rather than applying the expanded 1.4.2 combinations. The reference-sheet and Windows examples keep explicit `1440p` framing that works on both versions.
+| Flag | Models | Values |
+|:---|:---|:---|
+| `--detail-level` | GPT Image 2.5 Flare/Sunburst | `low` (default), `medium`, `high`, `xhigh`, `max` |
+| | GPT Image 2.0 | `low`, `medium`, `high` |
+| | Nano Banana 2.1 | `minimal`, `medium` (default), `high` |
+| `--background` | GPT Image 2.5 Flare/Sunburst, Seedream 5.5 | `auto` (default), `transparent`, `opaque`. The backend chooses the file format, so a transparent background does not guarantee PNG; `--output-format` is rejected. |
+| `--output-format` | MiniMax H3 Image only | `png` (default), `jpeg` (`jpg` alias), `webp`; case-insensitive; invalid values fall back to `png` |
 
-Both 2.5 models accept detail levels `low` (default), `medium`, `high`, `xhigh`, and `max`. GPT Image 2.0 retains only `low`, `medium`, and `high`; Nano Banana 2.1 has its own levels below; remaining image models reject `--detail-level`. The 16-reference limit is validated before upload and is separate from the 1–4 output `--count` limit.
+Other models reject these flags. GPT Image 2.5 has no quality-specific ratio rules: `1080p + 9:16` is valid; do not upgrade quality or switch models to obtain a ratio. For `auto`, `5:4`, or `4:5`, choose a Gemini, Seedream, Qwen or H3 Image model.
 
-The global built-in default in CLI 1.4.8 is `gpt-image-2.5-flare`, `1080p`, `16:9`, detail `low`; explicit flags and saved creation defaults can override it. GPT Image 2.0 remains available explicitly. For `auto`, `5:4`, or `4:5` framing, check Gemini or Seedream's rows above; these ratios are not supported by GPT Image 2.5. In `--region cn`, the default remains `qwen-image`; only `qwen-image`, `seedream-5.0-lite`, `seedream-4.5`, and `seedream-4.0` are available. Neither GPT Image 2.5 variant is available in CN.
+## Model notes
 
-Unsupported quality/ratio values are adjusted with a warning on stderr. Unsupported models or detail levels are validation errors; do not retry them as transient generation failures.
-
-CLI **1.4.11+** also supports `--background auto|transparent|opaque` on both GPT Image 2.5 variants for T2I/I2I. Seedream 5.5 also supports these backgrounds from CLI 1.4.17. Omission submits `auto`; other models reject an explicit background. The backend chooses output format, so transparent background does not guarantee a PNG file.
-
-### Nano Banana 2.1
-
-Use `gemini-nano-banana-2.1` for T2I or I2I on CLI **1.4.8+**, in the global region only. Query the installed model capability: builds without its `detail_level` parameter need an upgrade to use that flag.
-
-- `--detail-level` accepts `minimal`, `medium` (default), or `high`. GPT Image's `low`, `xhigh`, and `max` are invalid here; invalid or empty detail values fail before reference upload.
-- Shared built-in defaults are `1080p`, `16:9`, and one output for both T2I and I2I. Explicit flags and saved quality/framing/count defaults take precedence; adding an image does not automatically select `auto`. `512p` is unsupported.
-- At most 14 references; overflow is rejected before resolving or uploading inputs. Output `--count` is independently 1–4. On CLI 1.4.8+, all image models use that output cap, independently of their reference cap.
-- `--seed` is silently ignored for this model, including the implicit default; do not promise seed-based reproducibility.
+- **Nano Banana 2.1:** `512p` is unsupported, and `--seed` is silently ignored, so seed-based reproducibility cannot be promised.
+- **Seedream 5.5:** 4K is unsupported. `--detail-level` is unsupported, and prompts are passed through without a local length cap.
+- **MiniMax H3 Image (CLI 1.4.20+):**
+  - Framing defaults to `16:9` like other models; pass `--aspect-ratio auto` explicitly to get automatic framing.
+  - Prompts must be nonblank and at most 20,000 Unicode code points; invalid prompts fail locally without truncation.
+  - `--seed` is accepted but not sent. `--background` and `--detail-level` are unsupported.
+  - References must be JPEG/PNG/WebP, at most 64 MiB, with edges of 128–8192 px and a longest/shortest edge ratio of at most 4. Originals are checked before upload compression and again after it. Existing asset IDs are checked against available metadata only.
 
 ```bash
 pixverse create image --model gemini-nano-banana-2.1 --prompt "A panoramic botanical illustration" --quality 2160p --aspect-ratio 8:1 --detail-level high --json
-```
-
-### Seedream 5.5 (CLI 1.4.17+)
-
-Supports T2I/I2I with up to 10 references and 1–4 outputs. Built-in quality and unsupported-quality fallback are `1080p` (1K); 1.5K, 2K and 3K are supported, but 4K is not. Shared image framing defaults still apply; `auto` is supported, not automatically selected for I2I. Background is `auto` (default), `transparent` or `opaque`; `--detail-level` is unsupported. No output-format, width or height controls are added. The CLI passes prompts through without a new local length cap or truncation; backend validation still applies.
-
-### MiniMax H3 Image (CLI 1.4.20+)
-
-Use `minimax-h3-image` for T2I/I2I in Global, not CN. Quality supports 1K/2K/4K (`1080p`/`1440p`/`2160p`), with built-in `1080p`; framing defaults to `auto` unless a supported saved or explicit ratio takes precedence. Up to 16 references and 1–4 outputs are independent limits. Prompts must be nonblank and at most 20,000 Unicode code points; invalid prompts fail locally without truncation.
-
-`--output-format` accepts `png` (default), `jpeg`, or `webp`, case-insensitively; `jpg` maps to `jpeg`, and unsupported values fall back to `png`. This flag is exclusive to this model; other image models reject it. `--seed` is accepted but omitted from the request, so it does not provide reproducibility. Explicit `--background` and `--detail-level` are unsupported.
-
-References must be JPEG/PNG/WebP, at most 64 MiB, with edges 128–8192 pixels and a longest/shortest edge ratio no greater than 4. Local and downloaded originals are checked before ordinary upload compression; final dimensions are checked again after compression. These source limits do not disable the shared upload resizing/size policy. Existing asset IDs are checked against available metadata; missing metadata and opaque media paths do not prove that backend constraints are satisfied.
-
-```bash
 pixverse create image --model minimax-h3-image --prompt "$PROMPT" --quality 2K --aspect-ratio auto --output-format webp --json
 ```

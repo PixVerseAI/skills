@@ -4,6 +4,27 @@ All notable changes to PixVerse Skills will be documented in this file.
 
 Format follows [Keep a Changelog](https://keepachangelog.com/).
 
+## [1.37.1] - 2026-11-14
+
+Review and audit against PixVerse CLI **v1.4.20**: correct inaccurate behavior, remove internal details, cover missing commands, and remove outdated and duplicated guidance.
+
+### Added
+- Document `account slots`, the global `--trace-id` (UUIDv4), `pixverse update` (with user consent, distinct from the skill's `update.sh`), `asset info/delete --source create|upload`, audio upload formats, and `seedance-final` in capability discovery.
+
+### Fixed
+- `config defaults set` uses positional `<mode> <key> <value>` with snake_case keys stored per region; `config path` returns `{dir, config}`; membership tiers, personal usage fields, and login failure exit codes match the CLI.
+- `task status`, `asset info` and waited MiniApp results report display labels such as `Completed`; branch on `status_code`, which now includes `17`.
+- Transition with 3+ images rejects an explicitly unsupported model instead of falling back to v5; `seedance-2.5-480draft` is listed for transitions and CN.
+- Modify quality is `360p`/`540p`/`720p`; extend defaults to 5 seconds; MiniMax H3 reference-with-image and H3 Image default to `16:9`, while H3 Max reference defaults to `auto`.
+- Seedance `@image` binding refers to `create reference --images`; the Windows example is a real text-to-video recipe with status checks.
+- Workspace auto-recovery asks to confirm the destination before retrying, and Canvas project creation no longer refers to a nonexistent project list.
+
+### Changed
+- Remove internal API paths, header names, backend internals, the delegated profile's internal name, and realistic asset IDs.
+- Remove version-history narration for releases before 1.4.19, keeping only the `capabilities` (1.4.0+) gate and features added in 1.4.19 and 1.4.20.
+- Link the execution contract instead of repeating exit codes, Relax, retry, upload and download rules; condense help-mirroring flag tables, JSON samples and duplicate examples; give the README a short structure pointer instead of a file tree.
+- CI checks whitespace across the whole tree and ensures `jq` is available for recipe tests.
+
 ## [1.37.0] - 2026-11-14
 
 Review and sync to PixVerse CLI **v1.4.20**.

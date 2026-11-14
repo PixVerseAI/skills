@@ -5,49 +5,30 @@ description: Generate speech audio from text (TTS) using MiniMax or ElevenLabs v
 
 # Create Voice (Text-to-Speech)
 
-Generate speech audio from text with `pixverse create voice`. This replaces the removed `create speech` (lip-sync) command: voice is now a **standalone audio asset**, decoupled from any video. To put a voiceover on a clip, generate the audio here and mux it on yourself (e.g. `ffmpeg`).
+Generate speech audio from text with `pixverse create voice`. The result is a **standalone audio asset**; to put a voiceover on a clip, mux it yourself (for example with ffmpeg). Voice is **not available** in `--region cn` (exit 6 before any upload or API request).
 
-## Prerequisites
-
-- PixVerse CLI installed and authenticated (`pixverse auth login`)
-- The text to synthesize (literal, a file path, or `-` for stdin)
-- Voice is **not available** in `--region cn` (fails locally with exit code 6 before any upload or API request)
-
-## Decision Tree
-
-```
-Want spoken audio from text?
-├── Pick a model      → MiniMax (default) or ElevenLabs (see Model Reference)
-├── Pick a voice      → PixVerse preset (--voice-id, recommended) — browse with `pixverse voice presets`
-└── Tune delivery     → provider-specific flags (speed, emotion, stability, …)
-```
-
-Browse available models, languages, and preset voices first (no auth required):
+Browse models, languages, and preset voices first (no auth required):
 
 ```bash
 pixverse voice models --json
 pixverse voice presets --provider minimax --language en --json
 ```
 
----
-
 ## create voice -- Flags
 
 | Flag | Description | Values / Default |
 |:---|:---|:---|
-| `--text <str>` | Text to synthesize (required) — literal, a local file path, or `-` for stdin | -- |
-| `-m, --model <id>` | Voice/TTS model | `speech-2.8-hd` (default) — see Model Reference |
+| `--text <str>` | Text to synthesize (required): literal, file path, or `-` for stdin | -- |
+| `-m, --model <id>` | Voice/TTS model | `speech-2.8-hd` (default); see table below |
 | `--voice-id <id>` | PixVerse preset voice ID (**recommended**) | from `pixverse voice presets` |
-| `--provider-voice-id <id>` | Provider's raw voice ID (use when not using a preset) | -- |
+| `--provider-voice-id <id>` | Provider's raw voice ID (when not using a preset) | -- |
 | `--language <code>` | Language code | `auto` (default) |
 | `--speed <n>` | Speech speed | ElevenLabs `0.7`–`1.2`; MiniMax `0.5`–`2.0` (default `1.0`) |
-| `--output <path>` | Download the finished audio to this file/dir | optional; never overwrites in CLI 1.4.5+ |
-| `--client-request-id <id>` | Caller-side request id (logged only, not deduped) | optional |
-| `--no-wait` | Return immediately without polling | flag |
-| `--timeout <sec>` | Polling timeout | `300` (default) |
-| `--json` | JSON output | flag |
+| `--output <path>` | Download the finished audio to this file or directory | optional |
+| `--client-request-id <id>` | Caller-side request id (tracing only, not deduplication) | optional |
+| `--no-wait` / `--timeout <sec>` / `--json` | Standard flags | timeout `300` |
 
-### ElevenLabs-only flags
+ElevenLabs-only:
 
 | Flag | Description | Values / Default |
 |:---|:---|:---|
@@ -56,17 +37,15 @@ pixverse voice presets --provider minimax --language en --json
 | `--style <0..1>` | Style exaggeration (**`eleven-multilingual-v2` only**) | default `0` |
 | `--use-speaker-boost` / `--no-use-speaker-boost` | Speaker boost (**`eleven-multilingual-v2` only**) | default on |
 
-### MiniMax-only flags
+MiniMax-only:
 
 | Flag | Description | Values / Default |
 |:---|:---|:---|
 | `--volume <0..10>` | Output volume | default `1.0` |
 | `--pitch <-12..12>` | Pitch shift | default `0` |
-| `--emotion <enum>` | Emotion preset | `happy`, `sad`, `angry`, `fearful`, `disgusted`, `surprised`, `calm`, `fluent`, `whisper` (omit for neutral) |
+| `--emotion <enum>` | Emotion preset | `happy`, `sad`, `angry`, `fearful`, `disgusted`, `surprised`, `calm`, `fluent`, `whisper`; `auto` or omission sends no emotion |
 
-> Provider-specific flags are validated before submission — passing an ElevenLabs flag to a MiniMax model (or vice versa) fails with exit code 6.
-
-### Model Reference
+Passing a flag for the other provider fails with exit 6 before submission.
 
 | Model | `--model` value | Provider |
 |:---|:---|:---|
@@ -76,66 +55,22 @@ pixverse voice presets --provider minimax --language en --json
 | Eleven v3 | `eleven-v3` | ElevenLabs |
 | Eleven Turbo v2.5 | `eleven-turbo-v2.5` | ElevenLabs |
 
-> Pass only these public model IDs. Old underscore forms (e.g. `eleven_v3`) are rejected with `Unknown model` — run `pixverse voice models --json` for the installed list.
+Underscore forms such as `eleven_v3` are rejected. The CLI imposes no local text length cap; do not truncate or split the user's text, and report backend validation errors.
 
-CLI 1.4.6+ does not impose a local text length cap; provider-specific validation is deferred to the backend. This does not imply unlimited provider input. Preserve the supplied text instead of truncating or splitting it to satisfy obsolete local limits; report backend validation errors. Empty text and incompatible provider flags still fail locally. Older installations can retain local caps.
+## Results
 
----
-
-## Results and recovery
-
-With `--output`, successful JSON includes `local_path`. Follow [local download rules](../references/execution-contract.md#local-downloads-cli-145): output collisions fail with exit 6; recover the completed audio and download to a new path rather than submitting TTS/music again.
-
-Use the shared [execution contract](../references/execution-contract.md) for submitted, completed, batch, and partial results, polling, and recovery. A single completed result contains `audio_id` and `audio_url`. Poll and manage it with `--type audio`.
-
-## Steps
-
-1. Browse voices: `pixverse voice presets --provider minimax --language en --json` and pick a `voice_id`.
-2. Compose the text (or point `--text` at a file / `-` for stdin).
-3. Run the command with `--json`; add `--output` to download in one step.
-4. Parse `audio_id` (and `audio_url` when waiting) from the JSON.
-5. If `--no-wait` was used, poll with `pixverse task wait <audio_id> --type audio --json`.
-
----
+A completed result contains `audio_id` and `audio_url`; with `--output` it also includes `local_path`. Pass `--type audio` to task and asset commands. Do not resubmit after an ambiguous failure; follow the [execution contract](../references/execution-contract.md) for waiting, recovery, and [local downloads](../references/execution-contract.md#local-downloads).
 
 ## Examples
 
-Basic TTS with a preset voice, downloaded locally:
-
 ```bash
-pixverse create voice \
-  --text "Welcome to the future of creative tooling." \
-  --voice-id 12345 \
-  --output ./voiceover.mp3 \
-  --json
+pixverse create voice --text "Welcome to the future of creative tooling." --voice-id 12345 --output ./voiceover.mp3 --json
+pixverse create voice --text "Once upon a time…" --model eleven-multilingual-v2 --voice-id 67890 --stability 0.4 --style 0.6 --json
+pixverse create voice --text "We did it!" --voice-id 12345 --emotion happy --speed 1.1 --json
+cat script.txt | pixverse create voice --text - --voice-id 12345 --output ./narration.mp3 --json
 ```
 
-ElevenLabs with delivery tuning:
-
-```bash
-pixverse create voice \
-  --text "Once upon a time, in a kingdom far away…" \
-  --model eleven-multilingual-v2 \
-  --voice-id 67890 \
-  --stability 0.4 \
-  --style 0.6 \
-  --json
-```
-
-MiniMax with emotion:
-
-```bash
-pixverse create voice --text "We did it!" --model speech-2.8-hd --voice-id 12345 --emotion happy --speed 1.1 --json
-```
-
-Long text from a file (or stdin):
-
-```bash
-pixverse create voice --text ./script.txt --voice-id 12345 --output ./narration.mp3 --json
-cat script.txt | pixverse create voice --text - --voice-id 12345 --json
-```
-
-To combine completed voice audio with a video, follow [video production](../workflows/video-production.md); reuse existing files and select the intended audio stream explicitly.
+To combine voice audio with a video, follow [video production](../workflows/video-production.md).
 
 ## Related Skills
 

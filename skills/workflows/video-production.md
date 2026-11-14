@@ -3,8 +3,6 @@ name: pixverse:video-production
 description: Extend or upscale a video and optionally add voiceover or music
 ---
 
-Read [execution contract](../references/execution-contract.md) for result handling, retries, and defaults.
-
 Reuse an existing video file or completed video ID when provided; do not regenerate it. Only when the task needs a new source video, generate using [create-video](../capabilities/create-video.md), [motion-control](../capabilities/motion-control.md), or [modify-video](../capabilities/modify-video.md).
 
 1. If requested and supported by the source/model, extend via [post-process-video](../capabilities/post-process-video.md). Validate success and replace the working video ID.

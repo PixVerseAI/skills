@@ -34,27 +34,11 @@ pixverse create image --image <character_image_id> \
   --json
 ```
 
-The example requires CLI 1.4.1+ in a compatible region; preserve requested output settings. A previous I2I failure is not a permanent prohibition on Gemini or another model.
+Check region compatibility and preserve requested output settings. A previous I2I failure is not a permanent prohibition on Gemini or another model.
 
 ## Reuse for video
 
-A sheet is a design reference, not the video's opening frame. Do not directly animate a multi-panel sheet with `create video --image`.
-
-- For models that accept subject reference images, use `create reference --images <id...>` with the requested scene. Resolve multiple names in their input order; limits belong to [create-video](create-video.md).
-- For Seedance, prefer an existing single-view reference or generate a clean scene still from the sheet first, then animate that still. This avoids passing the multi-view layout to a consumer that may reproduce multiple character views. Do not require the user to manually split the sheet.
-- The still-first route is also useful for precise pose, framing, or product placement. Check image generation completion before passing its ID to video generation; use the requested output ratio and supported duration consistently.
-
-```bash
-# Generate a clean scene from the persistent reference; capture the completed image_id.
-pixverse create image --image <character_image_id> \
-  --prompt "Same character as the reference. <requested scene and pose>." --json
-
-# Animate that completed scene image, not the reference sheet.
-pixverse create video --image <scene_image_id> --model <video_model> \
-  --prompt "<requested motion>" --json
-```
-
-Use [seedance-prompt-optimize](seedance-prompt-optimize.md) for reference-binding syntax when prompt engineering is requested. Ordinary scene generation does not automatically trigger a rewrite.
+Follow [reuse in video](../references/persistent-assets.md#reuse-in-video): a multi-panel sheet is a design reference, not an opening frame. Use [seedance-prompt-optimize](seedance-prompt-optimize.md) for reference-binding syntax only when prompt engineering is requested.
 
 ## Scope
 

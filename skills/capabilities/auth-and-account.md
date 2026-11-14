@@ -5,447 +5,137 @@ description: Authenticate with PixVerse, check account info, manage credits, con
 
 # Auth and Account Management
 
-Covers: `auth login`, `auth logout`, `auth status`, `account info`, `account usage`, `subscribe`, `config set/get/list/reset/path/defaults`
+Covers: `auth login/status/logout`, `account info/usage/slots`, `subscribe`, `config`, `update`, and global options. Exit codes and error handling follow the [execution contract](../references/execution-contract.md); workspace behavior lives in [workspace](workspace.md).
 
----
+If the host integration runs the CLI under an isolated delegated (paired) profile, use [MCP pairing](../references/auth-pairing.md) instead of the login/logout and access-key instructions below.
 
-For CLI 1.4.10+ MCP-authorized device sessions, read [isolated pairing](../references/auth-pairing.md). The ordinary login/logout and access-key instructions below apply to the default profile; `PIXVERSE_AUTH_PROFILE=chatgpt` requires `auth pair`; CLI 1.4.19+ v2 sessions also support Team through [delegated workspace selection](../references/auth-pairing.md#delegated-workspace-selection-cli-1419).
+## Global options
+
+| Option | Use |
+|:---|:---|
+| `--json` / `-p` | JSON on stdout only; errors and diagnostics on stderr |
+| `--region global\|cn` | Default `global`; `PIXVERSE_REGION` overrides it. Tokens, active workspace and creation defaults are stored per region |
+| `--workspace-id <id>` | One-invocation workspace override (`0` = personal); see [workspace](workspace.md) |
+| `--trace-id <uuid>` | Attach a caller-chosen trace ID to every API request in this invocation; must be a UUIDv4. Useful for correlating a failure report |
 
 ## auth login
 
-OAuth device flow — the CLI prints an authorization URL, the user opens it in a browser and authorizes, and the token is stored automatically.
+OAuth device flow. With `--json` / `-p` the CLI does **not** open a browser: read the `Authorize at: <url> (code: <code>)` line from stderr while the command runs and show that URL to the user. It can be opened in any browser on any device. Stdout receives JSON only after authorization:
 
-```bash
-pixverse auth login --json
-```
-
-**Browser auto-open behavior:**
-- In **interactive mode** (no `--json` / `-p`), the CLI tries to open the authorization URL in the system default browser (`open` on macOS, `xdg-open` on Linux, `Start-Process` on Windows). Failure to open is non-fatal — the URL is still printed.
-- In **JSON / pipe mode** (`--json` or `-p`), the CLI does **not** auto-open a browser, so automation environments stay side-effect-free. Agents must read the `Authorize at: ...` URL from stderr while the command is running and route the user to it. Stdout contains the final success JSON only after authorization.
-
-JSON output on success:
 ```json
-{
-  "success": true,
-  "email": "user@example.com",
-  "nickname": "user",
-  "memberType": 2,
-  "tokenExpiresIn": 2592000
-}
+{"success": true, "email": "user@example.com", "nickname": "user", "memberType": 2, "tokenExpiresIn": 2592000}
 ```
 
-After login, the CLI automatically syncs the active workspace from the server.
+`phone` is included when the account has one. After login the CLI syncs the active workspace from the server.
 
-Tokens, active workspace, and creation defaults are isolated per `--region`. Logging in under `--region cn` does not reuse a `global` token (and vice versa). An invalid `PIXVERSE_ACCESS_KEY` (backend code `10004`) is treated as an authentication error and exits with code 3.
-
-Decision tree:
-- If exit code 0 -> login succeeded, token is stored in `~/.pixverse/`
-- If exit code 1 -> unexpected error, check stderr
-- If the user does not complete the browser authorization within the timeout, the command will fail
-
----
+On failure (including the user not authorizing before the session expires), stderr gets `{"success": false, "error": "...", "code": ...}` and the process exits with the typed exit code (for example 3 for authentication), not always 1.
 
 ## auth status
-
-Check whether the CLI is currently authenticated and display user info.
 
 ```bash
 pixverse auth status --json
 ```
 
-JSON output when logged in:
-```json
-{
-  "authenticated": true,
-  "email": "user@example.com",
-  "nickname": "user",
-  "memberType": "Pro",
-  "credits": 650
-}
-```
+Logged in (stdout): `{"authenticated": true, "email": "...", "nickname": "...", "memberType": "Pro", "credits": 650}`. Here `memberType` is the label, not the number.
 
-JSON output when not logged in (exit code 3):
-```json
-{
-  "authenticated": false,
-  "message": "Not logged in"
-}
-```
-
-Decision tree:
-- If `authenticated` is `true` -> proceed with CLI commands
-- If `authenticated` is `false` -> run `pixverse auth login --json` first
-
----
+Not logged in or token invalid: `{"authenticated": false, ...}` on **stderr**, exit 3. Run `pixverse auth login --json` in the intended region.
 
 ## auth logout
 
-Remove the stored token.
+`pixverse auth logout --json` → `{"success": true, "message": "Token removed"}`. It also resets the active workspace to personal (`0`).
 
-```bash
-pixverse auth logout --json
-```
+## Access key (non-interactive automation)
 
-JSON output:
-```json
-{
-  "success": true,
-  "message": "Token removed"
-}
-```
-
-Logout also resets the active workspace to personal (ID=0).
-
----
+Set `PIXVERSE_ACCESS_KEY` in the environment. It is used only when no stored login token exists and applies to the selected region only. An invalid key exits 3 like an expired token. `PIXVERSE_TOKEN` is not supported.
 
 ## account info
-
-Display account details, workspace context, and credit balance. Output varies depending on whether the active workspace is personal or a team.
 
 ```bash
 pixverse account info --json
 ```
 
-### JSON output (personal workspace)
-
-```json
-{
-  "accountId": 12345,
-  "email": "user@example.com",
-  "nickname": "user",
-  "username": "user",
-  "memberType": 2,
-  "memberLabel": "Pro",
-  "isCreator": false,
-  "credits": {
-    "daily": 100,
-    "membership": 500,
-    "bonus": 50,
-    "total": 650,
-    "highQualityTimes": 10,
-    "renewalCredits": 500,
-    "used": null
-  },
-  "workspace": {
-    "workspaceId": 0,
-    "name": "Personal",
-    "role": null,
-    "memberType": 2,
-    "memberLabel": "Pro",
-    "memberCount": null,
-    "seats": null
-  }
-}
-```
-
-### JSON output (team workspace)
-
-```json
-{
-  "accountId": 12345,
-  "email": "user@example.com",
-  "nickname": "user",
-  "username": "user",
-  "memberType": 3,
-  "memberLabel": "Premium",
-  "isCreator": false,
-  "credits": {
-    "daily": null,
-    "membership": null,
-    "bonus": null,
-    "total": 5000,
-    "highQualityTimes": null,
-    "renewalCredits": null,
-    "used": 1200
-  },
-  "workspace": {
-    "workspaceId": 42,
-    "name": "My Team",
-    "role": "admin",
-    "memberType": 3,
-    "memberLabel": "Premium",
-    "memberCount": 15,
-    "seats": 20
-  }
-}
-```
-
 Key fields:
-- `credits.total` — total available credits (personal breakdown or team pool)
-- `credits.used` — credits consumed (team workspaces only; `null` in personal)
-- `credits.daily` / `membership` / `bonus` — personal breakdown (`null` in team context)
-- `workspace.workspaceId` — `0` for personal, `> 0` for team
-- `workspace.name` — workspace display name
-- `workspace.role` — user's role in this workspace (`owner`, `admin`, `member`, `guest`, or `null`)
-- `workspace.seats` — total seats in team plan (`null` in personal)
-- `memberType` — subscription tier (0 = Free, 1 = Basic, 2 = Pro, 3 = Premium/Team)
-- `memberLabel` — human-readable subscription name (always "Premium" in team context)
 
-Decision tree:
-- If `credits.total` > 0 -> user can create content
-- If `credits.total` == 0 -> wait for daily reset or upgrade subscription at https://app.pixverse.ai/subscribe
-- If in a team workspace and credits are low -> team admin should manage via `pixverse workspace manage`
-- If exit code 3 -> token expired, re-run `pixverse auth login --json`
+- `memberType` / `memberLabel`: subscription tier. 0 Free, 1 Standard, 2 Pro, 3 Premium, 6 Elite, 8 Ultra.
+- `credits.total`: available credits (personal balance, or the team pool in a team workspace).
+- `credits.daily` / `membership` / `bonus`: personal breakdown; `null` in a team workspace.
+- `credits.used`: team consumption; `null` in personal.
+- `workspace`: `workspaceId` (`0` = personal), `name`, `role`, `memberCount`, `seats`. Field meanings: [workspace](workspace.md).
+- `phone` appears when present.
 
----
+Example error handling:
+
+```bash
+if INFO=$(pixverse account info --json); then
+  printf 'Available credits: %s\n' "$(printf '%s\n' "$INFO" | jq -r '.credits.total')"
+else
+  RC=$?
+  [ "$RC" -eq 3 ] && echo "Not authenticated: run pixverse auth login --json in this region" >&2
+  exit "$RC"
+fi
+```
+
+If `credits.total` is 0, stop and report. The user can upgrade at https://app.pixverse.ai/subscribe, or a team admin can manage the team plan with `pixverse workspace manage`.
 
 ## account usage
-
-View credit usage history. Behavior differs between personal and team workspaces.
-
-### Personal workspace
 
 ```bash
 pixverse account usage --json --type used --limit 10
 ```
 
-Options:
-| Flag | Values | Default | Description |
-|:---|:---|:---|:---|
-| `--type` | `all`, `earned`, `used` | `all` | Filter by transaction type (personal only) |
-| `--limit` | 1–100 | `20` | Number of items per page |
-| `--page` | any positive integer | `1` | Page number |
+| Flag | Values | Default |
+|:---|:---|:---|
+| `--type` | `all`, `earned`, `used` (personal only) | `all` |
+| `--limit` | items per page | `20` |
+| `--page` | page number | `1` |
 
-JSON output:
-```json
-{
-  "total": 100,
-  "page": 1,
-  "limit": 10,
-  "items": [
-    {
-      "id": 1,
-      "type": "used",
-      "amount": -10,
-      "description": "Video generation",
-      "createdAt": "2026-03-01T12:00:00Z"
-    }
-  ]
-}
-```
+Output: `{"total", "page", "limit", "items": [...]}`. Item fields differ by workspace:
 
-### Team workspace
+- Personal: `create_time`, `credits`, `acquired_type` (1 generation, 2 refund for failed generation, 3 membership renewal, 4 expired, 5 task reward, 6 bonus, 7 gift code, 8 referral), optional `video_id`, plus `type` / `sub_type` / `source`.
+- Team: your own usage in the team (last 30 days): `created_at`, `email`, `creation_mode`, `model`, `credit_cost`. A `--type` other than `all` exits 6.
+
+## account slots
 
 ```bash
-pixverse account usage --json --limit 10
+pixverse account slots --json
 ```
 
-In a team workspace, the command shows **your personal usage within the team** (last 30 days).
-
-**Important:** The `--type` filter is not supported in team workspaces — only `all` is accepted. Using `--type earned` or `--type used` in a team workspace exits with code 6 (`VALIDATION_ERROR`).
-
-JSON output (team):
 ```json
-{
-  "total": 50,
-  "page": 1,
-  "limit": 10,
-  "items": [
-    {
-      "credit_cost": 10,
-      "creation_mode": "text_to_video",
-      "model": "v6",
-      "created_at": "2026-03-30T14:00:00Z"
-    }
-  ]
-}
+{"image": {"limit": 3, "used": 1, "remaining": 2, "unlimited": false}, "video": {"limit": 3, "used": 1, "remaining": 2, "unlimited": false}, "shared_pool": true}
 ```
 
-Note: Team usage items have different fields (`credit_cost`, `creation_mode`, `model`) compared to personal usage items.
-
----
+Check before parallel submission and after exit 7 (concurrency limit). `shared_pool: true` means image and video draw from one pool. Do not submit more concurrent jobs than `remaining` unless `unlimited` is true.
 
 ## subscribe
 
-Open the subscription management page in the browser.
+`pixverse subscribe --json` opens the subscription page and returns `{"success": true, "url": "..."}`. If no browser can be opened, it exits 1 with `success: false` and the `url` to show the user. In a team workspace it exits 6; team billing goes through `pixverse workspace manage`, or switch to personal first.
+
+## config
+
+| Command | Notes |
+|:---|:---|
+| `config list --json` | `{"outputDir": ..., "_paths": {"dir", "config"}}` |
+| `config get <key>` / `config set <key> <value>` | The only settable key is `output-dir` (alias `outputDir`); unknown keys exit 6 |
+| `config reset` | Resets configuration |
+| `config path --json` | `{"dir": "...", "config": "..."}` |
+| `config defaults show [mode]` | All modes, or `{"mode", "defaults"}` for one |
+| `config defaults set <mode> <key> <value>` | One key per call |
+| `config defaults reset [mode]` | All modes, or one mode back to built-in values |
+
+Creation defaults apply when a flag is omitted; explicit flags always win. They are stored per region. Modes: `video`, `image`, `transition`, `extend`, `modify`, `upscale`, `reference`, `template`, `motion_control`. Keys are snake_case and mode-specific: `model`, `quality`, `duration`, `aspect_ratio`, `count`, `audio`, `multi_shot`, `off_peak` (`upscale` accepts only `quality`). Models are validated against the mode; invalid values exit 6.
 
 ```bash
-pixverse subscribe --json
+pixverse config defaults set video model v6 --json
+pixverse config defaults set video quality 1080p --json
 ```
 
-**Team workspace guard:** If the active workspace is a team workspace (ID > 0), this command exits with code 6 and a message directing you to use `pixverse workspace manage` instead. Team billing is managed by admins through the web dashboard.
+Do not change a user's saved defaults unless asked; pass flags per command instead.
 
-```bash
-# In a team workspace, this will fail:
-pixverse subscribe --json
-# → { "error": "You are in a team workspace. Use \"pixverse workspace manage\"..." }
+## update
 
-# Switch to personal first, or use workspace manage:
-pixverse workspace switch 0 --json
-pixverse subscribe --json
-```
+`pixverse update --json` runs `npm i -g pixverse@latest` and returns `{"success": true, "from": "<old version>", "command": "..."}`; failures exit 1. It changes the user's global installation, so ask the user first. It updates the CLI, not this skill; the skill checkout has its own `scripts/update.sh`.
 
----
+## Related
 
-## config commands
-
-### List all config values
-
-```bash
-pixverse config list --json
-```
-
-### Get a specific config value
-
-```bash
-pixverse config get <key> --json
-```
-
-Example:
-```bash
-pixverse config get output-dir --json
-```
-
-### Set a config value
-
-```bash
-pixverse config set <key> <value> --json
-```
-
-Example:
-```bash
-pixverse config set output-dir /tmp/pixverse-output --json
-```
-
-### Reset all config to defaults
-
-```bash
-pixverse config reset --json
-```
-
-### Show config file path
-
-```bash
-pixverse config path --json
-```
-
-JSON output:
-```json
-{
-  "path": "/Users/you/.pixverse/config.json"
-}
-```
-
-### View per-mode creation defaults
-
-```bash
-pixverse config defaults show --json
-```
-
-JSON output:
-```json
-{
-  "video": {
-    "model": "v5.6",
-    "quality": "1080p",
-    "duration": "5",
-    "aspectRatio": "16:9"
-  },
-  "image": {
-    "model": "qwen-image",
-    "quality": "1080p",
-    "aspectRatio": "1:1"
-  }
-}
-```
-
-### Set per-mode creation defaults
-
-```bash
-pixverse config defaults set --mode video --model v6 --quality 1080p --json
-```
-
-This sets default values that apply when you run `pixverse create video` without specifying those flags explicitly. Command-line flags always override defaults.
-
-### Reset per-mode creation defaults
-
-```bash
-pixverse config defaults reset --json
-```
-
----
-
-## Steps: First-Time Setup Recipe
-
-1. **Install the CLI**
-   ```bash
-   npm install -g pixverse
-   pixverse --version
-   ```
-
-2. **Authenticate**
-   ```bash
-   pixverse auth login --json
-   ```
-   The CLI will print a URL. Open it in a browser and authorize. On success, the token is stored in `~/.pixverse/`.
-
-3. **Verify authentication**
-   ```bash
-   pixverse auth status --json
-   ```
-   Confirm `authenticated` is `true`.
-
-4. **Check credits**
-   ```bash
-   pixverse account info --json
-   ```
-   Parse `credits.total` to confirm the user has credits available.
-
-5. **Check usage history** (optional)
-   ```bash
-   pixverse account usage --json --type used --limit 10
-   ```
-
-6. **Configure defaults** (optional)
-   ```bash
-   pixverse config defaults set --mode video --model v6 --quality 1080p --json
-   ```
-
-7. **Token recovery**: In the default profile, exit 3 requires ordinary login again. In the `chatgpt` profile, follow the pairing reference instead.
-
-8. **Server-to-server access key** (optional, for automation without interactive login):
-   - Set `PIXVERSE_ACCESS_KEY=<your-access-key>` in the environment.
-   - The CLI sends it as the `Access-Key` header when no user token is available.
-   - **Auth priority** (first match wins): explicit `Token` header → stored token (from `pixverse auth login`) → `PIXVERSE_ACCESS_KEY` env var.
-   - `PIXVERSE_TOKEN` is **not** a supported env var and is ignored by current CLI versions.
-   - An invalid access key (backend code `10004`) exits with code 3, the same as an expired token. The key applies only to the currently selected region.
-
-9. **Region** (optional): `pixverse --region cn auth login --json` stores credentials for that region only. `PIXVERSE_REGION` overrides `--region`. Default is `global`.
-
----
-
-## Error Handling
-
-| Exit Code | Cause | Recovery |
-|:---|:---|:---|
-| 0 | Success | -- |
-| 1 | Unexpected error | Check stderr for details |
-| 3 | Token expired or invalid | Re-run `pixverse auth login --json` |
-| Network error | No internet or API unreachable | Check internet connection, retry |
-
-Example error handling:
-```bash
-RESULT=$(pixverse account info --json 2>/tmp/pixverse_err)
-EXIT_CODE=$?
-
-if [ $EXIT_CODE -eq 0 ]; then
-  CREDITS=$(printf '%s\n' "$RESULT" | jq -r '.credits.total')
-  echo "Available credits: $CREDITS"
-elif [ $EXIT_CODE -eq 3 ]; then
-  echo "Token expired, re-authenticating..."
-  pixverse auth login --json
-else
-  echo "Error (code $EXIT_CODE):"
-  cat /tmp/pixverse_err
-fi
-```
-
----
-
-## Related Skills
-
-- `pixverse:workspace` — manage workspaces (list, switch, status)
-- `pixverse:create-video` — create videos from text or image
-- `pixverse:create-and-edit-image` — create or edit images
-- `pixverse:task-management` — check generation progress and wait for completion
-- `pixverse:asset-management` — browse, download, or delete generated assets
+- [workspace](workspace.md): list, switch, and override workspaces
+- [task-management](task-management.md) and [asset-management](asset-management.md)

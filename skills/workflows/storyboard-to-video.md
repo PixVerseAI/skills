@@ -3,8 +3,6 @@ name: pixverse:storyboard-to-video
 description: Generate a four-panel storyboard, animate each panel, and concatenate the clips
 ---
 
-Read [execution contract](../references/execution-contract.md) for result handling, retries, and defaults.
-
 This recipe uses a 2×2 grid and four clips. Adapt the shot count or layout if the user specifies a different structure.
 
 1. Check `pixverse`, Python 3, ImageMagick (`magick`, or IM6 `convert` plus `identify`), and `ffmpeg`/`ffprobe` availability. Follow existing user authorization for missing dependency installation. Create a unique working directory; never share fixed `/tmp/shot1.png` names across runs.
@@ -28,4 +26,4 @@ This recipe uses a 2×2 grid and four clips. Adapt the shot count or layout if t
    Choose width/height for the requested output. The helper normalizes dimensions, timestamps and frame rate; preserves existing audio, adds silence only to clips missing audio, and produces video-only output if all clips are silent. It fails rather than overwriting an existing final file. An arbitrary ffmpeg failure must not trigger a fallback that discards audio.
 8. Inspect the resulting video and report its final path. Keep generated inputs available for selective recovery; cleanup only task-owned temporary files when no longer needed.
 
-The helper performs local media operations only; generation, credentials, credits, and retry decisions remain with the agent. Details: [prompt-enhance](../capabilities/prompt-enhance.md), [asset-management](../capabilities/asset-management.md).
+The helper performs local media operations only; generation, credentials, credits, and retry decisions remain with the agent. Details: [prompt contract](../references/prompt-contract.md), [asset-management](../capabilities/asset-management.md).

@@ -1,7 +1,7 @@
 ---
 name: pixverse-ai-image-and-video-generator
 description: Generate and edit images, videos, speech, and music with PixVerse CLI; run effect templates, MiniApps, and connected Canvas workflows. Use for PixVerse generation, asset management, and creative production pipelines.
-version: 1.37.0
+version: 1.37.1
 homepage: https://pixverse.ai
 source: https://github.com/PixVerseAI/skills
 ---
@@ -21,7 +21,7 @@ For a single operation, read its capability. For a multi-step deliverable, start
 1. Check `pixverse --version`. If missing, install with `npm install -g pixverse` (Node.js >= 22.12); an existing older installation need not be changed for unrelated tasks.
 2. On CLI **1.4.0+**, query only the required mode/model: `pixverse capabilities create video --model v6 --json`. Use `pixverse capabilities create --json` to discover mode/model IDs if unknown. These queries are offline and need no login. Avoid the full `pixverse capabilities --json` bundle for a narrow task.
 3. On older versions, use `pixverse create <mode> --help` and the relevant capability's static reference. This skill documents CLI 1.4.20; a static table does not prove an older installation supports a model or flag. If support cannot be established, report the required upgrade instead of submitting an invented combination.
-4. Before account operations or generation, check `pixverse auth status --json` if login state is unknown. For `PIXVERSE_AUTH_PROFILE=chatgpt`, use [MCP pairing](references/auth-pairing.md) instead of ordinary login; retain this profile throughout the workflow. For ordinary login, run `pixverse auth login --json` and show the returned authorization URL; JSON mode does not open the browser automatically. See [auth and account](capabilities/auth-and-account.md) for access keys, configuration, and recovery.
+4. Before account operations or generation, check `pixverse auth status --json` if login state is unknown. If the host integration runs the CLI in its delegated (paired) profile, use [MCP pairing](references/auth-pairing.md) instead of ordinary login; never select or change that profile yourself. For ordinary login, run `pixverse auth login --json` and show the returned authorization URL; JSON mode does not open the browser automatically. See [auth and account](capabilities/auth-and-account.md) for access keys, configuration, and recovery.
 
 Canvas capabilities and MiniApp schemas are live: query the relevant node/app before constructing a request. See [capability discovery](capabilities/capabilities.md). Do not infer Canvas node mappings from Create model names.
 
@@ -82,7 +82,7 @@ Explicit user constraints take priority over default creative advice. An instruc
 - Create normally waits for completion. Save its result; do not create again to extract an ID or wait again for a completed result. For background work use `--no-wait`, retain all IDs, then wait/query existing tasks.
 - Preserve the requested model, region, workspace, and creative constraints. Query supported parameters before selecting replacements. Text inputs (`--prompt`, `--text`, `--lyrics`) accept literal text, a file path, or `-` for stdin.
 - `PIXVERSE_REGION` overrides `--region`; default is `global`. Login, active workspace, and creation defaults are isolated by region. CN does not support standalone voice/music or audio asset/task operations; model availability also differs. See the selected capability before submission.
-- In ordinary profiles, `--workspace-id <id>` overrides workspace for one invocation; `0` is personal. Delegated profiles use [account-wide workspace selection](references/auth-pairing.md#delegated-workspace-selection-cli-1419) instead. If the CLI resets an inaccessible active workspace to personal, re-establish the intended destination before retrying team work.
+- In ordinary profiles, `--workspace-id <id>` overrides workspace for one invocation; `0` is personal. Delegated profiles use [account-wide workspace selection](references/auth-pairing.md#delegated-workspace-selection-cli-1419) instead. If the CLI resets an inaccessible active workspace to personal, confirm the intended destination before retrying; a retry would otherwise spend personal credits.
 - Preserve successful outputs on partial failure. A nonzero exit can accompany usable batch results. A timeout is not proof of a failed submission. Follow the [execution contract](references/execution-contract.md), not a blind create retry.
 
-For Windows shell syntax, see the [PowerShell pipeline](examples/windows/powershell-text-to-video.ps1). For updating this skill checkout, run [update.sh](scripts/update.sh) only from a clean `main` checkout; it supports fast-forward updates and does not stash or switch branches.
+For Windows shell syntax, see the [PowerShell pipeline](examples/windows/powershell-text-to-video.ps1). To update this skill checkout, run [update.sh](scripts/update.sh) from a clean `main` checkout (fast-forward only; it never stashes or switches branches). This is separate from `pixverse update`, which reinstalls the CLI globally; run that only with the user's consent.

@@ -5,7 +5,7 @@ description: Rewrite Seedance 2.0/2.5 prompts for precise reference binding, sho
 
 # Seedance Prompt Optimizer
 
-Apply the [prompt editing contract](../references/prompt-contract.md). Use for Seedance engineering intent; use [seedance-vibe-creating](seedance-vibe-creating.md) for emotional or atmospheric rewriting. Other models route to [prompting-guide](prompting-guide.md), or [prompt-enhance](prompt-enhance.md) for V6.
+Apply the [prompt editing contract](../references/prompt-contract.md). Use for Seedance engineering intent; emotional or atmospheric rewriting belongs to [seedance-vibe-creating](seedance-vibe-creating.md).
 
 An explicit rewrite request is sufficient authorization. During generation-only requests, repair command/asset mapping as necessary but offer wording changes as advice. Do not automatically expand a clean prompt.
 
@@ -13,9 +13,11 @@ An explicit rewrite request is sufficient authorization. During generation-only 
 
 Bind references in the order actually passed to the CLI, numbering each modality independently:
 
-- `--image` / `--images` → `@image1`, `@image2`, …
+- `create reference --images` → `@image1`, `@image2`, …
 - `--videos` → `@video1`, `@video2`, …
 - `--audios` → `@audio1`, `@audio2`, …
+
+`create video --image` is the image-to-video opening frame, not a numbered reference; describe the motion instead of tagging it `@image1`.
 
 Raw file paths, URLs, and IDs belong in command inputs, not as substitutes for visual identity in the action description. For pasted JSON/content arrays, map each media item to its actual CLI input before rewriting its text references. Do not invent an attachment merely by declaring an ID inside the prompt.
 
@@ -62,7 +64,7 @@ These prompt delimiters distinguish channels:
 
 Preserve exact dialogue and text. Tag the requested language when helpful. Audio-reference timbre can be described as `Use the timbre in @audio1`; media eligibility still comes from create-video. Do not silently replace difficult words with homophones or remove multilingual dialogue. If pronunciation is wrong in an observed result, propose a correction. Exact subtitle/audio synchronization may need post-production; do not promise it from wording alone.
 
-## Example: reference-bound edit
+## Example: reference-bound extension
 
 ```bash
 pixverse create reference --model seedance-2.0-fast \

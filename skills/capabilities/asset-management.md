@@ -5,280 +5,45 @@ description: Browse, inspect, download, upload, and delete generated media asset
 
 # Asset Management
 
-Browse, inspect, download, upload, and delete generated video, image, and audio assets or MiniApp projects from your PixVerse account.
+Browse, inspect, download, upload, and delete video, image and audio assets or MiniApp projects. Download destinations, collisions and media-input rules follow the [execution contract](../references/execution-contract.md#local-downloads); exit codes follow its [recovery table](../references/execution-contract.md#waiting-and-recovery).
 
-## Prerequisites
+For MiniApp projects, pass the `project_id` and `--type miniapps` explicitly to every asset command. Projects are created-only, so `--source upload` and `--off-peak` are invalid with them.
 
-- PixVerse CLI installed and authenticated (`pixverse auth login`)
-- For download: write access to the destination directory
+## Commands
 
-## When to Use
-
-```
-Manage assets?
-├── Browse history?      → pixverse asset list --type video --json
-├── Browse uploads?      → pixverse asset list --source upload --json
-├── Browse MiniApps?     → pixverse asset list --type miniapps --json
-├── Filter off-peak?     → pixverse asset list --off-peak --json
-├── Get details?         → pixverse asset info <id> --json
-├── Download?            → pixverse asset download <id> --json
-├── Upload file or URL?  → pixverse asset upload <input> --json
-└── Delete?              → pixverse asset delete <id> --json
-```
-
-## Steps
-
-1. Use `pixverse asset list --json` to browse your generation history.
-2. Use `pixverse asset info <id> --json` to inspect a specific asset.
-3. Use `pixverse asset download <id> --json` to save an asset locally.
-4. Use `pixverse asset upload <input> --json` to upload a local file or HTTPS URL.
-5. Use `pixverse asset delete <id> --json` to remove an asset.
-
-For MiniApp projects, use the `project_id` returned by `miniapps create` and pass `--type miniapps` explicitly to every asset operation.
-
-## Commands Reference
-
-### asset list
-
-Browse generation history with pagination.
-
-| Flag | Description | Values |
+| Command | Key flags | JSON |
 |:---|:---|:---|
-| `--type <video\|image\|audio\|miniapps>` | Asset type | `video` (default), `image`, `audio`, `miniapps`. `--type audio` is unavailable in `--region cn` (exit code 6) |
-| `--source <create\|upload>` | Asset source | `create` (default), `upload` |
-| `--off-peak` | Filter off-peak generations only | flag (only valid with `--type video --source create`) |
-| `--limit <n>` | Items per page | `1`–`100`, default `20` |
-| `--page <n>` | Page number | default `1` |
-| `--json` | Output as JSON | flag |
+| `asset list` | `--type video\|image\|audio\|miniapps` (default `video`), `--source create\|upload` (default `create`), `--off-peak` (only with video + create), `--limit 1-100` (default 20), `--page` | `{"items", "total", "page", "limit", "has_more"}` |
+| `asset info <id>` | `--type` (auto-detected if omitted; `miniapps` must be explicit), `--source create\|upload` for audio | Full asset detail. MiniApps add `id`, `project_id`, `app_id`, `status`, `status_code`, `url`, `first_frame`, `assets`, `created_at` |
+| `asset download <id>` | `--type`, `--dest <dir>` (audio also accepts an exact filename) | `{"id", "type", "file"}`; MiniApps add `asset_id`, `asset_type` |
+| `asset upload <input>` | local file or HTTPS URL | `{"id", "type", "name", "path", "url", "created_at"}` |
+| `asset delete <id>` | `--type`, `--source create\|upload` (default `create`) | `{"id", "type", "deleted": true}`, plus `asset_id` / `source` where applicable |
 
-JSON output:
+`--type audio` is unavailable in `--region cn` (exit 6).
 
-```json
-{
-  "items": [...],
-  "total": 100,
-  "page": 1,
-  "limit": 20,
-  "has_more": true
-}
-```
+## Notes
 
-For `--type miniapps`, the list contains MiniApp projects with normalized `id` values. Projects are created-only: `--source upload` and `--off-peak` are invalid.
-
-### asset info <id>
-
-Get full details of a specific asset.
-
-| Flag | Description | Values |
-|:---|:---|:---|
-| `--type <video\|image\|audio\|miniapps>` | Asset type (auto-detected if omitted) | `video`, `image`, `audio`; `miniapps` must be explicit |
-| `--json` | Output as JSON | flag |
-
-JSON output: full VideoDetail or ImageDetail object from the API.
-
-For `--type miniapps`, JSON preserves the backend project detail and adds stable fields including `id`, `project_id`, `app_id`, `status`, `status_code`, `url`, `first_frame`, `assets`, and `created_at`.
-
-### asset download <id>
-
-Download an asset to the local filesystem. For CLI 1.4.5+ destination rules, filename validation, and collision recovery, read [local downloads](../references/execution-contract.md#local-downloads-cli-145). A collision is exit 6; retry the download to a fresh path without generating again.
-
-| Flag | Description | Values |
-|:---|:---|:---|
-| `--type <video\|image\|audio\|miniapps>` | Asset type (auto-detected if omitted) | `video`, `image`, `audio`; `miniapps` must be explicit |
-| `--dest <path>` | Destination directory; audio also accepts an exact filename | default: current directory; CLI 1.4.5+ never overwrites |
-| `--json` | Output as JSON | flag |
-
-JSON output:
-
-```json
-{
-  "id": 123456,
-  "type": "video",
-  "file": "/path/to/downloaded/file.mp4"
-}
-```
-
-MiniApp project download resolves and downloads the primary generated child asset: the first video, otherwise the first image. JSON identifies both the project and downloaded child asset:
-
-```json
-{
-  "id": 987654,
-  "type": "miniapps",
-  "asset_id": 123456,
-  "asset_type": "image",
-  "file": "/path/to/downloaded/file.png"
-}
-```
-
-### asset upload <input>
-
-Upload a local file or HTTPS URL to the asset library.
-
-| Flag | Description | Values |
-|:---|:---|:---|
-| `<input>` | Local file path or HTTPS URL (required argument) | jpg, png, webp, mp4, mov |
-| `--json` | Output as JSON | flag |
-
-> **Image auto-compression:** Local images exceeding `1920×1920` pixels or `5 MB` are auto-resized and re-encoded before upload (progressive JPEG/WebP, transparency preserved). The original file on disk is not modified. Videos are uploaded as-is. Only `https://` URLs are accepted; `http://` is rejected.
-
-JSON output:
-
-```json
-{
-  "id": 123456,
-  "type": "video",
-  "name": "clip.mp4",
-  "path": "upload/abc123.mp4",
-  "url": "https://...",
-  "created_at": "2026-01-01T00:00:00Z"
-}
-```
-
-### asset delete <id>
-
-Delete an asset from your account.
-
-| Flag | Description | Values |
-|:---|:---|:---|
-| `--type <video\|image\|audio\|miniapps>` | Asset type (auto-detected if omitted) | `video`, `image`, `audio`; `miniapps` must be explicit |
-| `--json` | Output as JSON | flag |
-
-JSON output:
-
-```json
-{
-  "id": 123456,
-  "type": "video",
-  "deleted": true
-}
-```
-
-MiniApp projects are created-only and delete by `project_id`:
-
-```json
-{
-  "id": 987654,
-  "asset_id": 987654,
-  "type": "miniapps",
-  "source": "create",
-  "deleted": true
-}
-```
+- **Status labels:** the `status` field in `asset info` (including MiniApps) is a display label such as `Completed` or `Generating`. Branch on `status_code`.
+- **Uploads:** accepted formats are jpg, png, webp, mp4 and mov, plus mp3, wav, m4a, aac and ogg in `global` (audio uploads are unavailable in `cn`). Local images larger than 1920×1920 or 5 MB are compressed before upload; the original file is not modified. Only `https://` URLs are accepted.
+- **Uploaded assets are not downloadable.** `asset download` only accepts created assets. Uploaded audio is inspected with `asset info <id> --type audio --source upload`. Deleting an upload needs `--source upload` and an explicit `--type`.
+- **MiniApp download:** downloads the project's primary child asset (the first video, otherwise the first image) and reports it as `asset_id` / `asset_type`.
+- **Collisions:** downloads never overwrite. On exit 6, choose a fresh destination and download the same asset again; never regenerate.
+- **Delete is irreversible.** Delete only what the user asked to remove.
 
 ## Examples
 
-List recent videos:
-
-```bash
-pixverse asset list --json
-```
-
-List uploaded videos:
-
-```bash
-pixverse asset list --source upload --json
-```
-
-List off-peak video generations:
-
-```bash
-pixverse asset list --off-peak --json
-```
-
-List images, page 2:
-
 ```bash
 pixverse asset list --type image --page 2 --json
-```
-
-List with custom page size:
-
-```bash
-pixverse asset list --type video --limit 50 --json
-```
-
-List MiniApp projects:
-
-```bash
-pixverse asset list --type miniapps --json
-```
-
-Get video details:
-
-```bash
+pixverse asset list --source upload --json
 pixverse asset info 123456 --json
-```
-
-Get image details:
-
-```bash
-pixverse asset info 789012 --type image --json
-```
-
-Download a video to current directory:
-
-```bash
-pixverse asset download 123456 --json
-```
-
-Download to a specific directory:
-
-```bash
 pixverse asset download 123456 --dest ./output --json
-```
-
-Download an image:
-
-```bash
-pixverse asset download 789012 --type image --json
-```
-
-Inspect and download a MiniApp project:
-
-```bash
-pixverse asset info 987654 --type miniapps --json
 pixverse asset download 987654 --type miniapps --dest ./output --json
-```
-
-Upload a local file:
-
-```bash
 pixverse asset upload ./clip.mp4 --json
+pixverse asset delete 555 --type image --source upload --json
 ```
 
-Upload from a URL:
+## Related
 
-```bash
-pixverse asset upload "https://example.com/photo.jpg" --json
-```
-
-Delete an asset:
-
-```bash
-pixverse asset delete 123456 --json
-```
-
-Delete a MiniApp project:
-
-```bash
-pixverse asset delete 987654 --type miniapps --json
-```
-
-For creation followed by download, follow the [text-to-video workflow](../workflows/text-to-video-pipeline.md).
-
-## Error Handling
-
-| Exit Code | Meaning |
-|:---|:---|
-| 0 | Success |
-| 1 | Generic API error (e.g., asset not found) |
-| 3 | Authentication error (token invalid/expired) |
-| 6 | Validation error (invalid flags/arguments) |
-
-## Related Skills
-
-- `pixverse:saved-folders` -- organize assets into named folders
-- `pixverse:create-video` -- create videos from text or images
-- `pixverse:create-and-edit-image` -- create and edit images
-- `pixverse:task-management` -- check status and wait for tasks
-- `pixverse:miniapps` -- discover MiniApps and create projects
+- [saved-folders](saved-folders.md): organize assets into named folders
+- [task-management](task-management.md): check status and wait for tasks
+- [miniapps](miniapps.md): MiniApp projects

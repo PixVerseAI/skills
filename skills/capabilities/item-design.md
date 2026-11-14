@@ -41,9 +41,7 @@ pixverse create image --image <item_image_id> \
   --json
 ```
 
-For video, normally generate a clean scene still first, then animate its completed image ID using `create video --image`. A multi-panel sheet must not be used as an opening frame. Preserve the requested aspect ratio between stages and validate duration/model settings with [create-video](create-video.md).
-
-Direct `create reference --images` is an alternative when the chosen model and task suit reference fusion. Do not turn this into a categorical ban: use the still-first route for controlled placement, or when direct reference results reproduce the grid.
+For video, follow [reuse in video](../references/persistent-assets.md#reuse-in-video).
 
 ## Composing with characters
 

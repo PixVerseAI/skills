@@ -15,6 +15,8 @@ jobs:
       - name: Check shell syntax and whitespace
         run: |
           bash -n skills/scripts/update.sh skills/scripts/check-update.sh
-          git show --format= --check HEAD
+          git diff --check "$(git hash-object -t tree /dev/null)" HEAD
+      - name: Install jq for recipe tests
+        run: command -v jq || (sudo apt-get update && sudo apt-get install -y jq)
       - name: Run offline regression tests
         run: python3 -m unittest discover -s tests -v

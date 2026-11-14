@@ -12,7 +12,7 @@ Use `.pixverse/characters.json` or `.pixverse/items.json` in the project root. T
   "characters": {
     "aria": {
       "name": "Aria",
-      "image_id": 398830212288488,
+      "image_id": 123456789,
       "image_url": "https://example.com/reference.png",
       "origin": "generated",
       "region": "global",
@@ -41,11 +41,30 @@ If the root is unwritable, use session memory and explain once that persistence 
 
 Prefer atomic registry replacement after reading the latest contents. If multiple agents mutate the same registry, serialize that write or coordinate ownership; do not lose other entries through stale read-modify-write.
 
+## Reuse in video
+
+A multi-panel sheet is a design reference, not the video's opening frame. Do not animate it directly with `create video --image`.
+
+- **Still first (default):** generate a clean scene still from the registry ID with I2I, confirm it completed, then animate that still. Use this for Seedance, precise pose/framing/placement, or when direct references reproduce the grid. Keep the requested ratio across both stages.
+- **Direct reference:** when the chosen model accepts subject references, `create reference --images <id...>` with the requested scene. Resolve multiple names in input order; limits belong to [create-video](../capabilities/create-video.md).
+
+```bash
+# Clean scene still from the persistent reference; capture the completed image_id.
+pixverse create image --image <reference_image_id> \
+  --prompt "Same subject as the reference. <requested scene and pose>." --json
+
+# Animate that scene still, not the reference sheet.
+pixverse create video --image <scene_image_id> --model <video_model> \
+  --prompt "<requested motion>" --json
+```
+
+Do not require the user to manually split a sheet.
+
 ## Generation and recovery
 
 Use [create-and-edit-image](../capabilities/create-and-edit-image.md) for current models, reference limits, qualities, and region support, and [execution-contract](execution-contract.md) for task completion, retries, and outputs.
 
-For generated reference sheets on CLI 1.4.1+, prefer `gpt-image-2.5-flare` at `1440p` when available; set the caller's ratio explicitly (`16:9` for characters, `1:1` for items). Older installations can use `gpt-image-2.0` at those settings. If a fallback is warranted, candidates are `gemini-3.1-flash`, `gemini-3.0`, and `seedream-5.0-lite`; filter candidates by selected region and supported parameters before submitting. In CN, prefer `seedream-5.0-lite`; if using `qwen-image`, lower quality to its supported `1080p`. Respect explicit model requirements rather than silently changing them.
+For generated reference sheets, prefer `gpt-image-2.5-flare` at `1440p` when available; set the caller's ratio explicitly (`16:9` for characters, `1:1` for items). If a fallback is warranted, candidates are `gemini-3.1-flash`, `gemini-3.0`, and `seedream-5.0-lite`; filter candidates by selected region and supported parameters before submitting. In CN, prefer `seedream-5.0-lite`; if using `qwen-image`, lower quality to its supported `1080p`. Respect explicit model requirements rather than silently changing them.
 
 A successful task supplies the image ID; confirm completed status, not merely presence of a URL. A temporary preview/HEAD failure is not evidence that image generation failed: inspect/download the existing asset before creating a replacement. Separate parameter errors, authentication/credit failures, moderation, and transient task failures. Do not retry all models for every failure. After a fallback also fails, report the cause instead of exhausting a costly chain. Retain task IDs so interrupted work can resume.
 

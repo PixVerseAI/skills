@@ -1,8 +1,7 @@
-# Image -> Sora 2 video -> upscale -> download. Node.js >= 22.12; authenticated CLI.
-# Shared behavior: ../../references/execution-contract.md
+# Text -> video -> download on Windows PowerShell. Requires Node.js >= 22.12 and an authenticated CLI.
+# Uses the region's default video model. Shared behavior: ../../references/execution-contract.md
 param(
-    [string]$ImagePrompt = "A medieval fortress at dawn, cinematic composition",
-    [string]$AnimationPrompt = "Camera slowly approaches the fortress as banners move in the wind",
+    [string]$Prompt = "A medieval fortress at dawn; the camera slowly approaches as banners move in the wind",
     [string]$OutputDirectory = (Join-Path ([IO.Path]::GetTempPath()) ("pixverse-" + [guid]::NewGuid()))
 )
 $ErrorActionPreference = 'Stop'
@@ -18,13 +17,9 @@ function Invoke-PixverseJson {
 }
 
 New-Item -ItemType Directory -Path $OutputDirectory -ErrorAction Stop | Out-Null
-$Image = Invoke-PixverseJson -CliArgs @('create', 'image', '--prompt', $ImagePrompt, '--quality', '1440p', '--aspect-ratio', '9:16', '--idempotency-key', [guid]::NewGuid().ToString())
-if ($Image.status -ne 'completed' -or -not $Image.image_id) { throw 'Expected a completed image with image_id' }
-$Video = Invoke-PixverseJson -CliArgs @('create', 'video', '--image', [string]$Image.image_id, '--prompt', $AnimationPrompt, '--model', 'sora-2', '--duration', '12', '--idempotency-key', [guid]::NewGuid().ToString())
-if (-not $Video.video_id) { throw 'Completed video result has no video_id' }
-$Upscale = Invoke-PixverseJson -CliArgs @('create', 'upscale', '--video', [string]$Video.video_id, '--quality', '2160p', '--idempotency-key', [guid]::NewGuid().ToString())
-if (-not $Upscale.video_id) { throw 'Completed upscale result has no video_id' }
-# Default create calls already waited. No additional task wait is needed.
-$Download = Invoke-PixverseJson -CliArgs @('asset', 'download', [string]$Upscale.video_id, '--type', 'video', '--dest', $OutputDirectory)
+# Default create waits for completion; the key makes an unconfirmed retry of this same request safe.
+$Video = Invoke-PixverseJson -CliArgs @('create', 'video', '--prompt', $Prompt, '--idempotency-key', [guid]::NewGuid().ToString())
+if ($Video.status -ne 'completed' -or -not $Video.video_id) { throw "Expected a completed video with video_id; got status '$($Video.status)'" }
+$Download = Invoke-PixverseJson -CliArgs @('asset', 'download', [string]$Video.video_id, '--type', 'video', '--dest', $OutputDirectory)
 if (-not $Download.file) { throw 'Download result has no file path' }
-Write-Host "Final video saved to: $($Download.file)"
+Write-Host "Video saved to: $($Download.file)"

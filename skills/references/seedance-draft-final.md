@@ -2,7 +2,7 @@
 
 Use `seedance-2.5-480draft` for a requested 480p sample in `create video`, `create reference`, or exactly-two-image `create transition`. It is not interchangeable with ordinary Seedance 2.5 at 480p. Draft is available in Global and CN; preserve the selected region and workspace.
 
-Draft supports only `480p` (default; other qualities are adjusted), integer 4–30 second duration (default 5), and requires a prompt. Reference limits match Seedance 2.5: up to 30 images, 10 videos and 10 audios, 50 total; separate 30-second video/audio totals, with visual input required for audio. Use [reference constraints](video-reference.md#reference-media-matrix) for media details.
+Draft supports only `480p` (default; other qualities are adjusted), integer 4–30 second duration (default 5), and requires a prompt. Reference limits match [Seedance 2.5](video-reference.md#reference-media-matrix).
 
 Framing depends on mode: T2V and text/image-only Reference accept six fixed ratios (`21:9`, `16:9`, `4:3`, `1:1`, `3:4`, `9:16`), default `16:9`. I2V uses automatic framing; Transition derives framing from its two images. With reference video, duration defaults to `auto` (JSON `0`) and locks framing to `auto`; explicit 4–30 seconds permits `auto` or fixed framing. `--task-type auto|reference|edit|extend` is available in Reference. Read matching installed capability rules instead of treating the base ratio enum as universal. Audio/multi-shot/off-peak controls remain unsupported.
 

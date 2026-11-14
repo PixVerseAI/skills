@@ -5,7 +5,7 @@ description: Shape emotional, atmospheric, memory-driven, or loosely expressed i
 
 # Seedance Vibe Creating
 
-Apply the [prompt editing contract](../references/prompt-contract.md). VC emphasizes the viewer's experience: imagery, emotion, rhythm, and continuity. For exact asset binding and engineered shot control, use [seedance-prompt-optimize](seedance-prompt-optimize.md). Parameter selection belongs to [create-video](create-video.md).
+Apply the [prompt editing contract](../references/prompt-contract.md). VC emphasizes the viewer's experience: imagery, emotion, rhythm, and continuity. Exact asset binding and engineered shot control belong to [seedance-prompt-optimize](seedance-prompt-optimize.md); parameters to [create-video](create-video.md).
 
 ## Decide how much to change
 
@@ -38,5 +38,3 @@ Return the prompt, plus a short note if a meaningful transformation needs explan
 Example input: `A girl waits alone at a rainy bus stop at night; neon reflections; a long wait, lonely. Keep the slow dolly-in.`
 
 Result: `Slow dolly-in on a girl waiting alone at a rainy bus stop at night. Neon reflections in the rain; the long wait feels lonely.`
-
-For non-Seedance models, use [prompting-guide](prompting-guide.md), or [prompt-enhance](prompt-enhance.md) for V6.

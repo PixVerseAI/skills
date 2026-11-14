@@ -5,274 +5,46 @@ description: Manage workspaces — list, switch, check status, and open manageme
 
 # Workspace Management
 
-Covers: `workspace list`, `workspace status`, `workspace switch`, `workspace manage`
+Covers: `workspace list`, `workspace status`, `workspace switch`, `workspace manage`, and the global `--workspace-id` override.
 
----
-
-CLI 1.4.19+ delegated `chatgpt` v2 sessions support Team selection shared across the account. Their JSON and failure behavior differ: read [delegated workspace selection](../references/auth-pairing.md#delegated-workspace-selection-cli-1419). The ordinary-profile examples, global override and personal fallback below do not apply to delegated sessions.
+Delegated (paired) sessions on CLI 1.4.19+ select Team workspaces account-wide, with different JSON and failure behavior. Use [delegated workspace selection](../references/auth-pairing.md#delegated-workspace-selection-cli-1419); the ordinary-profile override and personal fallback below do not apply to them.
 
 ## Concepts
 
-**Workspace** is an organizational context that determines which assets, credits, and team members you are working with.
+- Personal workspace ID is `0`; team workspaces are `> 0` and share a team credit pool.
+- The server is the source of truth for the active workspace; the CLI syncs it on login and on `workspace list` / `status`. The active workspace is stored per region.
+- All creation, task, asset and account commands run in the active workspace. Switching changes which credits are consumed and which assets are visible.
+- Roles: `owner`, `admin`, `member`, `guest`; `null` in personal.
 
-| Type | ID | Description |
-|:---|:---|:---|
-| Personal | `0` | Default private workspace for the individual user |
-| Team | `> 0` | Shared workspace with role-based access and a shared credit pool |
+## Commands
 
-Key facts:
-- The **server** is the source of truth for the active workspace — the CLI syncs with it
-- All creation commands (`create video`, `create image`, etc.) automatically operate in the active workspace via the `Workspace-Id` HTTP header
-- Switching workspace changes which credits are consumed and which assets are visible
-- Workspace state persists across CLI sessions in `~/.pixverse/`
-
-### Roles
-
-| Role | Value |
+| Command | JSON output |
 |:---|:---|
-| Owner | `owner` |
-| Admin | `admin` |
-| Member | `member` |
-| Guest | `guest` |
+| `workspace list --json` | `{"activeWorkspaceId": 42, "workspaces": [{"workspace_id", "name", "role", "member_count"}]}` |
+| `workspace status --json` | Personal: `{"workspaceId": 0, "name": "Personal"}`. Team: `{"workspaceId", "name", "role", "memberCount"}`. An inaccessible workspace returns `name: null` |
+| `workspace switch <id> --json` | `{"workspaceId", "name", "role"}`; persisted. `0` switches to personal |
+| `workspace manage --json` | Opens the region's team management page and returns `{"success": true, "url": "..."}`; use it for members, team plan and billing |
 
----
+`workspace switch` without an ID is an interactive menu and is unavailable with `--json`. IDs must be non-negative integers; invalid IDs exit 6.
 
-## Decision Tree
-
-```
-Need to manage workspaces?
-├── Want to see all available workspaces? → workspace list
-├── Want to check which workspace is active? → workspace status
-├── Want to change the active workspace? → workspace switch
-├── Want to manage team settings in browser? → workspace manage
-└── Want to run ONE command in a different workspace without switching?
-    → use global --workspace-id flag (see Global Override below)
-```
-
----
-
-## workspace list
-
-List all workspaces the user has access to.
+## One-invocation override: `--workspace-id`
 
 ```bash
-pixverse workspace list --json
-```
-
-JSON output:
-```json
-{
-  "activeWorkspaceId": 42,
-  "workspaces": [
-    {
-      "workspace_id": 0,
-      "name": "Personal",
-      "role": null,
-      "member_count": null
-    },
-    {
-      "workspace_id": 42,
-      "name": "My Team",
-      "role": "admin",
-      "member_count": 15
-    }
-  ]
-}
-```
-
-Key fields:
-- `activeWorkspaceId` — the currently active workspace (synced from server)
-- `workspaces[].workspace_id` — `0` for personal, `> 0` for team
-- `workspaces[].role` — user's role in this workspace (`owner`, `admin`, `member`, `guest`, or `null` for personal)
-- `workspaces[].member_count` — total members (team workspaces only)
-
----
-
-## workspace status
-
-Show the currently active workspace.
-
-```bash
-pixverse workspace status --json
-```
-
-JSON output (personal):
-```json
-{
-  "workspaceId": 0,
-  "name": "Personal"
-}
-```
-
-JSON output (team):
-```json
-{
-  "workspaceId": 42,
-  "name": "My Team",
-  "role": "admin",
-  "memberCount": 15
-}
-```
-
-JSON output (workspace no longer accessible):
-```json
-{
-  "workspaceId": 42,
-  "name": null
-}
-```
-
-Decision tree:
-- If `name` is `null` → the workspace was removed or the user lost access; switch to another workspace
-
----
-
-## workspace switch
-
-Change the active workspace. The change is persisted across CLI sessions.
-
-### With explicit ID
-
-```bash
-pixverse workspace switch 42 --json
-```
-
-JSON output:
-```json
-{
-  "workspaceId": 42,
-  "name": "My Team",
-  "role": "admin"
-}
-```
-
-Switch to personal:
-```bash
-pixverse workspace switch 0 --json
-```
-
-### Interactive mode (no ID)
-
-```bash
-pixverse workspace switch
-```
-
-Shows an interactive selection menu with all available workspaces. The current workspace is marked `(current)`.
-
-**Note:** Interactive mode is not available in `--json` mode — you must provide an explicit ID.
-
-### Validation
-- Workspace ID must be a non-negative integer (`0` = personal)
-- Invalid IDs exit with code 6 (`VALIDATION_ERROR`)
-
----
-
-## workspace manage
-
-Open the workspace management page in the browser.
-
-```bash
-pixverse workspace manage --json
-```
-
-JSON output:
-```json
-{
-  "success": true,
-  "url": "https://app.pixverse.ai/team"
-}
-```
-
-Use this to:
-- Invite or remove team members
-- Change team plan or billing
-- Manage workspace settings
-
----
-
-## Global Override: `--workspace-id`
-
-Run any command in a specific workspace **without switching** the persistent active workspace.
-
-```bash
-pixverse --workspace-id 42 create video --prompt "A sunset" --json
+pixverse --workspace-id 42 create video --prompt "Team content" --json
 pixverse --workspace-id 0 account info --json
 ```
 
-Key facts:
-- Applies to any command as a **global flag** (before the subcommand)
-- **Not persisted** — only affects the single command invocation
-- Must be a non-negative integer; invalid values exit with code 6
-- Does not apply to `workspace switch` (switch always changes persistent state)
+The global flag goes before the subcommand, is not persisted, and must be a non-negative integer (otherwise exit 6). Prefer it over repeated `switch` calls when one workflow touches several workspaces, and pass the same value to the later `task` / `asset` commands for those jobs.
 
-Use case: agents or scripts that need to create content across multiple workspaces without calling `switch` between each operation.
+## Inaccessible active workspace
 
----
+If the persisted team workspace becomes inaccessible (for example, the user was removed), a failing command exits 1. The CLI resets the active workspace to personal and appends "switched to personal workspace. Please retry your command." This does not happen with an explicit `--workspace-id` or for workspace-management requests.
 
-## Auto-Recovery
+Do not simply retry: a retry now runs in **personal** and spends personal credits. Confirm the intended destination with the user, then `workspace switch` to it or pass `--workspace-id` before resubmitting. A `name: null` in `workspace status` means the same thing.
 
-When a workspace becomes inaccessible (e.g. user was removed from a team), the CLI automatically:
+Other errors follow the [execution contract](../references/execution-contract.md).
 
-1. Resets the active workspace to Personal (ID=0)
-2. Appends a message: "...switched to personal workspace. Please retry your command."
-3. Exits with code 1
+## Related
 
-**Exceptions** — auto-recovery does NOT trigger when:
-- `--workspace-id` override is active (the user explicitly targeted a workspace)
-- The failing request is a workspace management endpoint
-
----
-
-## Error Handling
-
-| Exit Code | Cause | Recovery |
-|:---|:---|:---|
-| 0 | Success | — |
-| 1 | Workspace error (access denied, removed, etc.) | CLI auto-recovers to personal; retry the command |
-| 3 | Token expired | Re-run `pixverse auth login --json` |
-| 6 | Invalid workspace ID | Provide a valid non-negative integer |
-
----
-
-## Examples
-
-### Agent workflow: create in a team workspace
-
-```bash
-# Check current workspace
-WS=$(pixverse workspace status --json)
-echo "$WS" | jq -r '.name'
-
-# Switch to team workspace
-pixverse workspace switch 42 --json
-
-# Create video (uses team credits)
-pixverse create video --prompt "A rocket launch" --json
-
-# Switch back to personal
-pixverse workspace switch 0 --json
-```
-
-### Agent workflow: create across workspaces without switching
-
-```bash
-# Create in team workspace 42
-pixverse --workspace-id 42 create video --prompt "Team content" --json
-
-# Create in personal workspace (same session, no switch needed)
-pixverse --workspace-id 0 create video --prompt "Personal content" --json
-```
-
-### List workspaces and pick the first team workspace
-
-```bash
-FIRST_TEAM=$(pixverse workspace list --json | jq '[.workspaces[] | select(.workspace_id > 0)][0].workspace_id')
-pixverse workspace switch "$FIRST_TEAM" --json
-```
-
----
-
-## Related Skills
-
-- `pixverse:auth-and-account` — account info shows workspace context and team credits
-- `pixverse:batch-creation` — use `--workspace-id` to batch-create across workspaces
+- [auth-and-account](auth-and-account.md): `account info` shows workspace context and team credits
+- [batch-creation](../workflows/batch-creation.md): batch work with `--workspace-id`

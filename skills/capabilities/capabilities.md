@@ -11,9 +11,9 @@ Do **not** invent Canvas `node_type` → CLI command mappings, and do **not** co
 
 ## Prerequisites
 
-- PixVerse CLI v1.4.0 or later. Check `pixverse --version` once per session. On older releases, use the relevant `pixverse create <mode> --help` and static model reference; Canvas requires upgrading to a version that exposes its commands.
+- PixVerse CLI 1.4.0 or later. On older releases, use `pixverse create <mode> --help` and the static model references; Canvas needs an upgrade.
 - `capabilities` and `capabilities create` need **no login and no network**
-- `capabilities canvas` requires authentication (ordinary login/access key, or an isolated [paired session](../references/auth-pairing.md) on CLI 1.4.10+)
+- `capabilities canvas` requires authentication (ordinary login, access key, or a [paired session](../references/auth-pairing.md))
 
 ## Decision Tree
 
@@ -38,8 +38,6 @@ pixverse capabilities --json
 
 No login, no workspace switch, no HTTP, no generation credits.
 
-Human-readable output shows CLI version, manifest version, command count, Create mode count, and whether Canvas is runtime-discovered. The installed command manifest also records Canvas CLI surface changes: **1.4.5+** adds `canvas arrange <id>` and positional IDs for all 15 project-scoped operations, retaining `--project-id`. See [Canvas project IDs and arrangement](canvas.md#project-ids-cli-145).
-
 The bundled file uses a compact encoding (`capability_domains.create.encoding: "normalized"`). Prefer `capabilities create` when you need an expanded, query-ready structure. MiniApps are a separate product surface and are **not** in the Create mode list.
 
 ## capabilities create (offline)
@@ -58,6 +56,7 @@ upscale
 reference
 motion-control
 template
+seedance-final
 ```
 
 ### Mode index
@@ -108,16 +107,16 @@ Behavior:
 - `capability.models` keeps only that model
 - `parameters.model.enum` narrows to that model
 - Unsupported parameters keep `supported: false` and drop invalid defaults/enums/ranges
-- If `capability.rules` contains conditions, apply matching rules before choosing dependent parameters. GPT Image 2.5 had quality-specific ratio rules in CLI 1.4.1; CLI 1.4.2 removes them and accepts its full ratio enum at every quality. Do not invent rules absent from the installed query.
+- If `capability.rules` contains conditions, apply matching rules before choosing dependent parameters. Do not invent rules absent from the installed query.
 - Still offline — this is not a live backend catalog
 
-For template creation, the offline registry describes shared flags, not a specific template’s accepted overrides. Read `template info <id> --json`; [schema-driven templates](template.md#schema-driven-templates-cli-149) define their own inputs and fixed output settings.
+For template creation, the offline registry describes shared flags, not a specific template’s accepted overrides. Read `template info <id> --json`; [schema-driven templates](template.md#schema-driven-templates) define their own inputs and fixed output settings.
 
-CLI 1.4.11+ declares `relax_mode` with no boolean default and `on_invalid: backend` in six creation modes; this describes pass-through, not account eligibility. Image `background` is model-specific. See [Relax rules](../references/execution-contract.md#relax-mode-cli-1411) and [image options](create-and-edit-image.md#flags).
+`relax_mode` is declared with no boolean default and `on_invalid: backend` in six creation modes; this describes pass-through, not account eligibility. Image `background` is model-specific. See [Relax rules](../references/execution-contract.md#relax-mode) and [image options](create-and-edit-image.md#flags).
 
 `supported: false` for `audio`, `multi_shot` or `off_peak` describes unavailable CLI control, not an assertion that the model cannot generate sound, multiple shots, or receive service-side scheduling. Do not promise silent output merely because an audio switch is unsupported.
 
-CLI 1.4.19+ exposes `create seedance-final` as a model-less action with inherited parameters. Draft Reference framing uses conditional rules for video presence and automatic/fixed duration; apply matching rules instead of relying only on the base enum. See [Draft/Final](../references/seedance-draft-final.md).
+`seedance-final` (CLI 1.4.19+) is a model-less action with inherited parameters. Draft Reference framing uses conditional rules for video presence and automatic/fixed duration; apply matching rules instead of relying only on the base enum. See [Draft/Final](../references/seedance-draft-final.md).
 
 ### Parameter fields
 
@@ -140,7 +139,7 @@ Each parameter uses a stable logical key plus the real CLI `flag`. Structured fi
 
 Types, defaults, and enums use normalized JSON values. Integers are numbers, not strings. Reference automatic duration is JSON integer `0`; the CLI flag remains `--duration auto` and is normalized before submit.
 
-CLI 1.4.6+ omits voice text and music prompt/lyrics length caps from the offline registry. Missing length metadata means there is no declared local cap, not that the provider accepts unlimited input; backend validation still applies.
+The registry declares no local length cap for voice text or music prompt/lyrics. Missing length metadata means there is no declared local cap, not that the provider accepts unlimited input; backend validation still applies.
 
 ### Validation errors (exit 6)
 
@@ -154,7 +153,7 @@ JSON errors go to stderr and may include `valid_modes` or `valid_models`.
 
 ## capabilities canvas (online)
 
-Merges live Canvas node types, adapter routes, and field mappings with the **installed** CLI Create registry. Needs login. Does not create tasks, mutate projects, or charge generation credits. `capabilities canvas` and `canvas node schema` do not take a project ID; they discover node capabilities, not saved project positions. For a project layout use `canvas graph get <id>` (1.4.5+), and to change that layout use `canvas arrange <id>`; see [Canvas](canvas.md).
+Merges live Canvas node types, adapter routes, and field mappings with the **installed** CLI Create registry. Needs login. Does not create tasks, mutate projects, or charge generation credits. `capabilities canvas` and `canvas node schema` do not take a project ID; they discover node capabilities, not saved project positions. For a project layout use `canvas graph get <id>`, and to change that layout use `canvas arrange <id>`; see [Canvas](canvas.md).
 
 ```bash
 # All nodes, merged
@@ -220,18 +219,11 @@ pixverse capabilities canvas \
 
 If `compatible` is false or `issues` is non-empty, fix the node type, selector, model, or region before `canvas patch`.
 
-## Error Handling
+## Errors
 
-| Exit Code | Meaning |
-|:---|:---|
-| 0 | Success |
-| 1 | API or unexpected error (`capabilities canvas`) |
-| 2 | Canvas capabilities request timed out |
-| 3 | Authentication required or expired (`capabilities canvas`) |
-| 6 | Unknown mode/model/node type/selector, or illegal flag combination |
+Exit codes follow the [execution contract](../references/execution-contract.md#waiting-and-recovery). Offline queries fail only with exit 6 (unknown mode, model, node type or selector, or an illegal flag combination); `capabilities canvas` can also exit 1, 2 or 3 like any authenticated request.
 
-## Related Skills
+## Related
 
-- `pixverse:canvas` — build and run Canvas graphs using these query results
-- `pixverse:create-video` / `pixverse:create-and-edit-image` — human-oriented Create tables; prefer `capabilities create` when the installed CLI may be newer than this skill
-- `pixverse:auth-and-account` — login required for `capabilities canvas`
+- [canvas](canvas.md): build and run Canvas graphs using these results
+- [create-video](create-video.md) / [create-and-edit-image](create-and-edit-image.md): static tables; prefer `capabilities create` when the installed CLI may be newer than this skill

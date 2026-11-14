@@ -5,170 +5,69 @@ description: Create smooth transition animations between two or more keyframe im
 
 # Transition
 
-Create smooth transition animations between two or more keyframe images using PixVerse's transition generation.
+Animate between two or more keyframe images: face/object morphs, scene transitions, before/after reveals, or storyboard frames.
 
-CLI 1.4.11+ supports `--relax-mode [true|false]` / `--no-relax-mode`; see [Relax semantics and entitlement](../references/execution-contract.md#relax-mode-cli-1411).
+Relax flags are accepted; see the [execution contract](../references/execution-contract.md#relax-mode). For Seedance 480p Drafts and paid 1080p Final creation, read [Draft and Final](../references/seedance-draft-final.md).
 
-For CLI 1.4.19+ Seedance 480p Drafts, stage metadata and paid 1080p Final creation, read [Draft and Final](../references/seedance-draft-final.md).
-
-## Prerequisites
-
-- PixVerse CLI installed and authenticated (`pixverse auth login`)
-- Two or more images (local file paths or URLs) to use as keyframes
-
-## When to Use
-
-```
-Want to animate between images?
-├── Two images → pixverse create transition --images ./a.jpg ./b.jpg --json
-├── Multiple frames → pixverse create transition --images ./f1.jpg ./f2.jpg ./f3.jpg --json
-└── With guidance → pixverse create transition --images ./a.jpg ./b.jpg --prompt "smooth morph" --json
-```
-
-Use transitions when you need to:
-
-- Morph between faces or objects
-- Create scene transitions
-- Build before/after reveals
-- Animate a storyboard into a video
-
-## Steps
-
-1. Prepare two or more keyframe images (local files or URLs).
-2. Run `pixverse create transition` with `--images` and `--json`.
-3. Parse the JSON output to get the `video_id`.
-4. If using `--no-wait`, poll with `pixverse task wait <video_id> --json`.
-5. Download the result with `pixverse asset download <video_id> --json` if needed.
-
-## Commands Reference
-
-### create transition
+## create transition
 
 | Flag | Description | Values |
 |:---|:---|:---|
-| `--images <paths...>` | Image paths or URLs (2+ required) | -- |
-| `--prompt <text>` | Prompt to guide transition | optional generally; required for `seedance-2.5`, `minimax-h3`, `minimax-h3-max`, and `wan-3.0` |
-| `-m, --model <model>` | Video model | See the mode-specific model table below |
-| `-q, --quality <q>` | Video quality | model-specific; up to `2160p` (see table below) |
-| `-d, --duration <sec>` | Duration | model-specific; `1`–`30` overall (default `5`) |
-| `--count <n>` | Generations | `1`-`4` |
+| `--images <inputs...>` | Keyframes: local files, HTTPS URLs, image IDs, or media paths (2+ required) | -- |
+| `--prompt <text>` | Prompt to guide transition | optional generally; required for `seedance-2.5`, `seedance-2.5-480draft`, `minimax-h3`, `minimax-h3-max`, and `wan-3.0` |
+| `-m, --model <model>` | Video model | See the table below |
+| `-q, --quality <q>` | Video quality | model-specific (see table) |
+| `-d, --duration <sec>` | Duration | model-specific (default `5`; Veo `4`) |
+| `--count <n>` | Generations | `1`–`4`; two-frame transitions only |
 | `--seed <n>` | Random seed | -- |
-| `--audio` / `--no-audio` | Enable or disable audio generation | model-dependent boolean toggle |
+| `--audio` / `--no-audio` | Enable or disable audio generation | model-dependent |
 | `--off-peak` | Off-peak pricing | flag |
 | `--idempotency-key <key>` | Stable safe-retry key; see execution contract | optional |
 | `--no-wait` / `--timeout <sec>` / `--json` | Standard flags | -- |
 
-### Transition-capable models
+Framing is derived from the input images; there is no `--aspect-ratio` flag. Query `pixverse capabilities create transition --model <id> --json` for the installed CLI; the table below is a fallback.
 
-Only specific models support Transition mode. Using other models will result in a validation error.
+## Transition-capable models
+
+Two-frame models accept exactly two images. Only `v5` accepts three or more.
 
 | Model | `--model` value | Quality | Duration | Notes |
 |:---|:---|:---|:---|:---|
-| PixVerse V6 | `v6` (default) | `360p` `540p` `720p` `1080p` | `1`–`15` (any integer) | **First/last frame only** — no multi-frame |
-| PixVerse C1 | `pixverse-c1` | `360p` `540p` `720p` `1080p` | `1`–`15` (any integer) | **First/last frame only** — no multi-frame |
-| PixVerse v5.6 | `v5.6` | `360p` `480p` `540p` `720p` `1080p` | `1`–`10` (any integer) | First/last frame only (multi-frame: use `v5`) |
-| PixVerse v5 | `v5` | `360p` `480p` `540p` `720p` `1080p` | `1`–`10` (any integer) | **Multi-frame only** (3+ images); not valid for 2-frame transition |
-| Seedance 2.5 | `seedance-2.5` | `480p` `720p` (default) `1080p` | `4`–`30` (any integer) | Exactly 2 frames; prompt required; no generated audio/off-peak |
-| Seedance 2.0 Standard | `seedance-2.0-standard` | `480p` `720p` `1080p` `2160p` | `4`–`15` (any integer) | External model; no off-peak |
-| Seedance 2.0 Fast | `seedance-2.0-fast` | `480p` `720p` | `4`–`15` (any integer) | External model; no off-peak |
-| Seedance 2.0 Mini | `seedance-2.0-mini` | `480p` `720p` | `4`–`15` (any integer) | External model; no off-peak |
-| MiniMax H3 | `minimax-h3` | `768p` `1440p` (default) | `5`–`15` (any integer) | Exactly 2 frames; prompt required; no generated audio/off-peak |
-| MiniMax H3 Max | `minimax-h3-max` (CLI 1.4.4+) | `480p` `768p` (default) `1080p` | `5`–`15` (any integer; default `5`) | Exactly 2 frames; prompt required; no generated audio/off-peak; unavailable in `cn` |
-| Wan 3.0 | `wan-3.0` | `480p` `720p` (default) `1080p` | `2`–`30` (any integer) | Exactly 2 frames; prompt required; generated audio optional; no off-peak |
-| Veo 3.1 Standard | `veo-3.1-standard` | `720p` `1080p` `2160p` | `4` `6` `8` | First/last frame only |
-| Veo 3.1 Fast | `veo-3.1-fast` | `720p` `1080p` `2160p` | `4` `6` `8` | First/last frame only |
-| Veo 3.1 Lite | `veo-3.1-lite` | `720p` `1080p` | `4` `6` `8` | First/last frame only |
-| Kling 4.0 | `kling-4.0` (CLI 1.4.15+) | `720p`, `1080p` (default) | `3`–`30` (integer; default `5`) | Exactly two frames; automatic image framing; no audio control, multi-shot or off-peak |
-| Kling O3 Pro | `kling-o3-pro` | not applicable (omit `--quality`) | `3`–`15` (any integer) | External model; no off-peak |
-| Kling O3 Standard | `kling-o3-standard` | not applicable (omit `--quality`) | `3`–`15` (any integer) | External model; no off-peak |
-| Kling O3 4K | `kling-o3-4k` | not applicable (4K model tier) | `3`–`15` (any integer) | External model; no off-peak |
-| Kling 3.0 Pro | `kling-3.0-pro` | not applicable (omit `--quality`) | `3`–`15` (any integer) | External model; no off-peak |
-| Kling 3.0 Standard | `kling-3.0-standard` | not applicable (omit `--quality`) | `3`–`15` (any integer) | External model; no off-peak |
-| Kling 3.0 4K | `kling-3.0-4k` | not applicable (4K model tier) | `3`–`15` (any integer) | External model; no off-peak |
+| PixVerse V6 | `v6` (default) | `360p` `540p` `720p` `1080p` | `1`–`15` | Two frames only |
+| PixVerse C1 | `pixverse-c1` | `360p` `540p` `720p` `1080p` | `1`–`15` | Two frames only |
+| PixVerse v5.6 | `v5.6` | `360p` `480p` `540p` `720p` `1080p` | `1`–`10` | Two frames only |
+| PixVerse v5 | `v5` | `360p` `540p` `720p` `1080p` | `1`–`10` | **3+ frames only** |
+| Seedance 2.5 | `seedance-2.5` | `480p` `720p` (default) `1080p` | `4`–`30` | Prompt required; no audio/off-peak control |
+| Seedance 2.5 Draft | `seedance-2.5-480draft` | `480p` | `4`–`30` | Prompt required; see [Draft and Final](../references/seedance-draft-final.md) |
+| Seedance 2.0 Standard | `seedance-2.0-standard` | `480p` `720p` `1080p` `2160p` | `4`–`15` | No off-peak |
+| Seedance 2.0 Fast / Mini | `seedance-2.0-fast`, `seedance-2.0-mini` | `480p` `720p` | `4`–`15` | No off-peak |
+| MiniMax H3 | `minimax-h3` | `768p` `1440p` (default) | `5`–`15` | Prompt required; no audio/off-peak control |
+| MiniMax H3 Max | `minimax-h3-max` | `480p` `768p` (default) `1080p` | `5`–`15` | Prompt required; no audio/off-peak control |
+| Wan 3.0 | `wan-3.0` | `480p` `720p` (default) `1080p` | `2`–`30` | Prompt required; audio optional; no off-peak |
+| Veo 3.1 Standard / Fast | `veo-3.1-standard`, `veo-3.1-fast` | `720p` `1080p` `2160p` | `4` `6` `8` | |
+| Veo 3.1 Lite | `veo-3.1-lite` | `720p` `1080p` | `4` `6` `8` | |
+| Kling 4.0 | `kling-4.0` | `720p` `1080p` (default) | `3`–`30` | No audio control, multi-shot, or off-peak |
+| Kling O3 / 3.0 | `kling-o3-pro`, `kling-o3-standard`, `kling-o3-4k`, `kling-3.0-pro`, `kling-3.0-standard`, `kling-3.0-4k` | set by model ID (omit `--quality`) | `3`–`15` | No off-peak |
 
-Transition framing is derived from the input images; this command has no `--aspect-ratio` flag. On CLI v1.4.0 or later, prefer `pixverse capabilities create transition --model <id> --json`; on older versions, confirm flags with `pixverse create transition --help` and use this table as a fallback.
+In `--region cn`, only V6, C1, v5.6, v5 and the Seedance models are available.
 
-> **Kling O3/3.0 constraint:** Resolution is selected entirely by the Kling model ID. The CLI omits `quality` for Kling O3/3.0 transitions; an explicit `--quality` is ignored with a warning. Use `kling-o3-4k` or `kling-3.0-4k` for the 4K tier.
+Kling O3/3.0 resolution is selected entirely by the model ID; an explicit `--quality` is ignored with a warning. Use the `-4k` IDs for the 4K tier.
 
-### 3+ image constraint: automatic model fallback
+### Three or more images
 
-When **3 or more images** are provided, only `v5` supports multi-frame transitions. V6, `pixverse-c1`, and `v5.6` do **not**. The CLI automatically falls back to `v5` and prints a warning:
+With 3+ images, omitting `--model` selects `v5`. An explicit model that does not support multi-frame transitions (including `v6`, `pixverse-c1`, and `v5.6`) fails validation with exit 6; pass `--model v5` or omit the flag. Multi-frame requests send no top-level count, so `--count` has no effect.
 
-```
---model v5.6 does not support 3+ image transitions, using v5
-```
+## Results
 
-To avoid the fallback, explicitly pass `--model v5` when supplying 3+ images.
-
-Additionally, with 3+ images the `--count` flag has no effect — multi-frame transitions always produce one output per transition pair.
-
-## Results and recovery
-
-Use the shared [execution contract](../references/execution-contract.md) for submitted, completed, batch, and partial results, polling, and recovery. A single completed result contains `video_id` and `video_url`. Batch completions use `items[]`; do not parse a top-level ID from a batch result.
-
-## Use Cases
-
-- **Morphing between faces** -- provide two portraits and let the model interpolate
-- **Scene transitions** -- smoothly blend from one environment to another
-- **Before/after reveals** -- transition between two states of an object or scene
-- **Storyboard-to-animation** -- supply sequential storyboard frames to produce a cohesive animation
+Follow the [execution contract](../references/execution-contract.md) for result shapes, waiting, and recovery.
 
 ## Examples
 
-Basic two-image transition:
-
-```bash
-pixverse create transition --images ./frame1.jpg ./frame2.jpg --json
-```
-
-With prompt and higher quality:
-
 ```bash
 pixverse create transition --images ./a.jpg ./b.jpg --prompt "smooth morph" --quality 1080p --json
-```
-
-Multiple frames with longer duration:
-
-```bash
-pixverse create transition --images ./f1.jpg ./f2.jpg ./f3.jpg --duration 10 --json
-```
-
-Using a specific model (3+ frame transition requires `v5`):
-
-```bash
-pixverse create transition --images ./f1.jpg ./f2.jpg ./f3.jpg --model v5 --json
-```
-
-MiniMax H3 two-frame transition:
-
-```bash
-pixverse create transition --model minimax-h3 --images ./start.jpg ./end.jpg --prompt "A smooth orbiting camera move connects the scenes" --quality 1440p --duration 10 --json
-```
-
-MiniMax H3 Max two-frame transition (CLI 1.4.4+, global/upstream access required):
-
-```bash
+pixverse create transition --images ./f1.jpg ./f2.jpg ./f3.jpg --model v5 --duration 10 --json
 pixverse create transition --model minimax-h3-max --images ./start.jpg ./end.jpg --prompt "A smooth orbiting camera move connects the scenes" --quality 768p --duration 10 --json
-```
-
-H3 Max does not support 3+ frames, generated audio, multi-shot, or off-peak. Like other transitions, it has no selectable aspect-ratio flag. Do not use H3's `1440p` quality for H3 Max.
-
-Seedance 2.5 two-frame transition:
-
-```bash
-pixverse create transition --model seedance-2.5 --images ./start.jpg ./end.jpg --prompt "A seamless transformation" --quality 1080p --duration 20 --json
-```
-
-Wan 3.0 two-frame transition:
-
-```bash
-pixverse create transition --model wan-3.0 --images ./start.jpg ./end.jpg --prompt "A continuous tracking shot connects the two frames" --quality 720p --duration 8 --json
-```
-
-Submit without waiting:
-
-```bash
-pixverse create transition --images ./a.jpg ./b.jpg --no-wait --json
+pixverse create transition --model seedance-2.5 --images ./start.jpg ./end.jpg --prompt "A seamless transformation" --quality 1080p --duration 20 --no-wait --json
 ```
 
 ## Related Skills

@@ -40,8 +40,4 @@ For transforming existing art, supply `--image <input>` and state the requested 
 
 Follow [execution-contract](../references/execution-contract.md) for completion, retries, and delivering assets. Use [asset-management](asset-management.md) for download; do not duplicate generic error tables here.
 
-## Workflows
-
-- [mondo-poster-pipeline](../workflows/mondo-poster-pipeline.md): full poster creation when a workflow is needed.
-- [mondo-poster-to-video-pipeline](../workflows/mondo-poster-to-video-pipeline.md): animate a poster when requested.
-- [image-editing-pipeline](../workflows/image-editing-pipeline.md): iterative I2I refinement.
+To animate a finished poster, see [mondo-poster-to-video-pipeline](../workflows/mondo-poster-to-video-pipeline.md).

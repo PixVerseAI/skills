@@ -3,8 +3,6 @@ name: pixverse:image-editing-pipeline
 description: Refine an existing or generated image through iterative I2I edits
 ---
 
-Read [execution contract](../references/execution-contract.md) for result handling, retries, and defaults.
-
 Use [create-and-edit-image](../capabilities/create-and-edit-image.md) to generate a starting image, or begin with the user's existing image.
 
 1. Inspect the image; identify a concrete edit, including spatial location when relevant.

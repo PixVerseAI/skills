@@ -5,136 +5,62 @@ description: Generate music audio from a text prompt (optionally with lyrics) us
 
 # Create Music
 
-Generate music audio from a prompt with `pixverse create music`. Every model can produce instrumental tracks or auto-generated lyrics; MiniMax and ElevenLabs can also sing explicitly supplied lyrics. The output is a **standalone audio asset** — to score a video, generate the track here and mux it on yourself (e.g. `ffmpeg`).
+Generate music from a prompt with `pixverse create music`. Every model can produce instrumental tracks or auto-generated lyrics; MiniMax and ElevenLabs can also sing supplied lyrics. The output is a **standalone audio asset**; mux it onto a video yourself. Music is **not available** in `--region cn` (exit 6 before any upload or API request).
 
-## Prerequisites
-
-- PixVerse CLI installed and authenticated (`pixverse auth login`)
-- A music prompt (literal, a file path, or `-` for stdin)
-- Music is **not available** in `--region cn` (fails locally with exit code 6 before any upload or API request)
-
-## Decision Tree
-
-```
-Want generated music?
-├── Instrumental only?          → --instrumental      (highest priority)
-├── Let the model write lyrics? → --auto-lyrics     (all models)
-├── Have lyrics to sing?        → --lyrics "<text>"   (MiniMax / ElevenLabs only)
-└── Lyria with image vibe?      → --model lyria-3-pro-preview --image <ref...>
-```
-
-Browse available models first (no auth required):
+Browse models and current credit costs first (no auth required):
 
 ```bash
 pixverse music models --json
 ```
 
----
-
 ## create music -- Flags
 
 | Flag | Description | Values / Default |
 |:---|:---|:---|
-| `--prompt <text>` | Music prompt (required) — literal, a local file path, or `-` for stdin | -- |
-| `--lyrics <text>` | Explicit lyrics for MiniMax / ElevenLabs — literal, a file path, or `-` for stdin | rejected by Lyria; omitted when `--instrumental` or `--auto-lyrics` takes precedence |
-| `-m, --model <id>` | Music model | `music-3.0`, `music-2.6` (default), `music-v2`, `music-v1`, or `lyria-3-pro-preview` — see Model Reference |
-| `--instrumental` | Generate instrumental music (no vocals) | highest priority: forces `auto_lyrics=false` and omits lyrics |
-| `--auto-lyrics` | Let the model generate the lyrics | supported by every model; explicit lyrics are omitted unless `--instrumental` takes precedence |
-| `--duration-seconds <sec>` | Target duration (sets `duration_auto=false`) | within model range |
+| `--prompt <text>` | Music prompt (required): literal, file path, or `-` for stdin | -- |
+| `--lyrics <text>` | Explicit lyrics (MiniMax / ElevenLabs only): literal, file path, or `-` | rejected by Lyria |
+| `-m, --model <id>` | Music model | `music-2.6` (default); see table below |
+| `--instrumental` | Instrumental music (no vocals) | flag |
+| `--auto-lyrics` | Let the model write lyrics | flag; all models |
+| `--duration-seconds <sec>` | Target duration (sets `duration_auto=false`) | `10`–`240` |
 | `--no-duration-auto` | Disable automatic duration (requires `--duration-seconds`) | flag |
-| `--image <input...>` | Reference image(s) — **Google Lyria only**: file paths, HTTPS URLs, image IDs, or media paths | up to 10 |
-| `--output <path>` | Download the finished music to this file/dir | optional; never overwrites in CLI 1.4.5+ |
-| `--client-request-id <id>` | Caller-side request id (logged only) | optional |
-| `--no-wait` | Return immediately without polling | flag |
-| `--timeout <sec>` | Polling timeout | `300` (default) |
-| `--json` | JSON output | flag |
+| `--image <input...>` | Reference images, **Lyria only**: file paths, HTTPS URLs, image IDs, or media paths | up to 10 |
+| `--output <path>` | Download the finished music to this file or directory | optional |
+| `--client-request-id <id>` | Caller-side request id (tracing only, not deduplication) | optional |
+| `--no-wait` / `--timeout <sec>` / `--json` | Standard flags | timeout `300` |
 
-### Flag combination precedence
+Vocal flag precedence, applied after model compatibility checks:
 
-The CLI normalizes overlapping vocal flags to match the Web app:
+1. `--instrumental` wins: it sends `instrumental=true`, forces `auto_lyrics=false`, and omits lyrics.
+2. Otherwise `--auto-lyrics` wins over `--lyrics`, which is omitted.
+3. Otherwise explicit lyrics are sent. MiniMax and ElevenLabs require one of `--lyrics`, `--auto-lyrics`, or `--instrumental`.
 
-1. **`--instrumental` wins.** The request sends `instrumental=true`, forces `auto_lyrics=false`, and omits lyrics.
-2. **Otherwise, `--auto-lyrics` wins over explicit lyrics.** The request sends `auto_lyrics=true` and omits any supplied `--lyrics` value.
-3. **Otherwise, explicit lyrics are sent** for MiniMax and ElevenLabs. Those models require one of explicit lyrics, `--auto-lyrics`, or `--instrumental`.
+Lyria rejects `--lyrics` even alongside the other flags; put lyric-style direction in `--prompt` or use `--auto-lyrics`.
 
-Model compatibility is validated before this normalization. Lyria never accepts the separate `--lyrics` flag, even when `--auto-lyrics` or `--instrumental` is also present; omit `--lyrics` and use `--auto-lyrics` or put lyric-like direction in `--prompt`.
+| Model | `--model` value | Provider | Explicit lyrics | Image ref |
+|:---|:---|:---|:---|:---|
+| MiniMax Music 3.0 | `music-3.0` | MiniMax | Yes | No |
+| MiniMax Music 2.6 *(default)* | `music-2.6` | MiniMax | Yes | No |
+| ElevenLabs Music V2 | `music-v2` | ElevenLabs | Yes | No |
+| ElevenLabs Music | `music-v1` | ElevenLabs | Yes | No |
+| Google Lyria 3 Pro | `lyria-3-pro-preview` | Google | No | Up to 10 images |
 
-### Model Reference
+All models support auto lyrics, instrumental output, and `10`–`240s`. The CLI imposes no local prompt or lyrics length cap; do not truncate input, and report backend validation errors.
 
-| Model | `--model` value | Provider | Explicit lyrics | Auto lyrics | Instrumental | Duration | Image ref | Credits |
-|:---|:---|:---|:---|:---|:---|:---|:---|---:|
-| MiniMax Music 3.0 | `music-3.0` | MiniMax | Yes | Yes | Yes | 10–240s | No | 50 |
-| MiniMax Music 2.6 *(default)* | `music-2.6` | MiniMax | Yes | Yes | Yes | 10–240s | No | 40 |
-| ElevenLabs Music V2 | `music-v2` | ElevenLabs | Yes | Yes | Yes | 10–240s | No | 125 |
-| ElevenLabs Music | `music-v1` | ElevenLabs | Yes | Yes | Yes | 10–240s | No | 150 |
-| Google Lyria 3 Pro | `lyria-3-pro-preview` | Google | No | Yes | Yes | 10–240s | Up to 10 images | 20 |
+## Results
 
-> The ElevenLabs model IDs are `music-v2` and `music-v1` (the earlier `music_v1` form is invalid). Lyria supports `--auto-lyrics` and `--instrumental`, but does **not** take independent `--lyrics`; fold lyric-style instructions into `--prompt` when you are not using auto lyrics. `--image` is only valid for Lyria.
-
-CLI 1.4.6+ does not impose local prompt or lyrics length caps; provider-specific validation is deferred to the backend. Preserve supplied input instead of truncating or splitting it to satisfy obsolete local limits, and report backend validation errors. This does not imply unlimited provider input. Required prompt, lyrics support, flag compatibility, and duration checks still apply. Older installations can retain local caps.
-
----
-
-## Results and recovery
-
-With `--output`, successful JSON includes `local_path`. Follow [local download rules](../references/execution-contract.md#local-downloads-cli-145): output collisions fail with exit 6; recover the completed audio and download to a new path rather than submitting TTS/music again.
-
-Use the shared [execution contract](../references/execution-contract.md) for submitted, completed, batch, and partial results, polling, and recovery. A single completed result contains `audio_id` and `audio_url`. Poll and manage it with `--type audio`.
-
-## Steps
-
-1. Browse models: `pixverse music models --json`.
-2. Write the prompt; choose `--instrumental`, `--auto-lyrics`, or explicit `--lyrics` according to the precedence rules above.
-3. Run the command with `--json`; add `--output` to download in one step.
-4. Parse `audio_id` (and `audio_url` when waiting) from the JSON.
-5. If `--no-wait` was used, poll with `pixverse task wait <audio_id> --type audio --json`.
-
----
+A completed result contains `audio_id` and `audio_url`; with `--output` it also includes `local_path`. Pass `--type audio` to task and asset commands. Do not resubmit after an ambiguous failure; follow the [execution contract](../references/execution-contract.md) for waiting, recovery, and [local downloads](../references/execution-contract.md#local-downloads).
 
 ## Examples
 
-Instrumental background track:
-
 ```bash
 pixverse create music --prompt "calm ambient forest score, soft strings" --instrumental --output ./score.mp3 --json
-```
-
-Song with supplied lyrics:
-
-```bash
-pixverse create music \
-  --prompt "an upbeat synth-pop anthem, bright and energetic" \
-  --lyrics "[Verse]\nWalking through the neon light" \
-  --model music-2.6 \
-  --output ./song.mp3 \
-  --json
-```
-
-MiniMax Music 3.0 with auto-generated lyrics:
-
-```bash
+pixverse create music --prompt "an upbeat synth-pop anthem" --lyrics "[Verse]\nWalking through the neon light" --model music-2.6 --output ./song.mp3 --json
 pixverse create music --model music-3.0 --prompt "modern cinematic pop with a soaring chorus" --auto-lyrics --duration-seconds 120 --json
-```
-
-ElevenLabs Music V2 instrumental:
-
-```bash
-pixverse create music --model music-v2 --prompt "minimal electronic pulse for a product reveal" --instrumental --json
-```
-
-Let the model write lyrics, fixed duration:
-
-```bash
-pixverse create music --prompt "a nostalgic indie folk tune" --auto-lyrics --no-duration-auto --duration-seconds 90 --json
-```
-
-Google Lyria with auto-generated lyrics and image references:
-
-```bash
 pixverse create music --model lyria-3-pro-preview --prompt "an anthemic electronic song inspired by these scenes" --auto-lyrics --image ./scene1.jpg ./scene2.jpg --json
 ```
 
-To combine completed music with a video, follow [video production](../workflows/video-production.md); replace or mix original audio according to the requested result.
+To combine music with a video, follow [video production](../workflows/video-production.md).
 
 ## Related Skills
 

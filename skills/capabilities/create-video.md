@@ -5,50 +5,41 @@ description: Create AI videos from text prompts (T2V), images (I2V), reference m
 
 # Create Video
 
-For text-to-video use `create video --prompt`; add `--image` for image-to-video.
-For `create reference` with image/video/audio references or source-video editing, read [reference generation](../references/video-reference.md) only. Do not load the reference matrix for a normal text/image-to-video request.
+For text-to-video use `create video --prompt`; add `--image` for image-to-video. For `create reference` with image/video/audio references or source-video editing, read [reference generation](../references/video-reference.md) only; do not load it for a normal text/image-to-video request. For Seedance 480p Drafts and paid 1080p Final creation, read [Draft and Final](../references/seedance-draft-final.md).
 
-CLI 1.4.11+ supports `--relax-mode [true|false]` / `--no-relax-mode`; see [Relax semantics and entitlement](../references/execution-contract.md#relax-mode-cli-1411).
-
-Kling 4.0 (`kling-4.0`, CLI 1.4.15+, global only) supports `720p`/`1080p` and 3–30 seconds. Unlike older Kling tiers, it accepts `--quality`; see [Kling 4.0 defaults and framing](../references/video-models.md#kling-40-cli-1415).
-
-For CLI 1.4.19+ Seedance 480p Drafts, stage metadata and paid 1080p Final creation, read [Draft and Final](../references/seedance-draft-final.md).
+Relax flags are accepted; see the [execution contract](../references/execution-contract.md#relax-mode).
 
 ## Parameter discovery
 
-Check the CLI version once per session. On **1.4.0+**, query only the selected mode and model:
+Query only the selected mode and model:
 
 ```bash
 pixverse capabilities create video --model v6 --json
 ```
 
-Use the installed result for supported flags, defaults, enums, and limits. On older releases, inspect `pixverse create video --help` and read the [static video model reference](../references/video-models.md) as needed; a static entry does not establish support in an older install. Preserve the user's chosen model and parameters.
-
-MiniMax H3 Max (`minimax-h3-max`) requires **CLI 1.4.4+**, is available in the global model list subject to upstream access, and is unavailable in `cn`. T2V/I2V supports `480p`, `768p` (default), or `1080p`, with integer duration `5`–`15` (default `5`). T2V uses six fixed ratios (default `16:9`, no `auto`); I2V forces `auto`. CLI audio, multi-shot, and off-peak controls are unsupported. See the [model reference](../references/video-models.md) for mode differences; do not inherit H3's `1440p` default.
+Use the installed result for supported flags, defaults, enums, and limits. Without it (CLI before 1.4.0), use `pixverse create video --help` and the [static video model reference](../references/video-models.md), which also covers mode- and region-specific behavior. Preserve the user's chosen model and parameters.
 
 ## create video -- Flags
 
 | Flag | Description | Values / Default |
 |:---|:---|:---|
 | `--prompt <text>` | Prompt text (required) | -- |
-| `--image <input>` | Image input (enables I2V): local file path, HTTPS URL, image ID, or media path | local files auto-upload; pass an existing asset's image ID or media path to skip upload |
-| `-m, --model <model>` | Video model | Installed registry; static fallback linked above |
-| `-d, --duration <sec>` | Duration in seconds | model-specific; `1`–`30` overall (default `5`; see Parameter discovery above) |
-| `-q, --quality <q>` | Video quality | model-specific; `360p`–`2160p` overall (see Parameter discovery above) |
-| `--aspect-ratio <ratio>` | Aspect ratio | model-specific; Seedance 2.5 T2V, FLUX 3, and Wan 3.0 also accept `auto`; H3 and H3 Max image-to-video force `auto` (see Parameter discovery above) |
+| `--image <input>` | Image input (enables I2V): local file, HTTPS URL, image ID, or media path | pass an existing image ID or media path to skip upload |
+| `-m, --model <model>` | Video model | `v6` by default; see discovery above |
+| `-d, --duration <sec>` | Duration in seconds | model-specific (default `5`) |
+| `-q, --quality <q>` | Video quality | model-specific |
+| `--aspect-ratio <ratio>` | Aspect ratio | model-specific; some models accept `auto` or force it for I2V |
 | `--seed <number>` | Random seed | any integer |
-| `--count <number>` | Number of generations | `1` (default), `2`, `3`, `4` |
-| `--audio` / `--no-audio` | Enable or disable audio generation | boolean toggle (default: on for supported models) |
-| `--multi-shot` / `--no-multi-shot` | Enable or disable multi-shot mode | boolean toggle (forced off for `pixverse-c1`) |
+| `--count <number>` | Number of generations | `1`–`4` |
+| `--audio` / `--no-audio` | Enable or disable audio generation | default on for supported models |
+| `--multi-shot` / `--no-multi-shot` | Enable or disable multi-shot mode | model-dependent; forced off for `pixverse-c1` |
 | `--off-peak` | Use off-peak pricing | flag |
 | `--idempotency-key <key>` | Stable safe-retry key; see execution contract | optional |
-| `--no-wait` | Return immediately without polling | flag |
-| `--timeout <sec>` | Polling timeout | `300` (default) |
-| `--json` | JSON output | flag |
+| `--no-wait` / `--timeout <sec>` / `--json` | Standard flags | timeout `300` |
 
 ## Create one video
 
-After authentication and parameter selection, submit once and preserve the result. This example requests one output explicitly; use the [execution contract](../references/execution-contract.md) for batch or partial results, retries, and asynchronous submission.
+Submit once and preserve the result; the [execution contract](../references/execution-contract.md) covers batch or partial results, waiting, retries, and media inputs.
 
 ```bash
 if RESULT=$(pixverse create video --prompt "$PROMPT" --model v6 --count 1 --json); then
@@ -60,9 +51,7 @@ else
 fi
 ```
 
-To animate an image, add `--image "$IMAGE_INPUT"` to the same invocation. An input may be a local file, HTTPS URL, compatible image ID, or media path. Existing IDs/media paths avoid repeated transfer. HTTPS URLs are downloaded and uploaded; HTTP is rejected. Oversized local images are resized to fit `1920×1920` and `5 MB`; the original file stays unchanged. Local videos are uploaded as-is.
-
-Create waits by default; do not wait again after a completed result. To return before completion, pass `--no-wait`, retain submitted IDs, and follow [task management](task-management.md).
+To animate an image, add `--image "$IMAGE_INPUT"`. Oversized local images are resized to fit `1920×1920` and `5 MB`; the original file stays unchanged.
 
 ## Continue only when needed
 
