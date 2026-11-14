@@ -1,6 +1,6 @@
 # CLI execution contract
 
-Read once when executing a creation chain or handling results. This describes CLI 1.4.19; use installed command help and version-specific behavior on older releases. Canvas, MiniApps and [schema-driven templates](../capabilities/template.md#schema-driven-templates-cli-149) keep their own result contracts in their capabilities.
+Read once when executing a creation chain or handling results. This describes CLI 1.4.20; use installed command help and version-specific behavior on older releases. Canvas, MiniApps and [schema-driven templates](../capabilities/template.md#schema-driven-templates-cli-149) keep their own result contracts in their capabilities.
 
 ## Streams and task identity
 
@@ -95,6 +95,8 @@ CLI **1.4.18+** treats status `7` and external moderation status `17` as termina
 | 5 | Generation failure, including partial image/video batches in CLI 1.4.0 | Preserve successful items and submitted IDs; inspect `failed_ids` / `fail_count` |
 | 6 | Invalid parameters | Correct flags/inputs; it is not proof of partial success |
 | 7 | Concurrency limit | Query `account slots --json`, then bounded backoff |
+
+CLI 1.4.20 preserves service business codes/messages from non-success HTTP responses, including JSON envelopes served as text. Inspect structured `code`, `error` and available `trace_id` instead of classifying solely by HTTP status. Authentication, credit, concurrency and workspace errors retain their typed handling; an HTTP error does not automatically mean a transient transport failure or authorize resubmission.
 
 Older CLI output can differ; never classify a partial batch from an exit code alone. On timeout, recover a known ID with `task wait`; if no ID was captured, inspect recent assets/request diagnostics before resubmitting. Prefer `--no-wait` up front when durable task IDs are needed.
 

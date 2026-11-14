@@ -25,10 +25,11 @@ Preserve the requested model and quality. Otherwise use defaults or select based
 | `-m, --model <model>` | Image model | Installed registry; static fallback linked above |
 | `-q, --quality <q>` | Image quality | `512p`, `720p`, `1080p` (default), `1440p`, `1800p`, `2160p`, `1.5k` (availability varies by model — see Parameter discovery above) |
 | `--aspect-ratio <ratio>` | Aspect ratio | `1:1`, `16:9`, `9:16`, `4:3`, `3:4`, `3:2`, `2:3`, `5:4`, `4:5`, `2:1`, `1:2`, `21:9`, `1:4`, `4:1`, `1:8`, `8:1`, `auto` (availability and default vary by model and installed CLI version) |
-| `--background <value>` | GPT Image 2.5 Flare/Sunburst (CLI 1.4.11+) or Seedream 5.5 (1.4.17+) background | `auto` (default), `transparent`, `opaque`; T2I and I2I. Other models or invalid values fail with exit 6 before upload. Output format is backend-selected; no `--output-format` flag. |
+| `--output-format <format>` | MiniMax H3 Image only (CLI 1.4.20+) | `png` (default), `jpeg`, `webp`; case-insensitive, `jpg` alias; invalid values fall back to `png`. Other models reject this flag. |
+| `--background <value>` | GPT Image 2.5 Flare/Sunburst (CLI 1.4.11+) or Seedream 5.5 (1.4.17+) background | `auto` (default), `transparent`, `opaque`; T2I and I2I. Other models or invalid values fail with exit 6 before upload. For these background-capable models, output format is backend-selected and `--output-format` is rejected. |
 | `--detail-level <level>` | Model-specific rendering detail | 2.5 Flare/Sunburst: `low`, `medium`, `high`, `xhigh`, `max`; 2.0: `low`, `medium`, `high`. GPT default `low`. Nano Banana 2.1: `minimal`, `medium` (default), `high`. Other models or unsupported values fail with exit 6. |
 | `--count <number>` | Number of generations | `1` (default), `2`, `3`, `4` |
-| `--seed <number>` | Random seed | any integer; silently ignored by Nano Banana 2.1 |
+| `--seed <number>` | Random seed | any integer; silently ignored by Nano Banana 2.1 and MiniMax H3 Image |
 | `--idempotency-key <key>` | Stable safe-retry key; see execution contract | optional |
 | `--no-wait` | Return immediately without polling | flag |
 | `--timeout <sec>` | Polling timeout | `300` (default) |
@@ -39,6 +40,8 @@ On CLI **1.4.3+**, GPT Image 2.5 supports all ten ratios: `1:1`, `16:9`, `9:16`,
 Nano Banana 2.1 (`gemini-nano-banana-2.1`, CLI 1.4.8+, global only) supports T2I/I2I with up to 14 references and 1–4 outputs. See [model-specific defaults and constraints](../references/image-models.md#nano-banana-21), including detail levels and seed omission.
 
 CLI 1.4.17+ accepts case-insensitive image resolution aliases: `1K`=`1080p`, `1.5K`=`1.5k`, `2K`=`1440p`, `3K`=`1800p`, `4K`=`2160p`. They are normalized before model validation, not extra resolutions for every model. See [Seedream 5.5](../references/image-models.md#seedream-55-cli-1417) for its 1K–3K range and background support.
+
+MiniMax H3 Image (`minimax-h3-image`, CLI 1.4.20+, Global) adds up to 16 references and format selection. Read [its prompt and reference constraints](../references/image-models.md#minimax-h3-image-cli-1420) before uploading; oversized or invalid originals can fail before auto-compression.
 
 ## Create or edit one image
 

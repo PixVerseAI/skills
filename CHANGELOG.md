@@ -4,6 +4,17 @@ All notable changes to PixVerse Skills will be documented in this file.
 
 Format follows [Keep a Changelog](https://keepachangelog.com/).
 
+## [1.37.0] - 2026-11-14
+
+Review and sync to PixVerse CLI **v1.4.20**.
+
+### Added
+- Document MiniMax H3 Image T2I/I2I, 1K/2K/4K output, up to 16 references, format normalization, prompt limits and original-image validation.
+
+### Fixed
+- Scope output-format restrictions to the models they apply to and include MiniMax's ignored seed behavior.
+- Explain preserved service business errors from HTTP failures without introducing automatic submission retries.
+
 ## [1.36.0] - 2026-11-14
 
 Review and sync to PixVerse CLI **v1.4.19**.

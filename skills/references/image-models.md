@@ -1,6 +1,6 @@
 # Image model fallback reference
 
-Read when installed capability discovery is unavailable or to compare model-specific limits. This static reference describes CLI 1.4.18, not necessarily the installed version.
+Read when installed capability discovery is unavailable or to compare model-specific limits. This static reference describes CLI 1.4.20, not necessarily the installed version.
 
 ### Model Reference
 
@@ -12,6 +12,7 @@ On CLI v1.4.0 or later, query `pixverse capabilities create image [--model <id>]
 | GPT Image 2.5 Sunburst | `gpt-image-2.5-sunburst` (CLI 1.4.1+) | `1080p` `1440p` `2160p` | `1:1` `16:9` `9:16` `4:3` `3:4` `3:2` `2:3` `2:1` `1:2` `21:9` (CLI 1.4.3+) | 16 |
 | GPT Image 2 | `gpt-image-2.0` | `1080p` `1440p` `2160p` | `1:1` `16:9` `9:16` `4:3` `3:4` `3:2` `2:3` `2:1` `1:2` `21:9` | 9 |
 | Qwen Image | `qwen-image` | `720p` `1080p` | `1:1` `16:9` `9:16` `4:3` `3:4` `5:4` `4:5` `3:2` `2:3` `21:9` | 3 |
+| MiniMax H3 Image | `minimax-h3-image` (CLI 1.4.20+, global only) | `1080p` `1440p` `2160p` | `auto` `1:1` `16:9` `9:16` `4:3` `3:4` `5:4` `4:5` `3:2` `2:3` `21:9` | 16 |
 | Seedream 5.5 | `seedream-5.5` (CLI 1.4.17+, global only) | `1080p` `1.5k` `1440p` `1800p` | `auto` `1:1` `16:9` `9:16` `4:3` `3:4` `5:4` `4:5` `3:2` `2:3` `21:9` | 10 |
 | Seedream 5.0 Pro | `seedream-5.0-pro` | `1080p` `1440p` | `auto` `1:1` `16:9` `9:16` `4:3` `3:4` `5:4` `4:5` `3:2` `2:3` `21:9` | 10 |
 | Seedream 5.0 Lite | `seedream-5.0-lite` | `1440p` `1800p` `2160p` | `auto` `1:1` `16:9` `9:16` `4:3` `3:4` `5:4` `4:5` `3:2` `2:3` `21:9` | 6 |
@@ -59,3 +60,15 @@ pixverse create image --model gemini-nano-banana-2.1 --prompt "A panoramic botan
 ### Seedream 5.5 (CLI 1.4.17+)
 
 Supports T2I/I2I with up to 10 references and 1–4 outputs. Built-in quality and unsupported-quality fallback are `1080p` (1K); 1.5K, 2K and 3K are supported, but 4K is not. Shared image framing defaults still apply; `auto` is supported, not automatically selected for I2I. Background is `auto` (default), `transparent` or `opaque`; `--detail-level` is unsupported. No output-format, width or height controls are added. The CLI passes prompts through without a new local length cap or truncation; backend validation still applies.
+
+### MiniMax H3 Image (CLI 1.4.20+)
+
+Use `minimax-h3-image` for T2I/I2I in Global, not CN. Quality supports 1K/2K/4K (`1080p`/`1440p`/`2160p`), with built-in `1080p`; framing defaults to `auto` unless a supported saved or explicit ratio takes precedence. Up to 16 references and 1–4 outputs are independent limits. Prompts must be nonblank and at most 20,000 Unicode code points; invalid prompts fail locally without truncation.
+
+`--output-format` accepts `png` (default), `jpeg`, or `webp`, case-insensitively; `jpg` maps to `jpeg`, and unsupported values fall back to `png`. This flag is exclusive to this model; other image models reject it. `--seed` is accepted but omitted from the request, so it does not provide reproducibility. Explicit `--background` and `--detail-level` are unsupported.
+
+References must be JPEG/PNG/WebP, at most 64 MiB, with edges 128–8192 pixels and a longest/shortest edge ratio no greater than 4. Local and downloaded originals are checked before ordinary upload compression; final dimensions are checked again after compression. These source limits do not disable the shared upload resizing/size policy. Existing asset IDs are checked against available metadata; missing metadata and opaque media paths do not prove that backend constraints are satisfied.
+
+```bash
+pixverse create image --model minimax-h3-image --prompt "$PROMPT" --quality 2K --aspect-ratio auto --output-format webp --json
+```
