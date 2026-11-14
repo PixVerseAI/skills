@@ -4,6 +4,19 @@ All notable changes to PixVerse Skills will be documented in this file.
 
 Format follows [Keep a Changelog](https://keepachangelog.com/).
 
+## [1.36.0] - 2026-11-14
+
+Review and sync to PixVerse CLI **v1.4.19**.
+
+### Added
+- Document Seedance 480p Draft modes, conditional framing, stage metadata and paid 1080p Final generation with service-owned eligibility and no automatic resubmission.
+- Document delegated Team workspace selection, exact string IDs, account-wide scope, session-version compatibility and stale-selection recovery.
+
+### Fixed
+- Remove obsolete personal-only delegated guidance and scope ordinary workspace overrides/fallbacks correctly.
+- Exclude Final from generic idempotency/retry guidance and distinguish its regional Relax behavior.
+- Correct a remaining Seedance model-capability claim to describe unsupported CLI controls.
+
 ## [1.35.0] - 2026-11-13
 
 Sync the skill docs to PixVerse CLI **v1.4.18**, including v1.4.16–v1.4.17 changes.

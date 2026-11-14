@@ -7,6 +7,8 @@ description: Check generation task or MiniApp project status and wait for comple
 
 Check the status of generation tasks or MiniApp projects and wait for them to complete.
 
+For CLI 1.4.19+ Seedance 480p Drafts, stage metadata and paid 1080p Final creation, read [Draft and Final](../references/seedance-draft-final.md).
+
 ## Prerequisites
 
 - PixVerse CLI installed and authenticated (`pixverse auth login`)

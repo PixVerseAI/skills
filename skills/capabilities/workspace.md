@@ -9,7 +9,7 @@ Covers: `workspace list`, `workspace status`, `workspace switch`, `workspace man
 
 ---
 
-CLI 1.4.10+ delegated `chatgpt` auth profiles support personal workspace only. Do not switch them to a team; see [MCP pairing](../references/auth-pairing.md).
+CLI 1.4.19+ delegated `chatgpt` v2 sessions support Team selection shared across the account. Their JSON and failure behavior differ: read [delegated workspace selection](../references/auth-pairing.md#delegated-workspace-selection-cli-1419). The ordinary-profile examples, global override and personal fallback below do not apply to delegated sessions.
 
 ## Concepts
 

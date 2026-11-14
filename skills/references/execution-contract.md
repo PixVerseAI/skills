@@ -1,6 +1,6 @@
 # CLI execution contract
 
-Read once when executing a creation chain or handling results. This describes CLI 1.4.18; use installed command help and version-specific behavior on older releases. Canvas, MiniApps and [schema-driven templates](../capabilities/template.md#schema-driven-templates-cli-149) keep their own result contracts in their capabilities.
+Read once when executing a creation chain or handling results. This describes CLI 1.4.19; use installed command help and version-specific behavior on older releases. Canvas, MiniApps and [schema-driven templates](../capabilities/template.md#schema-driven-templates-cli-149) keep their own result contracts in their capabilities.
 
 ## Streams and task identity
 
@@ -68,12 +68,12 @@ Do not run create a second time to parse an ID. Do not pipe create straight into
 
 ## Relax mode (CLI 1.4.11+)
 
-Only `create image`, `video`, `transition`, `reference`, `modify`, and `motion-control` accept Relax flags:
+For ordinary generation, `create image`, `video`, `transition`, `reference`, `modify`, and `motion-control` accept Relax flags. CLI 1.4.19+ [Seedance Final](seedance-draft-final.md) also accepts them with separate regional behavior:
 
 - `--relax-mode` or `--relax-mode true` sends true; `--relax-mode false` or `--no-relax-mode` sends false. The `--relax-mode=true/false` forms also work.
 - Omission sends no Relax field; it is not an explicit false. Preserve the user's choice. If both positive/negative flags appear, the last wins; prefer a single unambiguous choice.
 - Values are case-sensitive; invalid or empty values fail with exit 6 before media upload. Registry `supported: true` means CLI pass-through, not model support or account entitlement. The backend decides eligibility and pricing; do not promise free video or retry a rejected Relax request as paid generation automatically.
-- Relax is separate from `--off-peak`; existing off-peak restrictions still apply. Other creation modes, templates and MiniApps do not gain these flags. Canvas fields still require live adapter discovery.
+- Relax is separate from `--off-peak`; existing off-peak restrictions still apply. Other creation modes, templates and MiniApps do not gain these flags; Seedance Final is the documented exception. Canvas fields still require live adapter discovery.
 
 ## Waiting and recovery
 
@@ -97,6 +97,8 @@ CLI **1.4.18+** treats status `7` and external moderation status `17` as termina
 | 7 | Concurrency limit | Query `account slots --json`, then bounded backoff |
 
 Older CLI output can differ; never classify a partial batch from an exit code alone. On timeout, recover a known ID with `task wait`; if no ID was captured, inspect recent assets/request diagnostics before resubmitting. Prefer `--no-wait` up front when durable task IDs are needed.
+
+Seedance Final has no idempotency key and every accepted submission creates a paid task. Never automatically resubmit; recover the returned or linked Final IDs using the [Draft/Final contract](seedance-draft-final.md).
 
 Use a stable `--idempotency-key` **from the first submission** for image/video creation commands that support it. Reuse it only for the same logical request when retrying an unconfirmed submission. An intentional replacement of a confirmed failed generation needs a new key and may cost credits. For concurrency, retry at most three times with increasing delay (for example 5/10/20 seconds), then report pending work and retained IDs. Do not switch models or workspaces just to evade a failed request.
 

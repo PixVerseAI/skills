@@ -9,7 +9,7 @@ Covers: `auth login`, `auth logout`, `auth status`, `account info`, `account usa
 
 ---
 
-For CLI 1.4.10+ MCP-authorized device sessions, read [isolated pairing](../references/auth-pairing.md). The ordinary login/logout and access-key instructions below apply to the default profile; `PIXVERSE_AUTH_PROFILE=chatgpt` requires `auth pair` and personal workspace.
+For CLI 1.4.10+ MCP-authorized device sessions, read [isolated pairing](../references/auth-pairing.md). The ordinary login/logout and access-key instructions below apply to the default profile; `PIXVERSE_AUTH_PROFILE=chatgpt` requires `auth pair`; CLI 1.4.19+ v2 sessions also support Team through [delegated workspace selection](../references/auth-pairing.md#delegated-workspace-selection-cli-1419).
 
 ## auth login
 

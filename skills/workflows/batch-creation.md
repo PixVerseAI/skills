@@ -12,7 +12,7 @@ Choose the batch form:
 
 Check available credits and any known per-request cost before a large batch; a positive balance alone does not prove the whole batch is affordable. All requests use the active workspace; use `--workspace-id <id>` per command to target a different one without switching.
 
-Assign a stable idempotency key to each logical submission before its first attempt. Check each command's exit status before parsing stdout. Retain IDs immediately; never collect only the last result or mask a failed background process with a bare shell `wait`. Use a unique temporary directory if saving responses.
+For commands supporting idempotency keys, assign a stable key to each logical submission before its first attempt. Seedance Final does not support keys or automatic submission retry; follow its [dedicated contract](../references/seedance-draft-final.md). Check each command's exit status before parsing stdout. Retain IDs immediately; never collect only the last result or mask a failed background process with a bare shell `wait`. Use a unique temporary directory if saving responses.
 
 For submitted video batches, retain `video_ids`; single requests return `video_id`. Query multiple IDs with `pixverse task status <id1> <id2> --type video --json`, or wait once per ID and save its completed result. Image tasks require `--type image`.
 

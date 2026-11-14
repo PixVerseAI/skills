@@ -4,6 +4,8 @@ Read for `create reference` image/video/audio inputs. On CLI 1.4.0+, query `pixv
 
 CLI 1.4.11+ supports `--relax-mode [true|false]` / `--no-relax-mode` for `create reference`; see [Relax semantics and entitlement](execution-contract.md#relax-mode-cli-1411).
 
+CLI 1.4.19+ `seedance-2.5-480draft` inherits Seedance 2.5 reference limits and task types but uses 480p and conditional framing; read [Draft and Final](seedance-draft-final.md).
+
 ## create reference -- Flags
 
 | Flag | Description | Values / Default |
@@ -16,7 +18,7 @@ CLI 1.4.11+ supports `--relax-mode [true|false]` / `--no-relax-mode` for `create
 | `-q, --quality <q>` | Video quality | model-specific; up to `2160p` (see [video model reference](video-models.md)) |
 | `--aspect-ratio <ratio>` | Aspect ratio | model-specific; `auto` is available or forced for selected media combinations (see matrix below) |
 | `-d, --duration <seconds-or-auto>` | Duration | `auto` is locked for V6, Gemini Omni, and Grok Imagine video references; it is the default for Seedance 2.5 and Wan 3.0 video references, which may instead use a fixed duration |
-| `--task-type <type>` | Seedance 2.5 task intent | `auto` (default), `reference`, `edit`, or `extend`; rejected for other models |
+| `--task-type <type>` | Seedance 2.5 / Draft task intent | `auto` (default), `reference`, `edit`, or `extend`; rejected for other models |
 | `--audio` / `--no-audio` | Enable or disable audio generation | model-dependent boolean toggle |
 | `--count <number>` | Number of generations | `1` (default), `2`, `3`, `4` |
 | `--seed <number>` | Random seed | any integer |
@@ -67,7 +69,7 @@ pixverse create reference --model seedance-2.5 \
   --quality 1080p --duration auto --aspect-ratio auto --task-type edit --json
 ```
 
-Reference mode allows up to 30 images, 10 videos, and 10 audios, with 50 inputs total. Known video durations may total at most 30 seconds, known audio durations may total at most 30 seconds, and audio cannot be the only reference type. With video, duration defaults to `auto` and locks aspect ratio to `auto`; explicitly select `--duration 4` through `30` to use either `auto` or a fixed ratio. Use `--task-type auto|reference|edit|extend` to state the task intent; this flag is Seedance 2.5-only and defaults to `auto`.
+Reference mode allows up to 30 images, 10 videos, and 10 audios, with 50 inputs total. Known video durations may total at most 30 seconds, known audio durations may total at most 30 seconds, and audio cannot be the only reference type. With video, duration defaults to `auto` and locks aspect ratio to `auto`; explicitly select `--duration 4` through `30` to use either `auto` or a fixed ratio. Use `--task-type auto|reference|edit|extend` to state the task intent; this flag supports Seedance 2.5 and its Draft variant and defaults to `auto`.
 
 ### Reference video editing
 

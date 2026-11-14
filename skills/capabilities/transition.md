@@ -9,6 +9,8 @@ Create smooth transition animations between two or more keyframe images using Pi
 
 CLI 1.4.11+ supports `--relax-mode [true|false]` / `--no-relax-mode`; see [Relax semantics and entitlement](../references/execution-contract.md#relax-mode-cli-1411).
 
+For CLI 1.4.19+ Seedance 480p Drafts, stage metadata and paid 1080p Final creation, read [Draft and Final](../references/seedance-draft-final.md).
+
 ## Prerequisites
 
 - PixVerse CLI installed and authenticated (`pixverse auth login`)

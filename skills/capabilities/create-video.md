@@ -12,6 +12,8 @@ CLI 1.4.11+ supports `--relax-mode [true|false]` / `--no-relax-mode`; see [Relax
 
 Kling 4.0 (`kling-4.0`, CLI 1.4.15+, global only) supports `720p`/`1080p` and 3–30 seconds. Unlike older Kling tiers, it accepts `--quality`; see [Kling 4.0 defaults and framing](../references/video-models.md#kling-40-cli-1415).
 
+For CLI 1.4.19+ Seedance 480p Drafts, stage metadata and paid 1080p Final creation, read [Draft and Final](../references/seedance-draft-final.md).
+
 ## Parameter discovery
 
 Check the CLI version once per session. On **1.4.0+**, query only the selected mode and model:

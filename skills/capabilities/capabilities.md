@@ -117,6 +117,8 @@ CLI 1.4.11+ declares `relax_mode` with no boolean default and `on_invalid: backe
 
 `supported: false` for `audio`, `multi_shot` or `off_peak` describes unavailable CLI control, not an assertion that the model cannot generate sound, multiple shots, or receive service-side scheduling. Do not promise silent output merely because an audio switch is unsupported.
 
+CLI 1.4.19+ exposes `create seedance-final` as a model-less action with inherited parameters. Draft Reference framing uses conditional rules for video presence and automatic/fixed duration; apply matching rules instead of relying only on the base enum. See [Draft/Final](../references/seedance-draft-final.md).
+
 ### Parameter fields
 
 Each parameter uses a stable logical key plus the real CLI `flag`. Structured fields include:
